@@ -1,0 +1,47 @@
+{
+  "name": "ai-compliance-gateway",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Passerelle intelligente de sécurisation des interactions entre les entreprises et les modèles d'IA générative",
+  "packageManager": "pnpm@11.22.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "pnpm -r --filter './packages/**' build && pnpm -r --filter './apps/**' build",
+    "build:packages": "pnpm -r --filter \"@acg/*\" --filter \"!@acg/api\" --filter \"!@acg/dashboard\" --filter \"!@acg/agent-browser\" --filter \"!@acg/agent-cli\" build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint . --ext .ts,.tsx",
+    "typecheck": "pnpm -r typecheck",
+    "db:create": "tsx db/scripts/create-database.ts",
+    "db:migrate": "tsx db/scripts/migrate.ts",
+    "db:seed": "tsx db/scripts/seed.ts",
+    "db:demo-events": "tsx db/scripts/demo-events.ts",
+    "db:reset": "tsx db/scripts/create-database.ts --drop && tsx db/scripts/migrate.ts && tsx db/scripts/seed.ts",
+    "dev:api": "pnpm --filter @acg/api dev",
+    "dev:dashboard": "pnpm --filter @acg/dashboard dev",
+    "dev": "concurrently -n api,dashboard -c blue,magenta \"pnpm dev:api\" \"pnpm dev:dashboard\"",
+    "agents:build": "pnpm --filter @acg/agent-runtime build && pnpm --filter @acg/agent-browser build && pnpm --filter @acg/agent-cli build",
+    "dataset:generate": "tsx data/synthetic/generate.ts",
+    "eval:detection": "tsx tools/evaluate-detection.ts",
+    "test:e2e:texte": "vitest run packages/agent-runtime/src/e2e-texte.test.ts",
+    "test:e2e:fichiers": "vitest run packages/agent-runtime/src/e2e-fichiers.test.ts packages/file-extract/src/file-extract.test.ts"
+  },
+  "dependencies": {
+    "pg": "^8.16.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "@types/pg": "^8.15.5",
+    "@typescript-eslint/eslint-plugin": "^8.44.0",
+    "@typescript-eslint/parser": "^8.44.0",
+    "concurrently": "^9.2.1",
+    "dotenv": "^17.2.2",
+    "esbuild": "^0.25.9",
+    "eslint": "^9.36.0",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  }
+}

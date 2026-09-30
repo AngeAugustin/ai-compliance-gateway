@@ -1,0 +1,26 @@
+node_modules/
+dist/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+.env
+.env.local
+*.log
+.DS_Store
+Thumbs.db
+
+# Poids des modèles (téléchargés séparément, voir docs/models.md)
+models/*.onnx
+models/*.gguf
+models/**/*.bin
+models/**/*.safetensors
+
+# Artefacts d'agent
+apps/agent-cli/build/
+apps/agent-browser/dist/
+apps/agent-cli/*.blob
+apps/agent-cli/acg-shim*.exe
+
+# Données locales d'agent
+.acg/

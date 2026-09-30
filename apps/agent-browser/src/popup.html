@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <title>ACG Agent A1</title>
+    <style>
+      :root { color-scheme: dark; }
+      body { margin: 0; width: 320px; font: 13px/1.45 "Segoe UI", sans-serif; background: #0B0F1A; color: #E8ECF4; }
+      header { padding: 14px 16px 8px; letter-spacing: .14em; font-size: 10px; color: #8B93A7; text-transform: uppercase; }
+      main { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 8px; }
+      label { font-size: 11px; color: #8B93A7; }
+      input { width: 100%; box-sizing: border-box; background: #121826; color: #E8ECF4; border: 1px solid #2A3348; border-radius: 4px; padding: 8px; }
+      button { background: #8B7CFF; color: #0B0F1A; border: 0; border-radius: 4px; padding: 8px 12px; font-weight: 600; cursor: pointer; }
+      #grant { background: #2A3348; color: #E8ECF4; }
+      .ok { color: #3DDC97; font-family: ui-monospace, monospace; font-size: 11px; }
+      .warn { color: #E8B84A; font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <header>Agent endpoint A1</header>
+    <main>
+      <p id="status" class="warn">Chargement…</p>
+      <label>URL de l'API</label>
+      <input id="api" placeholder="http://localhost:4000" />
+      <label>Jeton d'enrôlement</label>
+      <input id="token" placeholder="coller le jeton RSSI" />
+      <button id="enroll">Enrôler cet appareil</button>
+      <button id="grant" hidden>Autoriser les sites du catalogue</button>
+      <p style="color:#8B93A7;font-size:11px;margin:4px 0 0">Après enrôlement : sync, heartbeat signé, interception Enter / Envoyer / fetch. Un nouveau domaine ajouté au catalogue est couvert après « Autoriser les sites » — sans reconstruire l'extension.</p>
+    </main>
+    <script src="popup.js" type="module"></script>
+  </body>
+</html>

@@ -1,0 +1,10 @@
+packages:
+  - "packages/*"
+  - "apps/*"
+
+allowBuilds:
+  esbuild: true
+  "@nestjs/core": true
+
+autoInstallPeers: false
+strictPeerDependencies: false
