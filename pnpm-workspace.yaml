@@ -5,6 +5,7 @@ packages:
 allowBuilds:
   esbuild: true
   "@nestjs/core": true
+  tesseract.js: true
 
 autoInstallPeers: false
 strictPeerDependencies: false

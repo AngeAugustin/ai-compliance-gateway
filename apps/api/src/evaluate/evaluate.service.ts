@@ -225,11 +225,8 @@ export class EvaluateService implements OnModuleInit {
     files: { fileName: string; mimeType?: string; data: Uint8Array }[] = [],
   ) {
     if (!this.localEngine) throw new Error("Detection engine non initialisé");
-    const { extractFilesNode } = await import("@acg/file-extract/node");
+    const extracted = await this.extractAttachmentTexts(files);
     const { combinePromptAndFiles } = await import("@acg/file-extract");
-    const extracted = files.length
-      ? await extractFilesNode(files.map((f) => ({ fileName: f.fileName, mimeType: f.mimeType, data: f.data })))
-      : [];
     const analysisText = files.length ? combinePromptAndFiles(text, extracted) : text;
     const detection = await this.localEngine.detect(analysisText);
     const wire: DetectionResultWire[] = detection.results.map((r) => ({
@@ -259,6 +256,13 @@ export class EvaluateService implements OnModuleInit {
       } satisfies EvaluateInteractionRequest,
       { user },
     );
+  }
+
+  /** Extraction texte (+ OCR images) pour agents / inspect. */
+  async extractAttachmentTexts(files: { fileName: string; mimeType?: string; data: Uint8Array }[]) {
+    if (files.length === 0) return [];
+    const { extractFilesNode } = await import("@acg/file-extract/node");
+    return extractFilesNode(files.map((f) => ({ fileName: f.fileName, mimeType: f.mimeType, data: f.data })));
   }
 
   private async resolveUser(req: EvaluateInteractionRequest, actor: { user?: AuthUser; agentId?: string }): Promise<AuthUser> {

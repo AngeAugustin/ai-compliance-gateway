@@ -165,10 +165,6 @@ export function OverviewPage() {
             <p style={{ color: "var(--fog)", fontSize: 13, marginBottom: 0 }}>
               {data.agents.missing} silencieux · {data.agents.tampered} altérés · {data.openAlerts} alertes ouvertes
             </p>
-            <p style={{ color: "var(--fog)", fontSize: 13, margin: "10px 0 0" }}>
-              Chaîne d'audit : {data.chainIntegrity.verified ? "intègre" : "rompue"} · {data.chainIntegrity.checkedEvents}{" "}
-              événements vérifiés
-            </p>
           </BentoPanel>
         </div>
 

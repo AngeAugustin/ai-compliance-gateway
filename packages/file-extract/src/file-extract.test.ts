@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { combinePromptAndFiles } from "./combine.js";
 import { extractOne } from "./engine.js";
+import { zipStore } from "./extractors/pptx-zip.js";
 
 describe("file-extract", () => {
   it("extrait un CSV avec numéro CNSS", async () => {
@@ -12,6 +13,41 @@ describe("file-extract", () => {
     expect(result.extractionMethod).toBe("native");
     expect(result.text).toContain("A12345678");
     expect(result.sanitizable).toBe(true);
+  });
+
+  it("extrait un dump SQL avec e-mail", async () => {
+    const sql = "INSERT INTO users(email) VALUES ('marie.agbodji@cnss.bj');\n";
+    const result = await extractOne({
+      fileName: "backup.sql",
+      data: new TextEncoder().encode(sql),
+    });
+    expect(result.text).toContain("marie.agbodji@cnss.bj");
+    expect(result.sanitizable).toBe(true);
+  });
+
+  it("extrait le texte d'un PPTX minimal", async () => {
+    const slide = `<?xml version="1.0"?><p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"><a:t>Numéro CNSS A12345678</a:t></p:sld>`;
+    const data = zipStore({
+      "ppt/slides/slide1.xml": new TextEncoder().encode(slide),
+    });
+    const result = await extractOne({ fileName: "brief.pptx", data });
+    expect(result.text).toContain("A12345678");
+  });
+
+  it("extrait le contenu d'une archive ZIP", async () => {
+    const data = zipStore({
+      "notes.txt": new TextEncoder().encode("mot de passe = SuperSecret99!"),
+    });
+    const result = await extractOne({ fileName: "bundle.zip", data });
+    expect(result.text).toContain("SuperSecret99!");
+  });
+
+  it("fallback texte pour extension inconnue textuelle", async () => {
+    const result = await extractOne({
+      fileName: "dump.dat",
+      data: new TextEncoder().encode("sk-abcdefghijklmnopqrstuvwxyz012345"),
+    });
+    expect(result.text).toContain("sk-abcdefghijklmnopqrstuvwxyz012345");
   });
 
   it("combine prompt et fichier", async () => {

@@ -1,11 +1,11 @@
-/** OCR local optionnel (Node, ACG_ENABLE_OCR=1 + tesseract.js installé). */
+/** OCR local (Node / workers) via tesseract.js — langues fra+eng. */
 export async function extractImageOcr(data: Uint8Array): Promise<string> {
   try {
-    const mod = "tesseract.js";
-    const { createWorker } = (await import(mod)) as typeof import("tesseract.js");
+    const { createWorker } = await import("tesseract.js");
     const worker = await createWorker("fra+eng");
     try {
-      const { data: ocr } = await worker.recognize(Buffer.from(data));
+      const payload = typeof Buffer !== "undefined" ? Buffer.from(data) : data;
+      const { data: ocr } = await worker.recognize(payload);
       return (ocr.text ?? "").trim();
     } finally {
       await worker.terminate();

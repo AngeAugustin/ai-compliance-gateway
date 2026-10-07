@@ -49,7 +49,7 @@ export function InspectPage() {
       <PageHeader
         kicker="Simulation"
         title="Inspection d'un prompt"
-        lead="Testez le pipeline complet : texte, pièces jointes (Word, PDF, Excel, CSV, images avec OCR), score et politique."
+        lead="Testez le pipeline : texte + pièces jointes (Word, Excel, PowerPoint, PDF, CSV, SQL, ZIP, code, images OCR…)."
       />
       <form onSubmit={onSubmit} className="split-2">
         <div className="panel" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -64,7 +64,7 @@ export function InspectPage() {
             id="inspect-files"
             type="file"
             multiple
-            accept=".txt,.csv,.docx,.xlsx,.xls,.pdf,.png,.jpg,.jpeg,.webp"
+            accept=".txt,.csv,.tsv,.md,.json,.xml,.html,.sql,.yml,.yaml,.env,.log,.rtf,.docx,.doc,.xlsx,.xls,.pptx,.ppt,.odt,.ods,.odp,.pdf,.zip,.png,.jpg,.jpeg,.webp,.gif,.bmp,.js,.ts,.py"
             onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
           />
           {files.length > 0 ? (

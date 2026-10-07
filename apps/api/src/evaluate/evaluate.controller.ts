@@ -1,7 +1,7 @@
 import { Body, Controller, Inject, Post, Req } from "@nestjs/common";
 import { IncomingFileSchema } from "@acg/shared";
 import { EvaluateService } from "./evaluate.service.js";
-import { Public } from "../auth/guards.js";
+import { AgentAuth, Public } from "../auth/guards.js";
 import type { AuthUser } from "../auth/jwt.js";
 import { query } from "../db.js";
 import { importPublicKey, verifyPayload } from "@acg/shared";
@@ -32,25 +32,58 @@ export class EvaluateController {
     },
     @Req() req: { user: AuthUser },
   ) {
-    const files = (body.files ?? []).map((f) => {
-      const parsed = IncomingFileSchema.parse(f);
-      return {
-        fileName: parsed.fileName,
-        mimeType: parsed.mimeType,
-        data: Uint8Array.from(Buffer.from(parsed.base64, "base64")),
-      };
-    });
+    const files = decodeIncomingFiles(body.files);
     return this.evaluate.inspect(body.text, body.aiServiceId, body.channel ?? "api", req.user, files);
+  }
+
+  /** Extraction texte + OCR (fra+eng) pour l'agent A1/A2 — images analysables côté API. */
+  @AgentAuth()
+  @Post("/extract-files")
+  async extractFiles(@Body() body: { files?: { fileName: string; mimeType?: string; base64: string }[] }) {
+    const files = decodeIncomingFiles(body.files);
+    const extracted = await this.evaluate.extractAttachmentTexts(files);
+    return {
+      files: extracted.map((f) => ({
+        fileName: f.fileName,
+        mimeType: f.mimeType,
+        text: f.text,
+        extractedTextLength: f.extractedTextLength,
+        extractionMethod: f.extractionMethod,
+        extractionDegraded: f.extractionDegraded,
+        sanitizable: f.sanitizable,
+        error: f.error ?? null,
+        contentSha256: f.contentSha256,
+        sizeBytes: f.sizeBytes,
+        attachmentId: f.attachmentId,
+      })),
+    };
   }
 }
 
-async function resolveActor(req: { user?: AuthUser; headers: Record<string, string | undefined> }): Promise<{ user?: AuthUser; agentId?: string }> {
+function decodeIncomingFiles(files?: { fileName: string; mimeType?: string; base64: string }[]) {
+  return (files ?? []).map((f) => {
+    const parsed = IncomingFileSchema.parse(f);
+    return {
+      fileName: parsed.fileName,
+      mimeType: parsed.mimeType,
+      data: Uint8Array.from(Buffer.from(parsed.base64, "base64")),
+    };
+  });
+}
+
+async function resolveActor(req: {
+  user?: AuthUser;
+  headers: Record<string, string | undefined>;
+}): Promise<{ user?: AuthUser; agentId?: string }> {
   if (req.user) return { user: req.user };
   const agentId = req.headers["x-agent-id"];
   const ts = req.headers["x-agent-timestamp"];
   const sig = req.headers["x-agent-signature"];
   if (agentId && ts && sig) {
-    const row = await query<{ public_key: string; revoked_at: Date | null }>(`SELECT public_key, revoked_at FROM agent WHERE agent_id = $1`, [agentId]);
+    const row = await query<{ public_key: string; revoked_at: Date | null }>(
+      `SELECT public_key, revoked_at FROM agent WHERE agent_id = $1`,
+      [agentId],
+    );
     const agent = row.rows[0];
     if (agent && !agent.revoked_at) {
       const key = await importPublicKey(JSON.parse(agent.public_key));

@@ -2,7 +2,7 @@ import { DetectionEngine } from "@acg/detection-engine";
 import { applyMasking, residualQuasiIdentifiers } from "@acg/detection-engine";
 import { buildPolicyContext, decidePolicy } from "@acg/policy-engine";
 import { computeRiskScore, type ScoreConfig } from "@acg/risk-scoring";
-import { sanitizeTextFile, type ExtractedFile } from "@acg/file-extract";
+import { sanitizeTextFile, type ExtractedFile, type SanitizedFile } from "@acg/file-extract";
 import {
   randomUuid,
   type AttachmentWire,
@@ -32,6 +32,8 @@ export interface LocalDecision {
   /** Fichiers présents mais bloqués (BLOCK ou MASK non réécrivable) */
   blockAttachments: boolean;
   sanitizedFileNames: string[];
+  /** Contenu fichier déjà jetonné (à renvoyer à la place de l'original) */
+  sanitizedFiles: SanitizedFile[];
 }
 
 export interface PipelineInput {
@@ -119,7 +121,7 @@ export async function decideLocally(input: PipelineInput): Promise<LocalDecision
   });
 
   const promptEntities = entitiesInPromptOnly(promptText, detection.entities);
-  let masked = applyMasking(promptText, promptEntities.length ? promptEntities : detection.entities);
+  let masked = applyMasking(promptText, promptEntities);
   const residual = residualQuasiIdentifiers(masked.text, detection.entities);
   let decision = decidePolicy({
     policies: snapshot.policies,
@@ -128,6 +130,28 @@ export async function decideLocally(input: PipelineInput): Promise<LocalDecision
     entities: detection.entities,
     residualEntities: residual,
   });
+
+  // Image / PDF / format illisible : sans texte extractible la détection ne voit rien.
+  // BLOCK systématique (tous rôles / directions) — sinon ALLOW + fuite possible.
+  if (extractionDegraded && extractedFiles.length > 0) {
+    const unreadable = extractedFiles.filter(
+      (f) => f.extractionDegraded || f.extractionMethod === "unsupported" || f.extractionMethod === "failed",
+    );
+    const names = unreadable
+      .map((f) => f.fileName)
+      .filter(Boolean)
+      .slice(0, 3)
+      .join(", ");
+    decision = {
+      ...decision,
+      action: "BLOCK",
+      escalated: true,
+      escalationReason: "Fail-closed : fichier non analysable",
+      userMessage: names
+        ? `Interaction bloquée : impossible d'analyser le fichier « ${names} » de façon fiable (OCR requis pour les images, ou format non supporté).`
+        : "Interaction bloquée : impossible d'analyser le fichier joint de façon fiable.",
+    };
+  }
 
   const failClosed =
     combinedDegraded &&
@@ -147,6 +171,7 @@ export async function decideLocally(input: PipelineInput): Promise<LocalDecision
 
   let blockAttachments = decision.action === "BLOCK" && extractedFiles.length > 0;
   const sanitizedFileNames: string[] = [];
+  const sanitizedFiles: SanitizedFile[] = [];
 
   if (decision.action === "MASK" && extractedFiles.length > 0) {
     const fileGate = shouldBlockAttachmentsForMask(decision.action, extractedFiles, detection.entities);
@@ -163,8 +188,18 @@ export async function decideLocally(input: PipelineInput): Promise<LocalDecision
     } else {
       for (const file of extractedFiles) {
         const fileEntities = detection.entities.filter((e) => file.text.includes(e.value ?? ""));
+        if (fileEntities.length === 0) continue;
         const sanitized = sanitizeTextFile(file, fileEntities);
-        if (sanitized) sanitizedFileNames.push(file.fileName);
+        if (sanitized) {
+          sanitizedFileNames.push(file.fileName);
+          sanitizedFiles.push(sanitized);
+        }
+      }
+      if (sanitizedFiles.length > 0 && !decision.userMessage) {
+        decision = {
+          ...decision,
+          userMessage: `Données sensibles remplacées dans le prompt et ${sanitizedFiles.length} fichier(s) (${sanitizedFileNames.join(", ")}).`,
+        };
       }
     }
   }
@@ -198,6 +233,7 @@ export async function decideLocally(input: PipelineInput): Promise<LocalDecision
     attachments,
     blockAttachments,
     sanitizedFileNames,
+    sanitizedFiles,
   };
 }
 

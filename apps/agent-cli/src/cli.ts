@@ -8,11 +8,11 @@
  */
 import { spawn } from "node:child_process";
 import { closeSync, existsSync, openSync, unlinkSync } from "node:fs";
-import { chmod, mkdir, readFile, unlink, writeFile } from "node:fs/promises";
-import { homedir } from "node:os";
-import { dirname, join } from "node:path";
+import { chmod, mkdir, mkdtemp, readFile, unlink, writeFile } from "node:fs/promises";
+import { homedir, tmpdir } from "node:os";
+import { basename, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { AgentRuntime } from "@acg/agent-runtime";
+import { AgentRuntime, type LocalDecision } from "@acg/agent-runtime";
 import { DetectionEngine } from "@acg/detection-engine";
 import { DEFAULT_AI_SERVICES } from "@acg/shared";
 import {
@@ -208,7 +208,7 @@ if (cmd === "daemon") {
   const files = await loadFiles(filePaths);
   if (prompt || files.length > 0) {
     const decision = await runtime.intercept(prompt || "(fichier joint)", "cli", command, files, {
-      enableOcr: process.env.ACG_ENABLE_OCR === "1",
+      enableOcr: process.env.ACG_ENABLE_OCR !== "0",
     });
     if (decision.action === "BLOCK") {
       console.error(decision.decision.userMessage ?? "ACG : interaction bloquée.");
@@ -217,7 +217,8 @@ if (cmd === "daemon") {
     }
     if (decision.action === "MASK") {
       if (prompt) rewritePrompt(commandArgs, decision.maskedText);
-      if (decision.sanitizedFileNames.length) {
+      if (decision.sanitizedFiles.length) {
+        await materializeSanitizedFiles(decision, filePaths, commandArgs);
         console.error(`[ACG MASK] Fichiers anonymisés : ${decision.sanitizedFileNames.join(", ")}`);
       }
       console.error(`[ACG MASK] ${decision.decision.userMessage ?? "texte anonymisé"}`);
@@ -256,7 +257,9 @@ function findFilePaths(argv: string[]): string[] {
       continue;
     }
     if (a.startsWith("@") && a.length > 1) paths.push(a.slice(1));
-    else if (/\.(csv|txt|pdf|docx|xlsx|xls|png|jpe?g|webp)$/i.test(a) && existsSync(a)) paths.push(a);
+    else if (/\.(csv|tsv|txt|md|json|jsonl|xml|html?|sql|ya?ml|toml|ini|cfg|conf|env|log|rtf|properties|sh|ps1|bat|js|ts|jsx|tsx|py|java|cs|go|rb|php|pdf|docx?|xlsx?|pptx?|od[tsp]|zip|jar|png|jpe?g|webp|gif|bmp|tiff?)$/i.test(a) && existsSync(a)) {
+      paths.push(a);
+    }
   }
   return [...new Set(paths)];
 }
@@ -278,6 +281,31 @@ function rewritePrompt(argv: string[], masked: string): void {
     }
   }
   argv.push(masked);
+}
+
+/** Écrit les fichiers jetonés dans un répertoire temporaire et réécrit les chemins dans argv. */
+async function materializeSanitizedFiles(
+  decision: LocalDecision,
+  originalPaths: string[],
+  argv: string[],
+): Promise<void> {
+  const dir = await mkdtemp(join(tmpdir(), "acg-mask-"));
+  const byName = new Map(decision.sanitizedFiles.map((f) => [f.fileName, f]));
+  for (const orig of originalPaths) {
+    const name = basename(orig);
+    const sanitized = byName.get(name);
+    if (!sanitized) continue;
+    const outPath = join(dir, name);
+    await writeFile(outPath, sanitized.data);
+    for (let i = 0; i < argv.length; i++) {
+      const a = argv[i]!;
+      if (a === orig || a.endsWith(orig) || basename(a) === name) {
+        argv[i] = outPath;
+      } else if (a.startsWith("@") && (a.slice(1) === orig || basename(a.slice(1)) === name)) {
+        argv[i] = `@${outPath}`;
+      }
+    }
+  }
 }
 
 async function writeWrappers(runtime: AgentRuntime): Promise<void> {

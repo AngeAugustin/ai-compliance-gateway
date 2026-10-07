@@ -1,0 +1,9 @@
+{
+  "application": "Portail RH",
+  "menus": [
+    "Accueil",
+    "Congés",
+    "Formation"
+  ],
+  "version": "1.2.0"
+}

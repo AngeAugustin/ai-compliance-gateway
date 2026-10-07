@@ -149,7 +149,58 @@ export class AgentRuntime {
     files: IncomingFile[] = [],
     extractOpts?: ExtractEngineOptions,
   ): Promise<LocalDecision> {
-    const prepared = await prepareFileAnalysis(text, files, extractOpts);
+    let prepared = await prepareFileAnalysis(text, files, extractOpts);
+
+    // Images / extractions dégradées : OCR côté API (tesseract Node) — le bundle A1 MV3 n'embarque pas Tesseract.
+    if (
+      this.config.agentId &&
+      this.privateKey &&
+      files.length > 0 &&
+      prepared.extracted.some((f) => f.extractionDegraded || f.extractionMethod === "unsupported" || f.extractionMethod === "failed")
+    ) {
+      try {
+        const remote = await this.client.extractFiles(
+          files.map((f) => ({
+            fileName: f.fileName,
+            mimeType: f.mimeType,
+            base64: uint8ToBase64(f.data),
+          })),
+        );
+        if (remote.length > 0) {
+          const { combinePromptAndFiles } = await import("@acg/file-extract");
+          const extracted = remote.map((f) => ({
+            attachmentId: f.attachmentId,
+            fileName: f.fileName,
+            mimeType: f.mimeType,
+            sizeBytes: f.sizeBytes,
+            contentSha256: f.contentSha256,
+            text: f.text,
+            extractedTextLength: f.extractedTextLength,
+            extractionMethod: f.extractionMethod as "native" | "ocr" | "failed" | "unsupported",
+            extractionDegraded: f.extractionDegraded,
+            sanitizable: f.sanitizable,
+            error: f.error ?? undefined,
+          }));
+          prepared = {
+            analysisText: combinePromptAndFiles(text, extracted),
+            extracted,
+            attachments: extracted.map((f) => ({
+              attachmentId: f.attachmentId,
+              fileName: f.fileName,
+              mimeType: f.mimeType,
+              sizeBytes: f.sizeBytes,
+              contentSha256: f.contentSha256,
+              extractedTextLength: f.extractedTextLength,
+              extractionMethod: f.extractionMethod,
+              extractionDegraded: f.extractionDegraded,
+            })),
+          };
+        }
+      } catch {
+        /* conserve l'extraction locale dégradée → fail-closed BLOCK */
+      }
+    }
+
     const decision = await decideLocally({
       promptText: text,
       analysisText: prepared.analysisText,
@@ -282,9 +333,22 @@ export class AgentRuntime {
   }
 }
 
+function uint8ToBase64(data: Uint8Array): string {
+  if (typeof Buffer !== "undefined") return Buffer.from(data).toString("base64");
+  let binary = "";
+  for (let i = 0; i < data.length; i++) binary += String.fromCharCode(data[i]!);
+  return btoa(binary);
+}
+
 export { decideLocally, userFacingText } from "./pipeline.js";
 export { prepareFileAnalysis, type IncomingFile } from "./files.js";
 export { DecisionCache } from "./cache.js";
 export { GatewayClient } from "./client.js";
 export { SecureQueue } from "./queue.js";
-export { memoryConfigStore, DEFAULT_AGENT_CONFIG, type AgentPersistedConfig, type ConfigStore } from "./config.js";
+export {
+  type AgentPersistedConfig,
+  type ConfigStore,
+  DEFAULT_AGENT_CONFIG,
+  memoryConfigStore,
+} from "./config.js";
+export type { LocalDecision } from "./pipeline.js";

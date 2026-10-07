@@ -1,5 +1,6 @@
 /**
- * Extraction navigateur — sans OCR (bundle MV3). Images → unsupported/degraded.
+ * Extraction navigateur — OCR local non embarqué (MV3).
+ * Les images dégradées sont renvoyées à l'API (`/v1/interactions/extract-files`) pour OCR Node.
  */
 export * from "./types.js";
 export * from "./detect.js";

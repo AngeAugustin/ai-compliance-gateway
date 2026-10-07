@@ -1,5 +1,6 @@
+const DEFAULT_API_URL = "http://localhost:4000";
+
 const status = document.getElementById("status")!;
-const api = document.getElementById("api") as HTMLInputElement;
 const token = document.getElementById("token") as HTMLInputElement;
 const grant = document.getElementById("grant") as HTMLButtonElement;
 
@@ -20,10 +21,8 @@ async function refresh() {
   const s = (await chrome.runtime.sendMessage({ type: "GET_STATUS" })) as {
     enrolled?: boolean;
     agentId?: string;
-    apiUrl?: string;
     error?: string;
   };
-  api.value = s.apiUrl ?? "http://localhost:4000";
   grant.hidden = !s.enrolled;
   if (s.enrolled) {
     status.className = "ok";
@@ -36,7 +35,11 @@ async function refresh() {
 
 document.getElementById("enroll")!.addEventListener("click", async () => {
   status.textContent = "Enrôlement…";
-  await chrome.runtime.sendMessage({ type: "CONFIGURE", apiUrl: api.value, token: token.value });
+  await chrome.runtime.sendMessage({
+    type: "CONFIGURE",
+    apiUrl: DEFAULT_API_URL,
+    token: token.value,
+  });
   const res = (await chrome.runtime.sendMessage({ type: "ENROLL", hostname: "chrome-extension" })) as { error?: string };
   if (res?.error) {
     status.className = "warn";

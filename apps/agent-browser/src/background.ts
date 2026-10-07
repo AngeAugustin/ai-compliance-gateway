@@ -66,7 +66,6 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       const c = runtime.getConfig();
       sendResponse({
         enrolled: runtime.isEnrolled(),
-        apiUrl: c.apiUrl,
         agentId: c.agentId,
         catalogOrigins: catalogMatches(c.lastSnapshot),
       });
@@ -99,7 +98,9 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         mimeType: f.mimeType,
         data: Uint8Array.from(atob(f.base64), (c) => c.charCodeAt(0)),
       }));
-      const decision = await runtime.intercept(String(message.text ?? ""), "browser", String(message.host ?? ""), files);
+      const decision = await runtime.intercept(String(message.text ?? ""), "browser", String(message.host ?? ""), files, {
+        enableOcr: false,
+      });
       sendResponse({
         action: decision.action,
         outbound: runtime.outboundText(decision),
@@ -108,8 +109,20 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         riskBand: decision.risk.band,
         blockAttachments: decision.blockAttachments,
         attachmentCount: decision.attachments.length,
+        sanitizedFileNames: decision.sanitizedFileNames,
+        sanitizedFiles: decision.sanitizedFiles.map((f) => ({
+          fileName: f.fileName,
+          mimeType: f.mimeType,
+          base64: uint8ToBase64(f.data),
+        })),
       });
     }
   })().catch((err) => sendResponse({ error: String(err) }));
   return true;
 });
+
+function uint8ToBase64(data: Uint8Array): string {
+  let binary = "";
+  for (let i = 0; i < data.length; i++) binary += String.fromCharCode(data[i]!);
+  return btoa(binary);
+}

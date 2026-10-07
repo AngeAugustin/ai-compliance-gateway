@@ -60,6 +60,9 @@ describe("E2E fichiers", () => {
     expect(decision.action).toBe("MASK");
     expect(decision.attachments).toHaveLength(1);
     expect(decision.attachments[0]!.fileName).toBe("cotisations.csv");
+    expect(decision.sanitizedFiles).toHaveLength(1);
+    expect(decision.sanitizedFiles[0]!.text).not.toContain("A12345678");
+    expect(decision.sanitizedFiles[0]!.text).toMatch(/NUM_ASSURE_\d{3}/);
   });
 
   it("F-FILE-02 — CSV propre + prompt ALLOW → ALLOW", async () => {
@@ -99,5 +102,27 @@ describe("E2E fichiers", () => {
     });
     expect(decision.action).toBe("BLOCK");
     expect(decision.blockAttachments).toBe(true);
+  });
+
+  it("F-FILE-04 — image sans OCR → BLOCK fail-closed", async () => {
+    const png = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+    const prepared = await prepareFileAnalysis("Lis cette capture", [
+      { fileName: "idents.png", mimeType: "image/png", data: png },
+    ], { enableOcr: false });
+    expect(prepared.extracted[0]?.extractionDegraded).toBe(true);
+    const engine = new DetectionEngine();
+    await engine.initialize();
+    const decision = await decideLocally({
+      promptText: "Lis cette capture",
+      analysisText: prepared.analysisText,
+      extractedFiles: prepared.extracted,
+      channel: "browser",
+      hostnameOrCommand: "chatgpt.com",
+      engine,
+      cache: cacheCotisations(),
+    });
+    expect(decision.action).toBe("BLOCK");
+    expect(decision.blockAttachments).toBe(true);
+    expect(decision.decision.userMessage ?? "").toMatch(/analyser|OCR|fiable/i);
   });
 });

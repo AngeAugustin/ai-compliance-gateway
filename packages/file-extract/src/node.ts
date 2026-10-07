@@ -1,7 +1,7 @@
-export * from "./index.js";
 import { extractFiles, extractOne } from "./engine.js";
 
-const ocrDefault = process.env.ACG_ENABLE_OCR === "1";
+/** OCR actif sauf si ACG_ENABLE_OCR=0. */
+const ocrDefault = process.env.ACG_ENABLE_OCR !== "0";
 
 export async function extractFilesNode(inputs: Parameters<typeof extractFiles>[0], opts: Parameters<typeof extractFiles>[1] = {}) {
   return extractFiles(inputs, { ...opts, enableOcr: opts.enableOcr ?? ocrDefault });

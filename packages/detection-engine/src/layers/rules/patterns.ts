@@ -54,6 +54,13 @@ export const RULE_PATTERNS: RulePattern[] = [
     regex: /\b(?:password|mot\s+de\s+passe|mdp|passwd)\s*[:=]\s*['"]?([^\s'"]{6,})['"]?/gi,
   },
   {
+    id: "credential-email-slash",
+    entityType: "PASSWORD",
+    confidence: 0.82,
+    regex: /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\s*\/\s*([^\s/,;]{4,})\b/gi,
+    contextKeywords: ["identifiant", "mdp", "password", "mot de passe", "compte", "demo", "connexion", "espace"],
+  },
+  {
     id: "iban",
     entityType: "IBAN",
     confidence: 0.97,

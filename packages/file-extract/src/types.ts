@@ -30,5 +30,6 @@ export interface ExtractOptions {
 export const DEFAULT_EXTRACT_OPTIONS: Required<ExtractOptions> = {
   maxBytes: 25 * 1024 * 1024,
   maxPages: 50,
-  enableOcr: false,
+  /** Activé par défaut côté Node via extractFilesNode ; le browser peut forcer true/false. */
+  enableOcr: true,
 };

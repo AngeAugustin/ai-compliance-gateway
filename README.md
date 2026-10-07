@@ -33,7 +33,7 @@ pnpm agents:build
 
 1. Dashboard → **Utilisateurs** : créer le collaborateur si besoin.
 2. Dashboard → **Agents** → choisir le collaborateur → **Émettre un jeton (Extension + Terminal)**. Le même jeton enrôle A1 et A2 (une consommation par module).
-3. **A1** : Chrome → `chrome://extensions` → Mode développeur → Charger le dossier `apps/agent-browser/dist`. Popup : coller l'URL API (`http://localhost:4000`) et le jeton → **Enrôler**. Accepter les sites du catalogue (nouveaux domaines web = pas de rebuild). L'agent intercepte Entrée, le bouton Envoyer, les **pièces jointes** (CSV, Word, Excel, PDF ; images avec `ACG_ENABLE_OCR=1` côté Node) et `fetch()` des APIs de conversation ; un MASK renvoie automatiquement le prompt jetonnné.
+3. **A1** : Chrome → `chrome://extensions` → Mode développeur → Charger le dossier `apps/agent-browser/dist`. Popup : coller l'URL API (`http://localhost:4000`) et le jeton → **Enrôler**. Accepter les sites du catalogue (nouveaux domaines web = pas de rebuild). L'agent intercepte Entrée, le bouton Envoyer, les **pièces jointes** (CSV/SQL/code, Word, Excel, PowerPoint, PDF, ZIP, images OCR) et `fetch()` des APIs de conversation ; un MASK renvoie automatiquement le prompt jetonnné.
 4. **A2** (même jeton) : coller la commande affichée, du type :
 
 ```powershell

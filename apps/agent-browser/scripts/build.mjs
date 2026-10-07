@@ -8,30 +8,33 @@ const src = resolve(root, "../src");
 const out = resolve(root, "../dist");
 await mkdir(out, { recursive: true });
 
-await build({
+/** Zod 4 embarque des regex littéraux (currencyCode, html5Email…) fragiles dans le SW MV3. */
+const zodStub = resolve(src, "zod-stub.ts");
+
+const shared = {
   absWorkingDir: resolve(root, ".."),
+  bundle: true,
+  platform: "browser",
+  target: "chrome120",
+  outdir: out,
+  sourcemap: true,
+  alias: { zod: zodStub },
+};
+
+await build({
+  ...shared,
   entryPoints: {
     background: resolve(src, "background.ts"),
     content: resolve(src, "content.ts"),
     popup: resolve(src, "popup.ts"),
   },
-  bundle: true,
   format: "esm",
-  platform: "browser",
-  target: "chrome120",
-  outdir: out,
-  sourcemap: true,
 });
 
 await build({
-  absWorkingDir: resolve(root, ".."),
+  ...shared,
   entryPoints: { "page-hook": resolve(src, "page-hook.ts") },
-  bundle: true,
   format: "iife",
-  platform: "browser",
-  target: "chrome120",
-  outdir: out,
-  sourcemap: true,
 });
 
 await copyFile(resolve(src, "manifest.json"), resolve(out, "manifest.json"));

@@ -4,29 +4,148 @@
     <meta charset="utf-8" />
     <title>ACG Agent A1</title>
     <style>
-      :root { color-scheme: dark; }
-      body { margin: 0; width: 320px; font: 13px/1.45 "Segoe UI", sans-serif; background: #0B0F1A; color: #E8ECF4; }
-      header { padding: 14px 16px 8px; letter-spacing: .14em; font-size: 10px; color: #8B93A7; text-transform: uppercase; }
-      main { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 8px; }
-      label { font-size: 11px; color: #8B93A7; }
-      input { width: 100%; box-sizing: border-box; background: #121826; color: #E8ECF4; border: 1px solid #2A3348; border-radius: 4px; padding: 8px; }
-      button { background: #8B7CFF; color: #0B0F1A; border: 0; border-radius: 4px; padding: 8px 12px; font-weight: 600; cursor: pointer; }
-      #grant { background: #2A3348; color: #E8ECF4; }
-      .ok { color: #3DDC97; font-family: ui-monospace, monospace; font-size: 11px; }
-      .warn { color: #E8B84A; font-size: 12px; }
+      :root {
+        color-scheme: light;
+        --paper: #fbfdfc;
+        --ink: #142428;
+        --fog: #5d7370;
+        --line: #d4e0dc;
+        --seal: #1a6b5c;
+        --seal-soft: #dceee8;
+        --on-seal: #f7fffb;
+        --allow: #1f8a5b;
+        --warn: #c4841a;
+        --radius: 8px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        width: 340px;
+        font: 13px/1.45 "Segoe UI", system-ui, sans-serif;
+        background: var(--paper);
+        color: var(--ink);
+      }
+
+      header {
+        padding: 16px 16px 10px;
+        letter-spacing: 0.14em;
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--seal);
+        text-transform: uppercase;
+        border-bottom: 1px solid var(--line);
+      }
+
+      main {
+        padding: 14px 16px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      label {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--fog);
+        margin-top: 2px;
+      }
+
+      input {
+        width: 100%;
+        background: #fff;
+        color: var(--ink);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 9px 10px;
+        font: inherit;
+        outline: none;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      }
+
+      input::placeholder {
+        color: color-mix(in srgb, var(--fog) 70%, white);
+      }
+
+      input:focus {
+        border-color: color-mix(in srgb, var(--seal) 55%, var(--line));
+        box-shadow: 0 0 0 3px var(--seal-soft);
+      }
+
+      button {
+        margin-top: 4px;
+        background: var(--seal);
+        color: var(--on-seal);
+        border: 0;
+        border-radius: var(--radius);
+        padding: 9px 12px;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.15s ease;
+      }
+
+      button:hover {
+        background: #155a4e;
+      }
+
+      #grant {
+        margin-top: 0;
+        background: var(--seal-soft);
+        color: var(--seal);
+      }
+
+      #grant:hover {
+        background: color-mix(in srgb, var(--seal) 18%, var(--seal-soft));
+      }
+
+      #status {
+        margin: 0 0 4px;
+        padding: 10px 12px;
+        border-radius: var(--radius);
+        border: 1px solid var(--line);
+        background: color-mix(in srgb, var(--line) 35%, white);
+        font-size: 12px;
+        line-height: 1.4;
+      }
+
+      #status.ok {
+        color: var(--allow);
+        border-color: color-mix(in srgb, var(--allow) 28%, var(--line));
+        background: color-mix(in srgb, var(--allow) 8%, white);
+        font-family: ui-monospace, "Cascadia Code", "Consolas", monospace;
+        font-size: 11px;
+      }
+
+      #status.warn {
+        color: #8a5a0a;
+        border-color: color-mix(in srgb, var(--warn) 35%, var(--line));
+        background: color-mix(in srgb, var(--warn) 10%, white);
+      }
+
+      .hint {
+        margin: 6px 0 0;
+        color: var(--fog);
+        font-size: 11px;
+        line-height: 1.45;
+      }
     </style>
   </head>
   <body>
     <header>Agent endpoint A1</header>
     <main>
       <p id="status" class="warn">Chargement…</p>
-      <label>URL de l'API</label>
-      <input id="api" placeholder="http://localhost:4000" />
-      <label>Jeton d'enrôlement</label>
-      <input id="token" placeholder="coller le jeton RSSI" />
-      <button id="enroll">Enrôler cet appareil</button>
-      <button id="grant" hidden>Autoriser les sites du catalogue</button>
-      <p style="color:#8B93A7;font-size:11px;margin:4px 0 0">Après enrôlement : sync, heartbeat signé, interception Enter / Envoyer / fetch. Un nouveau domaine ajouté au catalogue est couvert après « Autoriser les sites » — sans reconstruire l'extension.</p>
+      <label for="token">Jeton d'enrôlement</label>
+      <input id="token" placeholder="coller le jeton RSSI" autocomplete="off" />
+      <button id="enroll" type="button">Enrôler cet appareil</button>
+      <button id="grant" type="button" hidden>Autoriser les sites du catalogue</button>
+      <p class="hint">
+        Après enrôlement : sync, heartbeat signé, interception Enter / Envoyer / fetch. Un nouveau domaine
+        ajouté au catalogue est couvert après « Autoriser les sites » — sans reconstruire l'extension.
+      </p>
     </main>
     <script src="popup.js" type="module"></script>
   </body>

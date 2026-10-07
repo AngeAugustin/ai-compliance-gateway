@@ -1,5 +1,4 @@
 import {
-  EnrollAgentResponseSchema,
   type AgentSyncResponse,
   type EnrollAgentRequest,
   type EnrollAgentResponse,
@@ -33,8 +32,9 @@ export class GatewayClient {
   }
 
   async enroll(body: EnrollAgentRequest): Promise<EnrollAgentResponse> {
-    const res = await this.request("POST", "/v1/agents/enroll", body, false);
-    return EnrollAgentResponseSchema.parse(res);
+    const res = (await this.request("POST", "/v1/agents/enroll", body, false)) as EnrollAgentResponse;
+    if (!res?.agentId) throw new AgentApiError("réponse d'enrôlement invalide", 502);
+    return res;
   }
 
   async sync(): Promise<AgentSyncResponse> {
@@ -50,6 +50,41 @@ export class GatewayClient {
 
   async evaluate(body: EvaluateInteractionRequest): Promise<EvaluateInteractionResponse> {
     return (await this.request("POST", "/v1/interactions/evaluate", body, true)) as EvaluateInteractionResponse;
+  }
+
+  async extractFiles(
+    files: { fileName: string; mimeType?: string; base64: string }[],
+  ): Promise<
+    {
+      fileName: string;
+      mimeType: string;
+      text: string;
+      extractedTextLength: number;
+      extractionMethod: string;
+      extractionDegraded: boolean;
+      sanitizable: boolean;
+      error: string | null;
+      contentSha256: string;
+      sizeBytes: number;
+      attachmentId: string;
+    }[]
+  > {
+    const res = (await this.request("POST", "/v1/interactions/extract-files", { files }, true)) as {
+      files: {
+        fileName: string;
+        mimeType: string;
+        text: string;
+        extractedTextLength: number;
+        extractionMethod: string;
+        extractionDegraded: boolean;
+        sanitizable: boolean;
+        error: string | null;
+        contentSha256: string;
+        sizeBytes: number;
+        attachmentId: string;
+      }[];
+    };
+    return res.files ?? [];
   }
 
   private async request(method: string, path: string, body: unknown, signed: boolean): Promise<unknown> {

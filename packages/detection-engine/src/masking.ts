@@ -7,12 +7,38 @@ export interface MaskingPlan {
 }
 
 /**
+ * Recalcule les spans d'entités dans un texte cible (ex. fichier seul ou prompt seul)
+ * lorsque la détection a été faite sur un texte combiné.
+ */
+export function remapEntitiesToText(text: string, entities: SensitiveEntity[]): SensitiveEntity[] {
+  const out: SensitiveEntity[] = [];
+  const seen = new Set<string>();
+  for (const e of entities) {
+    const value = e.value ?? "";
+    if (!value || !text.includes(value)) continue;
+    let from = 0;
+    while (true) {
+      const idx = text.indexOf(value, from);
+      if (idx < 0) break;
+      const key = `${e.entityType}:${idx}:${value.length}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        out.push({ ...e, span: [idx, idx + value.length] });
+      }
+      from = idx + value.length;
+    }
+  }
+  return out;
+}
+
+/**
  * Remplace les entités par des jetons stables au sein d'une interaction
  * (PERSONNE_001, MONTANT_001…). Opère de droite à gauche pour préserver les offsets.
  */
 export function applyMasking(text: string, entities: SensitiveEntity[]): MaskingPlan {
+  const localized = remapEntitiesToText(text, entities);
   const counters = new Map<string, number>();
-  const sorted = [...entities].sort((a, b) => b.span[0] - a.span[0]);
+  const sorted = [...localized].sort((a, b) => b.span[0] - a.span[0]);
   const replacements: MaskingPlan["replacements"] = [];
   let out = text;
 

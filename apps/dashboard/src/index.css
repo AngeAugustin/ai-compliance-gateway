@@ -1754,6 +1754,20 @@ textarea.input:hover {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 14px;
+  align-items: stretch;
+}
+
+.metrics-grid > [class*="span-"] {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.metrics-grid > [class*="span-"] > .panel {
+  flex: 1 1 auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .span-4 { grid-column: span 4; }

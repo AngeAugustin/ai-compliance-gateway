@@ -26,7 +26,8 @@
     "dataset:generate": "tsx data/synthetic/generate.ts",
     "eval:detection": "tsx tools/evaluate-detection.ts",
     "test:e2e:texte": "vitest run packages/agent-runtime/src/e2e-texte.test.ts",
-    "test:e2e:fichiers": "vitest run packages/agent-runtime/src/e2e-fichiers.test.ts packages/file-extract/src/file-extract.test.ts"
+    "test:e2e:fichiers": "vitest run packages/agent-runtime/src/e2e-fichiers.test.ts packages/file-extract/src/file-extract.test.ts",
+    "fixtures:fichiers": "tsx data/fixtures-fichiers/generate.ts"
   },
   "dependencies": {
     "pg": "^8.16.3"
