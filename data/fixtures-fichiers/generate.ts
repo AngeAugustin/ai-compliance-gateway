@@ -2,7 +2,7 @@
  * Génère le jeu de fixtures pour tests manuels (Inspect / A1 / A2).
  * Usage : pnpm fixtures:fichiers
  */
-import { mkdir, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as XLSX from "xlsx";
@@ -326,6 +326,26 @@ DATABASE_URL=postgres://cnss:P@ssw0rd@10.0.0.5:5432/cotisations
       "keys/openai.txt": enc.encode("api_key: sk-abcdefghijklmnopqrstuvwxyz012345\n"),
     }),
   );
+
+  // Alias numérotés (démoc / docs) — toujours synchronisés avec les préfixes format-*
+  const numberedAliases: [string, string][] = [
+    ["txt-ALLOW-procedure-archivage.txt", "01-ALLOW-procedure-archivage.txt"],
+    ["md-ALLOW-checklist-qualite.md", "02-ALLOW-checklist-qualite.md"],
+    ["csv-MASK-assures.csv", "03-MASK-assures.csv"],
+    ["csv-BLOCK-secrets.csv", "04-BLOCK-secrets.csv"],
+    ["sql-MASK-backup.sql", "05-MASK-backup.sql"],
+    ["json-MASK-dossier.json", "06-MASK-dossier.json"],
+    ["env-BLOCK-config.env", "07-BLOCK-config.env"],
+    ["txt-BLOCK-medical.txt", "08-BLOCK-medical.txt"],
+    ["xlsx-MASK-cotisations.xlsx", "09-MASK-cotisations.xlsx"],
+    ["docx-MASK-rappel-assure.docx", "10-MASK-rappel-assure.docx"],
+    ["pptx-BLOCK-brief-finance.pptx", "11-BLOCK-brief-finance.pptx"],
+    ["zip-BLOCK-export-technique.zip", "12-BLOCK-export-technique.zip"],
+    ["pdf-MASK-rappel.pdf", "13-MASK-rappel.pdf"],
+  ];
+  for (const [src, dest] of numberedAliases) {
+    await copyFile(join(root, src), join(root, dest));
+  }
 
   console.log(`Fixtures écrites dans ${root}`);
 }

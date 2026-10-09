@@ -2,7 +2,7 @@ import {
   anyExtractionDegraded,
   combinePromptAndFiles,
   extractFiles,
-  sanitizeTextFile,
+  sanitizeExtractedFile,
   type ExtractedFile,
   type ExtractEngineOptions,
   type FileInput,
@@ -44,17 +44,17 @@ export function fileExtractionDegraded(extracted: ExtractedFile[]): boolean {
   return anyExtractionDegraded(extracted);
 }
 
-/** Si MASK mais fichier non réécrivable (PDF, image…) → bloquer la pièce jointe. */
-export function shouldBlockAttachmentsForMask(
+/** Si MASK mais fichier non réécrivable → bloquer la pièce jointe. */
+export async function shouldBlockAttachmentsForMask(
   action: PolicyAction,
   extracted: ExtractedFile[],
   entities: SensitiveEntity[],
-): { block: boolean; reason: string | null } {
+): Promise<{ block: boolean; reason: string | null }> {
   if (action !== "MASK" || extracted.length === 0) return { block: false, reason: null };
   for (const file of extracted) {
     const fileEntities = entities.filter((e) => file.text.includes(e.value ?? ""));
     if (fileEntities.length === 0) continue;
-    const sanitized = sanitizeTextFile(file, fileEntities);
+    const sanitized = await sanitizeExtractedFile(file, fileEntities);
     if (!sanitized) {
       return {
         block: true,

@@ -3,6 +3,7 @@ import {
   extensionOf,
   guessMimeType,
   isImageMime,
+  isOfficeSanitizable,
   isTextLikeMime,
   isZipLike,
 } from "./detect.js";
@@ -136,9 +137,13 @@ async function extractOneInternal(
       extractedTextLength: text.length,
       extractionMethod: method,
       extractionDegraded: base.extractionDegraded || text.length === 0,
+      sanitizable:
+        isTextLikeMime(mime, input.fileName) ||
+        (Boolean(text.trim()) && isOfficeSanitizable(ext, mime)),
+      sourceData: input.data,
     };
   } catch (err) {
-    return fail(base, err instanceof Error ? err.message : String(err));
+    return fail(base, err instanceof Error ? err.message : String(err), input.data);
   }
 }
 
@@ -175,6 +180,7 @@ function fail(
     "attachmentId" | "fileName" | "mimeType" | "sizeBytes" | "contentSha256" | "extractionMethod" | "extractionDegraded" | "sanitizable"
   >,
   error: string,
+  sourceData?: Uint8Array,
 ): ExtractedFile {
   return {
     ...base,
@@ -183,6 +189,7 @@ function fail(
     extractionMethod: "failed",
     extractionDegraded: true,
     sanitizable: false,
+    sourceData,
     error,
   };
 }

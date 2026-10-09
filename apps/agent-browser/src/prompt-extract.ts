@@ -1,5 +1,20 @@
-const AI_PATH =
-  /conversation|complet|chat|generate|message|prompt|query|ask|append_message|backend-api|generatecontent|streamgenerate|anthropic|v1\//i;
+/**
+ * Détection des appels modèle / upload.
+ * On reste large sur les envois (conversation, completion…) mais on exclut le trafic annexe
+ * (me, liste conversations, settings) qui spamait le badge.
+ */
+const MODEL_CALL_INCLUDE =
+  /conversation|complet|generate|append_message|generatecontent|streamgenerate|chat\/completions|\/v1\/messages|anthropic|\/completion(?:\/|$|\?)/i;
+
+const MODEL_CALL_EXCLUDE =
+  /\/backend-api\/(?:me|files(?:\/|$)|conversations(?:\?|$)|settings|accounts|lat\/|sentinel|shar)/i;
+
+const FILE_UPLOAD_PATH =
+  /\/backend-api\/files(?:\/|$|\?)|\/api\/(?:.+\/)?(?:upload|files|attachments)(?:\/|$|\?)|\/v1\/files(?:\/|$|\?)|\/files\/upload/i;
+
+function isLocalApi(u: URL): boolean {
+  return /localhost|127\.0\.0\.1/.test(u.hostname) && u.port === "4000";
+}
 
 export function looksLikeModelCall(url: string, method: string): boolean {
   const verb = method.toUpperCase();
@@ -7,8 +22,24 @@ export function looksLikeModelCall(url: string, method: string): boolean {
   try {
     const u = new URL(url, "https://localhost");
     if (u.protocol !== "https:" && u.hostname !== "localhost" && u.hostname !== "127.0.0.1") return false;
-    if (/localhost|127\.0\.0\.1/.test(u.hostname) && u.port === "4000") return false;
-    return AI_PATH.test(`${u.pathname}${u.search}`);
+    if (isLocalApi(u)) return false;
+    const path = `${u.pathname}${u.search}`;
+    if (MODEL_CALL_EXCLUDE.test(path)) return false;
+    return MODEL_CALL_INCLUDE.test(path);
+  } catch {
+    return false;
+  }
+}
+
+/** POST/PUT d'upload de fichier — à gater quand des octets sont présents. */
+export function looksLikeFileUpload(url: string, method: string): boolean {
+  const verb = method.toUpperCase();
+  if (verb !== "POST" && verb !== "PUT") return false;
+  try {
+    const u = new URL(url, "https://localhost");
+    if (u.protocol !== "https:" && u.hostname !== "localhost" && u.hostname !== "127.0.0.1") return false;
+    if (isLocalApi(u)) return false;
+    return FILE_UPLOAD_PATH.test(`${u.pathname}${u.search}`);
   } catch {
     return false;
   }

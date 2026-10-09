@@ -16,8 +16,10 @@ export interface ExtractedFile {
   extractedTextLength: number;
   extractionMethod: ExtractionMethod;
   extractionDegraded: boolean;
-  /** Formats texte (csv, txt) pouvant être réécrits localement */
+  /** Formats texte (csv, txt) ou bureautique réécrivable (docx, pdf…) */
   sanitizable: boolean;
+  /** Octets originaux — requis pour anonymiser DOCX/PDF */
+  sourceData?: Uint8Array;
   error?: string;
 }
 

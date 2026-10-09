@@ -15,12 +15,15 @@
       "import": "./dist/node.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@acg/shared": "workspace:*"
+    "@acg/shared": "workspace:*",
+    "@huggingface/transformers": "^4.3.1"
   }
 }

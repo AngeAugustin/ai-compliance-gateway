@@ -2,7 +2,7 @@ import { DetectionEngine } from "@acg/detection-engine";
 import { applyMasking, residualQuasiIdentifiers } from "@acg/detection-engine";
 import { buildPolicyContext, decidePolicy } from "@acg/policy-engine";
 import { computeRiskScore, type ScoreConfig } from "@acg/risk-scoring";
-import { sanitizeTextFile, type ExtractedFile, type SanitizedFile } from "@acg/file-extract";
+import { sanitizeExtractedFile, type ExtractedFile, type SanitizedFile } from "@acg/file-extract";
 import {
   randomUuid,
   type AttachmentWire,
@@ -131,26 +131,30 @@ export async function decideLocally(input: PipelineInput): Promise<LocalDecision
     residualEntities: residual,
   });
 
-  // Image / PDF / format illisible : sans texte extractible la détection ne voit rien.
-  // BLOCK systématique (tous rôles / directions) — sinon ALLOW + fuite possible.
-  if (extractionDegraded && extractedFiles.length > 0) {
+  // Format illisible (texte vide) : fail-closed. Un fichier « dégradé » mais avec texte
+  // extractible (ex. .doc legacy) reste analysable — ne pas bloquer systématiquement.
+  if (extractedFiles.length > 0) {
     const unreadable = extractedFiles.filter(
-      (f) => f.extractionDegraded || f.extractionMethod === "unsupported" || f.extractionMethod === "failed",
+      (f) =>
+        !f.text.trim() &&
+        (f.extractionDegraded || f.extractionMethod === "unsupported" || f.extractionMethod === "failed"),
     );
-    const names = unreadable
-      .map((f) => f.fileName)
-      .filter(Boolean)
-      .slice(0, 3)
-      .join(", ");
-    decision = {
-      ...decision,
-      action: "BLOCK",
-      escalated: true,
-      escalationReason: "Fail-closed : fichier non analysable",
-      userMessage: names
-        ? `Interaction bloquée : impossible d'analyser le fichier « ${names} » de façon fiable (OCR requis pour les images, ou format non supporté).`
-        : "Interaction bloquée : impossible d'analyser le fichier joint de façon fiable.",
-    };
+    if (unreadable.length > 0) {
+      const names = unreadable
+        .map((f) => f.fileName)
+        .filter(Boolean)
+        .slice(0, 3)
+        .join(", ");
+      decision = {
+        ...decision,
+        action: "BLOCK",
+        escalated: true,
+        escalationReason: "Fail-closed : fichier non analysable",
+        userMessage: names
+          ? `Interaction bloquée : impossible d'analyser le fichier « ${names} » de façon fiable (OCR requis pour les images, ou format non supporté).`
+          : "Interaction bloquée : impossible d'analyser le fichier joint de façon fiable.",
+      };
+    }
   }
 
   const failClosed =
@@ -174,7 +178,7 @@ export async function decideLocally(input: PipelineInput): Promise<LocalDecision
   const sanitizedFiles: SanitizedFile[] = [];
 
   if (decision.action === "MASK" && extractedFiles.length > 0) {
-    const fileGate = shouldBlockAttachmentsForMask(decision.action, extractedFiles, detection.entities);
+    const fileGate = await shouldBlockAttachmentsForMask(decision.action, extractedFiles, detection.entities);
     if (fileGate.block) {
       decision = {
         ...decision,
@@ -189,7 +193,7 @@ export async function decideLocally(input: PipelineInput): Promise<LocalDecision
       for (const file of extractedFiles) {
         const fileEntities = detection.entities.filter((e) => file.text.includes(e.value ?? ""));
         if (fileEntities.length === 0) continue;
-        const sanitized = sanitizeTextFile(file, fileEntities);
+        const sanitized = await sanitizeExtractedFile(file, fileEntities);
         if (sanitized) {
           sanitizedFileNames.push(file.fileName);
           sanitizedFiles.push(sanitized);

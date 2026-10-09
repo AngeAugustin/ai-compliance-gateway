@@ -6,6 +6,8 @@ allowBuilds:
   esbuild: true
   "@nestjs/core": true
   tesseract.js: true
+  onnxruntime-node: true
+  protobufjs: true
 
 autoInstallPeers: false
 strictPeerDependencies: false

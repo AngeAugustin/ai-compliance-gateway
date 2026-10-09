@@ -1,9 +1,16 @@
 import {
-  addPendingFile,
   applySanitizedFiles,
+  awaitFileCapture,
+  clearComposerFiles,
   clearPendingFiles,
   hasVisibleAttachments,
+  injectComposerFiles,
+  isFileCaptureSuppressed,
   pendingFiles,
+  queueFileCapture,
+  replaceComposerWithSanitized,
+  setPendingFiles,
+  stripAttachmentChipsOnly,
   stripAttachmentUi,
   type PendingFileWire,
 } from "./files.js";
@@ -22,8 +29,17 @@ type GateResponse = {
 const overlayId = "acg-agent-banner";
 const SEND_LABEL = /send|envoyer|submit|envoyer le prompt|send prompt|envoyer un message/i;
 const SEND_TESTID = /send|composer-submit|submit/i;
+let lastBannerKey = "";
+let lastBannerAt = 0;
+let attachBusy = false;
 
 function showBanner(text: string, action: string) {
+  const key = `${action}:${text}`;
+  const now = Date.now();
+  if (key === lastBannerKey && now - lastBannerAt < 12_000) return;
+  lastBannerKey = key;
+  lastBannerAt = now;
+
   document.getElementById(overlayId)?.remove();
   const el = document.createElement("div");
   el.id = overlayId;
@@ -56,7 +72,9 @@ function showBanner(text: string, action: string) {
 
   el.innerHTML = `<strong style="color:${tone.accent};letter-spacing:.1em;font-size:11px;font-weight:700">${action}</strong><span style="color:#5d7370"> · </span><span>${text}</span>`;
   document.body.appendChild(el);
-  window.setTimeout(() => el.remove(), 8000);
+  window.setTimeout(() => {
+    if (document.getElementById(overlayId) === el) el.remove();
+  }, 8000);
 }
 
 function findComposer(): HTMLTextAreaElement | HTMLElement | null {
@@ -124,8 +142,6 @@ function writeText(el: HTMLTextAreaElement | HTMLElement, value: string) {
 let gating = false;
 let passThrough = false;
 let lastGate: { text: string; res: GateResponse; at: number } | null = null;
-/** Après un BLOCK lié à un fichier : interdire l'envoi tant que la pastille UI / buffer n'est pas vide. */
-let holdUntilDetach = false;
 
 function allowNativeOnce() {
   passThrough = true;
@@ -134,19 +150,9 @@ function allowNativeOnce() {
   }, 1200);
 }
 
-function enforceDetachAfterFileBlock(res: GateResponse, hadFiles: boolean) {
-  const fileBlock =
-    res.action === "BLOCK" && (hadFiles || res.blockAttachments || (res.attachmentCount ?? 0) > 0);
-  if (!fileBlock) return;
-  holdUntilDetach = true;
-  stripAttachmentUi();
-}
-
-function stillHoldingBlockedAttachment(): boolean {
-  if (!holdUntilDetach) return false;
-  if (pendingFiles().length > 0 || hasVisibleAttachments()) return true;
-  holdUntilDetach = false;
-  return false;
+/** Chaque interaction repart de zéro — évite qu'un BLOCK précédent contamine un MASK suivant. */
+function resetGateCache() {
+  lastGate = null;
 }
 
 function extensionAlive(): boolean {
@@ -176,14 +182,21 @@ async function sendToBackground<T>(message: Record<string, unknown>): Promise<T>
   }
 }
 
+function gateCacheKey(text: string, files: PendingFileWire[]): string {
+  const filePart = files.map((f) => `${f.fileName}:${f.base64.slice(0, 48)}:${f.base64.length}`).join("|");
+  return `${text}::${filePart}`;
+}
+
 async function gateText(text: string, files: PendingFileWire[] = pendingFiles()): Promise<GateResponse> {
   const trimmed = text.trim();
   const hasFiles = files.length > 0;
   if (!trimmed && !hasFiles) return { action: "ALLOW", outbound: text };
-  const cacheKey = `${trimmed}::${files.map((f) => f.fileName).join(",")}`;
+
+  const cacheKey = gateCacheKey(trimmed, files);
   if (lastGate && lastGate.text === cacheKey && Date.now() - lastGate.at < 2500) {
     return lastGate.res;
   }
+
   try {
     const res = await sendToBackground<GateResponse>({
       type: "INTERCEPT",
@@ -208,7 +221,94 @@ async function gateText(text: string, files: PendingFileWire[] = pendingFiles())
   }
 }
 
-function applyVisual(res: GateResponse, composer: HTMLTextAreaElement | HTMLElement | null) {
+function hadAttachments(res: GateResponse, files: PendingFileWire[]): boolean {
+  return files.length > 0 || Boolean(res.blockAttachments) || (res.attachmentCount ?? 0) > 0;
+}
+
+/** BLOCK avec pièce jointe : vider le champ fichier uniquement. */
+function applyFileBlock(res: GateResponse) {
+  clearComposerFiles();
+  stripAttachmentUi();
+  showBanner(res.userMessage ?? "Fichier bloqué par la politique de sécurité.", "BLOCK");
+}
+
+function applyMaskFilesToComposer(res: GateResponse) {
+  const files = res.sanitizedFiles ?? [];
+  if (files.length === 0) return false;
+  const ok = injectComposerFiles(files);
+  const names = res.sanitizedFileNames?.join(", ") ?? files.map((f) => f.fileName).join(", ");
+  showBanner(
+    res.userMessage ?? `Données sensibles anonymisées dans le fichier (${names}) avant envoi.`,
+    "MASK",
+  );
+  return ok;
+}
+
+/**
+ * Analyse le fichier dès l'attache, avant upload cloud.
+ * BLOCK → champ vidé · MASK → version jetonée · ALLOW → original réinjecté
+ */
+async function gateFilesOnAttach(rawFiles: File[]): Promise<void> {
+  if (attachBusy || rawFiles.length === 0) return;
+  attachBusy = true;
+  resetGateCache();
+  lastBannerKey = "";
+  try {
+    stripAttachmentChipsOnly();
+    await queueFileCapture(rawFiles);
+    const files = pendingFiles();
+    if (files.length === 0) {
+      clearComposerFiles();
+      showBanner("Impossible de lire le fichier joint.", "BLOCK");
+      return;
+    }
+
+    const res = await gateText("", files);
+
+    if (res.error === "CONTEXT_INVALIDATED") {
+      showBanner(res.userMessage ?? "Rechargez cet onglet (F5).", "WARN");
+      clearComposerFiles();
+      return;
+    }
+    if (res.error) {
+      showBanner("Agent A1 : " + res.error, "WARN");
+      clearComposerFiles();
+      return;
+    }
+
+    if (res.action === "BLOCK") {
+      applyFileBlock(res);
+      return;
+    }
+
+    if (res.action === "MASK") {
+      if (res.sanitizedFiles?.length) {
+        applyMaskFilesToComposer(res);
+        return;
+      }
+      applyFileBlock({
+        ...res,
+        action: "BLOCK",
+        userMessage:
+          res.userMessage ??
+          "Le fichier contient des données sensibles et ne peut pas être anonymisé. Envoi bloqué.",
+      });
+      return;
+    }
+
+    injectComposerFiles(files);
+    if (res.action === "WARN") {
+      showBanner(res.userMessage ?? "Fichier journalisé.", "WARN");
+    }
+  } catch (err) {
+    clearComposerFiles();
+    showBanner(err instanceof Error ? err.message : "Erreur d'analyse du fichier.", "BLOCK");
+  } finally {
+    attachBusy = false;
+  }
+}
+
+function applyVisual(res: GateResponse, composer: HTMLTextAreaElement | HTMLElement | null, files: PendingFileWire[]) {
   if (res.error === "CONTEXT_INVALIDATED") {
     showBanner(res.userMessage ?? "Rechargez cet onglet (F5) pour réactiver l'agent A1.", "WARN");
     return;
@@ -219,11 +319,11 @@ function applyVisual(res: GateResponse, composer: HTMLTextAreaElement | HTMLElem
   }
   if (res.action === "BLOCK") {
     if (composer) writeText(composer, "");
-    // Toujours tenter de retirer les PJ côté UI — vider input.value ne suffit pas sur ChatGPT.
-    if (res.blockAttachments || (res.attachmentCount ?? 0) > 0) {
-      stripAttachmentUi();
+    if (hadAttachments(res, files)) {
+      applyFileBlock(res);
+    } else {
+      showBanner(res.userMessage ?? "Interaction bloquée par la politique de sécurité.", "BLOCK");
     }
-    showBanner(res.userMessage ?? "Interaction bloquée par la politique de sécurité.", "BLOCK");
     return;
   }
   if (res.action === "MASK") {
@@ -249,51 +349,62 @@ async function gateEvent(event: Event) {
   if (passThrough) return;
   const composer = findComposer();
   if (!composer) return;
-  const text = readText(composer).trim();
-  const files = pendingFiles();
-  const visibleOnly = files.length === 0 && hasVisibleAttachments();
-  if ((!text && files.length === 0 && !visibleOnly) || gating) return;
-
-  if (stillHoldingBlockedAttachment()) {
-    event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
-    stripAttachmentUi();
-    showBanner(
-      "Pièce jointe encore présente après un blocage. Retirez-la manuellement avant de renvoyer.",
-      "BLOCK",
-    );
-    return;
-  }
-
-  // Image seule affichée dans ChatGPT mais absente du buffer agent → on ne peut pas OCR → BLOCK
-  if (visibleOnly) {
-    event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
-    showBanner(
-      "Pièce jointe non capturée. Retirez-la puis rattachez-la via le trombone (ou collez l'image), puis renvoyez.",
-      "BLOCK",
-    );
-    return;
-  }
+  if (gating || attachBusy) return;
 
   gating = true;
   event.preventDefault();
   event.stopPropagation();
   event.stopImmediatePropagation();
   try {
+    resetGateCache();
+    await awaitFileCapture();
+    const text = readText(composer).trim();
+    const files = pendingFiles();
+    const visibleOnly = files.length === 0 && hasVisibleAttachments();
+
+    if (!text && files.length === 0 && !visibleOnly) {
+      allowNativeOnce();
+      findSendButton()?.click();
+      return;
+    }
+
+    if (visibleOnly) {
+      clearComposerFiles();
+      showBanner(
+        "Pièce jointe non capturée. Retirez-la puis rattachez-la via le trombone, puis renvoyez.",
+        "BLOCK",
+      );
+      return;
+    }
+
     const res = await gateText(text, files);
-    enforceDetachAfterFileBlock(res, files.length > 0);
-    applyVisual(res, composer);
-    if (res.error) return;
-    if (res.action === "BLOCK") return;
-    // MASK avec fichiers sanitizés : garder le buffer (versions jetonées) pour le fetch FormData
-    if (!(res.action === "MASK" && res.sanitizedFiles?.length)) {
-      clearPendingFiles();
+    if (res.error) {
+      applyVisual(res, composer, files);
+      return;
+    }
+    if (res.action === "BLOCK") {
+      applyVisual(res, composer, files);
+      return;
+    }
+    if (res.action === "MASK" && res.sanitizedFiles?.length) {
+      if (composer && res.outbound) writeText(composer, res.outbound);
+      replaceComposerWithSanitized(res.sanitizedFiles);
+      showBanner(
+        res.userMessage ??
+          `Données sensibles anonymisées (${res.sanitizedFileNames?.join(", ") ?? "fichier"}).`,
+        "MASK",
+      );
+    } else {
+      applyVisual(res, composer, files);
+      if (res.action !== "MASK") clearPendingFiles();
     }
     allowNativeOnce();
     findSendButton()?.click();
+  } catch (err) {
+    showBanner(
+      err instanceof Error ? err.message : "Erreur d'analyse A1 — rechargez l'onglet (F5).",
+      "WARN",
+    );
   } finally {
     gating = false;
   }
@@ -329,14 +440,15 @@ document.addEventListener(
 document.addEventListener(
   "change",
   (ev) => {
+    if (isFileCaptureSuppressed() || attachBusy) return;
     const t = ev.target;
     if (!(t instanceof HTMLInputElement) || t.type !== "file" || !t.files?.length) return;
-    void (async () => {
-      clearPendingFiles();
-      for (const file of Array.from(t.files)) {
-        await addPendingFile(file);
-      }
-    })();
+
+    const snapshot = Array.from(t.files);
+    ev.preventDefault();
+    ev.stopImmediatePropagation();
+    t.value = "";
+    void gateFilesOnAttach(snapshot);
   },
   true,
 );
@@ -344,14 +456,12 @@ document.addEventListener(
 document.addEventListener(
   "drop",
   (ev) => {
+    if (isFileCaptureSuppressed() || attachBusy) return;
     const list = ev.dataTransfer?.files;
     if (!list?.length) return;
-    void (async () => {
-      clearPendingFiles();
-      for (const file of Array.from(list)) {
-        await addPendingFile(file);
-      }
-    })();
+    ev.preventDefault();
+    ev.stopImmediatePropagation();
+    void gateFilesOnAttach(Array.from(list));
   },
   true,
 );
@@ -359,6 +469,7 @@ document.addEventListener(
 document.addEventListener(
   "paste",
   (ev) => {
+    if (isFileCaptureSuppressed() || attachBusy) return;
     const items = ev.clipboardData?.items;
     if (!items?.length) return;
     const files: File[] = [];
@@ -369,54 +480,68 @@ document.addEventListener(
       }
     }
     if (files.length === 0) return;
-    void (async () => {
-      clearPendingFiles();
-      for (const file of files) {
-        await addPendingFile(file);
-      }
-    })();
+    ev.preventDefault();
+    ev.stopImmediatePropagation();
+    void gateFilesOnAttach(files);
   },
   true,
 );
 
 window.addEventListener("message", (ev: MessageEvent) => {
   if (ev.source !== window) return;
-  const data = ev.data as { source?: string; type?: string; id?: string; text?: string };
+  const data = ev.data as {
+    source?: string;
+    type?: string;
+    id?: string;
+    text?: string;
+    files?: PendingFileWire[];
+  };
   if (data?.source !== "acg-hook" || data.type !== "GATE" || !data.id) return;
+
+  const reply = (payload: GateResponse & Record<string, unknown>) => {
+    window.postMessage({ source: "acg-content", type: "GATE_RESULT", id: data.id, ...payload }, "*");
+  };
+
   void (async () => {
-    if (stillHoldingBlockedAttachment()) {
-      stripAttachmentUi();
-      const blocked: GateResponse = {
-        action: "BLOCK",
-        userMessage: "Pièce jointe encore présente après un blocage. Retirez-la avant de renvoyer.",
-      };
-      applyVisual(blocked, findComposer());
-      window.postMessage({ source: "acg-content", type: "GATE_RESULT", id: data.id, ...blocked }, "*");
-      return;
+    try {
+      while (attachBusy) {
+        await new Promise((r) => setTimeout(r, 40));
+      }
+      await awaitFileCapture();
+
+      const hookFiles = Array.isArray(data.files) ? data.files.filter((f) => f?.base64 && f?.fileName) : [];
+      const files = pendingFiles().length > 0 ? pendingFiles() : hookFiles;
+      if (files.length > 0 && pendingFiles().length === 0) {
+        setPendingFiles(files);
+      }
+      const text = (data.text ?? "").trim();
+
+      // Heartbeat / retry sans contenu : laisser passer sans toucher au composeur.
+      if (!text && files.length === 0) {
+        reply({ action: "ALLOW", outbound: "" });
+        return;
+      }
+
+      const res = await gateText(text, files);
+
+      if (res.action === "BLOCK") {
+        // Ne pas appeler applyFileBlock ici : le fetch est déjà annulé côté page-hook.
+        // Muter le composeur depuis un fetch provoquait des états incohérents après un BLOCK.
+        reply(res);
+        return;
+      }
+
+      if (res.action === "MASK" && res.sanitizedFiles?.length) {
+        applySanitizedFiles(res.sanitizedFiles);
+      }
+
+      reply(res);
+    } catch (err) {
+      reply({
+        action: "WARN",
+        error: err instanceof Error ? err.message : String(err),
+        userMessage: "Agent A1 : erreur lors de l'analyse — réessayez ou rechargez l'onglet (F5).",
+      });
     }
-    const files = pendingFiles();
-    const text = (data.text ?? "").trim();
-    if (!text && files.length === 0 && hasVisibleAttachments()) {
-      const blocked: GateResponse = {
-        action: "BLOCK",
-        userMessage:
-          "Pièce jointe non capturée. Retirez-la puis rattachez-la via le trombone (ou collez l'image), puis renvoyez.",
-      };
-      applyVisual(blocked, findComposer());
-      window.postMessage({ source: "acg-content", type: "GATE_RESULT", id: data.id, ...blocked }, "*");
-      return;
-    }
-    // Image seule (texte vide) : on gate quand même les fichiers / OCR
-    if (!text && files.length === 0) {
-      window.postMessage(
-        { source: "acg-content", type: "GATE_RESULT", id: data.id, action: "ALLOW", outbound: "" },
-        "*",
-      );
-      return;
-    }
-    const res = await gateText(text, files);
-    enforceDetachAfterFileBlock(res, files.length > 0);
-    applyVisual(res, findComposer());
-    window.postMessage({ source: "acg-content", type: "GATE_RESULT", id: data.id, ...res }, "*");
   })();
 });

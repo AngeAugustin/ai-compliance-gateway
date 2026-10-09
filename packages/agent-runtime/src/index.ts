@@ -168,19 +168,26 @@ export class AgentRuntime {
         );
         if (remote.length > 0) {
           const { combinePromptAndFiles } = await import("@acg/file-extract");
-          const extracted = remote.map((f) => ({
-            attachmentId: f.attachmentId,
-            fileName: f.fileName,
-            mimeType: f.mimeType,
-            sizeBytes: f.sizeBytes,
-            contentSha256: f.contentSha256,
-            text: f.text,
-            extractedTextLength: f.extractedTextLength,
-            extractionMethod: f.extractionMethod as "native" | "ocr" | "failed" | "unsupported",
-            extractionDegraded: f.extractionDegraded,
-            sanitizable: f.sanitizable,
-            error: f.error ?? undefined,
-          }));
+          const byName = new Map(files.map((f) => [f.fileName, f.data]));
+          const localByName = new Map(prepared.extracted.map((f) => [f.fileName, f]));
+          const extracted = remote.map((f) => {
+            const local = localByName.get(f.fileName);
+            const sourceData = byName.get(f.fileName) ?? local?.sourceData;
+            return {
+              attachmentId: f.attachmentId,
+              fileName: f.fileName,
+              mimeType: f.mimeType,
+              sizeBytes: f.sizeBytes,
+              contentSha256: f.contentSha256,
+              text: f.text,
+              extractedTextLength: f.extractedTextLength,
+              extractionMethod: f.extractionMethod as "native" | "ocr" | "failed" | "unsupported",
+              extractionDegraded: f.extractionDegraded,
+              sanitizable: f.sanitizable,
+              sourceData,
+              error: f.error ?? undefined,
+            };
+          });
           prepared = {
             analysisText: combinePromptAndFiles(text, extracted),
             extracted,

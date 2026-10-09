@@ -135,6 +135,20 @@ export function isTextLikeMime(mime: string, fileName: string): boolean {
   return (TEXT_LIKE_EXTENSIONS as readonly string[]).includes(ext);
 }
 
+/** Formats bureautique pour lesquels une réécriture anonymisée est supportée. */
+export function isOfficeSanitizable(ext: string, mime: string): boolean {
+  return (
+    ext === ".docx" ||
+    ext === ".pdf" ||
+    ext === ".xlsx" ||
+    ext === ".pptx" ||
+    mime.includes("wordprocessingml") ||
+    mime.includes("spreadsheetml") ||
+    mime.includes("presentationml") ||
+    mime === "application/pdf"
+  );
+}
+
 export function extensionOf(fileName: string): string {
   return fileName.toLowerCase().match(/\.[a-z0-9]+$/)?.[0] ?? "";
 }
