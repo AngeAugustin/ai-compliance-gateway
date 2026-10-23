@@ -239,7 +239,7 @@ export function PolicyFormPage() {
                     })
                   }
                   rows={2}
-                  style={{ fontFamily: "IBM Plex Mono, monospace" }}
+                  style={{ fontFamily: "JetBrains Mono, monospace" }}
                 />
               </FormSection>
             ) : (

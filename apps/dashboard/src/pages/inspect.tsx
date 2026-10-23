@@ -105,7 +105,7 @@ export function InspectPage() {
           <label className="field-label" htmlFor="inspect-text">
             Prompt à évaluer
           </label>
-          <textarea id="inspect-text" className="input" value={text} onChange={(e) => setText(e.target.value)} rows={9} style={{ fontFamily: "IBM Plex Mono, monospace" }} />
+          <textarea id="inspect-text" className="input" value={text} onChange={(e) => setText(e.target.value)} rows={9} style={{ fontFamily: "JetBrains Mono, monospace" }} />
           <label className="field-label" htmlFor="inspect-files">
             Pièces jointes (optionnel)
           </label>

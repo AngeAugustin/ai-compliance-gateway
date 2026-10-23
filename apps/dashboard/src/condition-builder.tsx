@@ -83,7 +83,7 @@ export function ConditionBuilder({
             }}
             rows={5}
             required
-            style={{ fontFamily: "IBM Plex Mono, monospace" }}
+            style={{ fontFamily: "JetBrains Mono, monospace" }}
           />
         </div>
       ) : (

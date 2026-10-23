@@ -220,7 +220,7 @@ export function ServiceFormPage() {
                   }
                   rows={4}
                   placeholder="poe.com"
-                  style={{ fontFamily: "IBM Plex Mono, monospace" }}
+                  style={{ fontFamily: "JetBrains Mono, monospace" }}
                 />
                 <label className="field-label">Commandes CLI (une par ligne)</label>
                 <textarea
@@ -234,7 +234,7 @@ export function ServiceFormPage() {
                   }
                   rows={3}
                   placeholder="poe"
-                  style={{ fontFamily: "IBM Plex Mono, monospace" }}
+                  style={{ fontFamily: "JetBrains Mono, monospace" }}
                 />
                 <label className="field-check">
                   <input

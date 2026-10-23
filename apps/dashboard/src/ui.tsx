@@ -64,7 +64,7 @@ export function RiskGauge({ value }: { value: number }) {
   const color = value >= 75 ? "var(--block)" : value >= 50 ? "var(--mask)" : value >= 25 ? "var(--warn)" : "var(--allow)";
   return (
     <div>
-      <div className="font-mono" style={{ fontSize: 44, color, letterSpacing: "-0.05em", fontWeight: 600, fontFamily: "Sora, Figtree, sans-serif" }}>
+      <div className="font-mono" style={{ fontSize: 44, color, letterSpacing: "-0.05em", fontWeight: 600, fontFamily: "Inter, system-ui, sans-serif" }}>
         {value.toFixed(0)}
         <span style={{ fontSize: 15, color: "var(--fog)", fontWeight: 500 }}>/100</span>
       </div>
