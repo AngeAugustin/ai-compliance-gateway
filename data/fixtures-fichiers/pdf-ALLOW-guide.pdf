@@ -2,19 +2,30 @@
 1 0 obj<< /Type /Catalog /Pages 2 0 R >>endobj
 2 0 obj<< /Type /Pages /Kids [3 0 R] /Count 1 >>endobj
 3 0 obj<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources<< /Font<< /F1 5 0 R >> >> >>endobj
-4 0 obj<< /Length 77 >>stream
-BT /F1 12 Tf 50 750 Td (Guide utilisateur - aucun identifiant sensible) Tj ET
+4 0 obj<< /Length 588 >>stream
+BT /F1 11 Tf
+50 760 Td (GUIDE UTILISATEUR - PORTAIL DES SERVICES EN LIGNE) Tj
+0 -16 Td () Tj
+0 -16 Td (1. Se connecter avec son identifiant professionnel.) Tj
+0 -16 Td (2. Choisir le service dans le menu principal.) Tj
+0 -16 Td (3. Remplir le formulaire et joindre les pieces demandees.) Tj
+0 -16 Td (4. Verifier le recapitulatif puis valider la demande.) Tj
+0 -16 Td (5. Suivre l'avancement dans l'onglet Mes demandes.) Tj
+0 -16 Td () Tj
+0 -16 Td (En cas de difficulte, utiliser le formulaire d'assistance du portail.) Tj
+0 -16 Td (Ce guide ne contient aucun identifiant sensible.) Tj
+ET
 endstream endobj
 5 0 obj<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>endobj
 xref
 0 6
 0000000000 65535 f 
 0000000009 00000 n 
-0000000058 00000 n 
-0000000115 00000 n 
-0000000266 00000 n 
-0000000365 00000 n 
+0000000056 00000 n 
+0000000111 00000 n 
+0000000233 00000 n 
+0000000870 00000 n 
 trailer<< /Size 6 /Root 1 0 R >>
 startxref
-444
+938
 %%EOF

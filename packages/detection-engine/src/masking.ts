@@ -4,6 +4,8 @@ export interface MaskingPlan {
   text: string;
   tokens: string[];
   replacements: { span: [number, number]; token: string; entityType: EntityType; value: string }[];
+  /** Jetons connus après ce masquage (précédents + nouveaux). */
+  bindings: TokenBinding[];
 }
 
 /**
@@ -31,44 +33,65 @@ export function remapEntitiesToText(text: string, entities: SensitiveEntity[]): 
   return out;
 }
 
-/**
- * Remplace les entités par des jetons stables au sein d'une interaction
- * (PERSONNE_001, MONTANT_001…). Opère de droite à gauche pour préserver les offsets.
- */
-export function applyMasking(text: string, entities: SensitiveEntity[]): MaskingPlan {
-  const localized = remapEntitiesToText(text, entities);
-  const counters = new Map<string, number>();
-  const sorted = [...localized].sort((a, b) => b.span[0] - a.span[0]);
-  const replacements: MaskingPlan["replacements"] = [];
-  let out = text;
-
-  for (const entity of sorted) {
-    const def = ENTITY_DEFINITIONS[entity.entityType];
-    const n = (counters.get(def.tokenPrefix) ?? 0) + 1;
-    counters.set(def.tokenPrefix, n);
-    const token = `${def.tokenPrefix}_${String(n).padStart(3, "0")}`;
-    const value = entity.value ?? out.slice(entity.span[0], entity.span[1]);
-    out = out.slice(0, entity.span[0]) + token + out.slice(entity.span[1]);
-    replacements.push({ span: entity.span, token, entityType: entity.entityType, value });
-  }
-
-  replacements.reverse();
-  const sequential = remapTokenNumbers(replacements);
-  let rebuilt = text;
-  for (const r of [...sequential].sort((a, b) => b.span[0] - a.span[0])) {
-    rebuilt = rebuilt.slice(0, r.span[0]) + r.token + rebuilt.slice(r.span[1]);
-  }
-  return { text: rebuilt, tokens: sequential.map((r) => r.token), replacements: sequential };
+/** Association jeton ↔ valeur, conservée par l'agent pour réutiliser les mêmes jetons d'un prompt à l'autre. */
+export interface TokenBinding {
+  token: string;
+  entityType: EntityType;
+  value: string;
 }
 
-function remapTokenNumbers(replacements: MaskingPlan["replacements"]): MaskingPlan["replacements"] {
+function bindingKey(entityType: EntityType, value: string): string {
+  return `${entityType}:${value.trim().toLowerCase()}`;
+}
+
+/**
+ * Remplace les entités par des jetons stables (PERSONNE_001, MONTANT_001…).
+ * Une même valeur reçoit toujours le même jeton, y compris d'un prompt à l'autre
+ * si `previous` est fourni : l'IA voit une conversation cohérente et l'agent peut
+ * restaurer les valeurs dans la réponse.
+ */
+export function applyMasking(text: string, entities: SensitiveEntity[], previous: TokenBinding[] = []): MaskingPlan {
+  const localized = remapEntitiesToText(text, entities).sort((a, b) => a.span[0] - b.span[0] || b.span[1] - a.span[1]);
+  // Deux entités qui se chevauchent : on garde la plus longue (sinon le remplacement corrompt le texte).
+  const kept: SensitiveEntity[] = [];
+  for (const e of localized) {
+    const last = kept[kept.length - 1];
+    if (last && e.span[0] < last.span[1]) {
+      if (e.span[1] - e.span[0] > last.span[1] - last.span[0]) kept[kept.length - 1] = e;
+      continue;
+    }
+    kept.push(e);
+  }
+
+  const known = new Map(previous.map((b) => [bindingKey(b.entityType, b.value), b]));
   const counters = new Map<string, number>();
-  return replacements.map((r) => {
-    const prefix = ENTITY_DEFINITIONS[r.entityType].tokenPrefix;
-    const n = (counters.get(prefix) ?? 0) + 1;
-    counters.set(prefix, n);
-    return { ...r, token: `${prefix}_${String(n).padStart(3, "0")}` };
-  });
+  for (const b of previous) {
+    const m = /^(.*)_(\d+)$/.exec(b.token);
+    if (m) counters.set(m[1]!, Math.max(counters.get(m[1]!) ?? 0, Number(m[2])));
+  }
+
+  const replacements: MaskingPlan["replacements"] = [];
+  const bindings = [...previous];
+  for (const entity of kept) {
+    const value = entity.value ?? text.slice(entity.span[0], entity.span[1]);
+    const key = bindingKey(entity.entityType, value);
+    let binding = known.get(key);
+    if (!binding) {
+      const prefix = ENTITY_DEFINITIONS[entity.entityType].tokenPrefix;
+      const n = (counters.get(prefix) ?? 0) + 1;
+      counters.set(prefix, n);
+      binding = { token: `${prefix}_${String(n).padStart(3, "0")}`, entityType: entity.entityType, value };
+      known.set(key, binding);
+      bindings.push(binding);
+    }
+    replacements.push({ span: entity.span, token: binding.token, entityType: entity.entityType, value });
+  }
+
+  let rebuilt = text;
+  for (const r of [...replacements].reverse()) {
+    rebuilt = rebuilt.slice(0, r.span[0]) + r.token + rebuilt.slice(r.span[1]);
+  }
+  return { text: rebuilt, tokens: replacements.map((r) => r.token), replacements, bindings };
 }
 
 /** Quasi-identifiants encore présents dans le texte masqué (DAT §10.2 risque résiduel). */

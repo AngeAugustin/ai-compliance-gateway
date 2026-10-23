@@ -1,4 +1,14 @@
--- Dump synthétique CNSS (données fictives de test)
-INSERT INTO assure (num_cnss, email, telephone) VALUES
-  ('cnss A12345678', 'marie.agbodji@cnss.bj', '+229 01 97 12 34 56'),
-  ('cnss C77889900', 'koffi.mensah@cnss.bj', '+229 01 90 11 22 33');
+-- Extrait de sauvegarde — base de test (données fictives)
+-- Table assure : identifiants CNSS et contacts
+
+INSERT INTO assure (num_cnss, nom, email, agence) VALUES
+  ('cnss A12345678', 'Agbodji', 'marie.agbodji@cnss.bj', 'Agence centrale'),
+  ('cnss C77889900', 'Mensah', 'koffi.mensah@cnss.bj', 'Agence nord'),
+  ('cnss B99887766', 'Bello', 'aicha.bello@cnss.bj', 'Agence centrale'),
+  ('cnss D55443322', 'Houngbedji', 'rodrigue.houngbedji@cnss.bj', 'Agence sud');
+
+INSERT INTO identite (num_cnss, npi) VALUES
+  ('cnss A12345678', 'NPI : BJ19880312A45'),
+  ('cnss C77889900', 'NPI : BJ19750921K08');
+
+-- Fin de l'extrait

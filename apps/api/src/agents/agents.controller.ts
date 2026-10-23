@@ -11,6 +11,9 @@ import {
   type AgentModule,
   type AgentSyncResponse,
   type Policy,
+  NER_BROWSER_HASH_KEY,
+  NER_BROWSER_MODEL,
+  onnxFile,
 } from "@acg/shared";
 import { query } from "../db.js";
 import { Public, Roles } from "../auth/guards.js";
@@ -421,6 +424,7 @@ export class AgentsController {
       expectedModelHashes: {
         ...(env.nerModelSha256 ? { ner: env.nerModelSha256 } : {}),
         ...(env.llmModelSha256 ? { llm: env.llmModelSha256 } : {}),
+        [NER_BROWSER_HASH_KEY]: onnxFile(NER_BROWSER_MODEL).sha256,
       },
     };
   }

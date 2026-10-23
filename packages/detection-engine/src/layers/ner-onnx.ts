@@ -1,19 +1,8 @@
-import type { DetectionResult, EntityType, SensitiveEntity } from "@acg/shared";
-import { isEntityType } from "@acg/shared";
+import type { DetectionResult } from "@acg/shared";
 import { existsSync } from "node:fs";
 import { now, type DetectionLayerProvider, type LayerStatus } from "./types.js";
 import { hubIntegrity, verifyModelFile, type ModelIntegrityResult } from "../integrity.js";
-
-const LABEL_MAP: Record<string, EntityType> = {
-  PER: "PERSON",
-  PERSON: "PERSON",
-  PERS: "PERSON",
-  LOC: "ADDRESS",
-  LOCATION: "ADDRESS",
-  ORG: "ORGANIZATION",
-  ORGANIZATION: "ORGANIZATION",
-  MISC: "INTERNAL_ID",
-};
+import { DEFAULT_NER_HUB_MODEL, runNerPipeline, type NerPipeline } from "./ner-common.js";
 
 export interface NerOnnxConfig {
   modelPath?: string;
@@ -30,7 +19,7 @@ export interface NerOnnxConfig {
 export class NerOnnxLayer implements DetectionLayerProvider {
   readonly layer = "ner" as const;
   private ready = false;
-  private pipeline: ((text: string) => Promise<unknown>) | null = null;
+  private pipeline: NerPipeline | null = null;
   private integrity: ModelIntegrityResult | null = null;
   private lastError: string | undefined;
 
@@ -57,9 +46,9 @@ export class NerOnnxLayer implements DetectionLayerProvider {
       const { pipeline, env } = await import("@huggingface/transformers");
       env.allowLocalModels = true;
       env.allowRemoteModels = this.integrity.status === "hub";
-      const hubId = this.config.hubModel ?? process.env.NER_HUB_MODEL ?? "Xenova/bert-base-multilingual-cased-ner-hrl";
+      const hubId = this.config.hubModel ?? process.env.NER_HUB_MODEL ?? DEFAULT_NER_HUB_MODEL;
       const model = this.config.modelPath && existsSync(this.config.modelPath) ? this.config.modelPath : hubId;
-      this.pipeline = (await pipeline("token-classification", model, { aggregation_strategy: "simple" })) as (text: string) => Promise<unknown>;
+      this.pipeline = (await pipeline("token-classification", model)) as unknown as NerPipeline;
       this.ready = true;
       this.lastError = undefined;
     } catch (err) {
@@ -99,20 +88,7 @@ export class NerOnnxLayer implements DetectionLayerProvider {
       };
     }
     try {
-      const raw = (await this.pipeline(text)) as Array<{ entity_group?: string; entity?: string; score: number; start: number; end: number; word: string }>;
-      const entities: SensitiveEntity[] = [];
-      for (const item of raw) {
-        const label = (item.entity_group ?? item.entity ?? "").replace(/^B-|^I-/, "").toUpperCase();
-        const mapped = LABEL_MAP[label];
-        if (!mapped || !isEntityType(mapped)) continue;
-        entities.push({
-          entityType: mapped,
-          confidence: Math.max(0, Math.min(1, item.score)),
-          span: [item.start, item.end],
-          layer: "ner",
-          value: text.slice(item.start, item.end),
-        });
-      }
+      const entities = await runNerPipeline(this.pipeline, text);
       return {
         layer: "ner",
         entities,

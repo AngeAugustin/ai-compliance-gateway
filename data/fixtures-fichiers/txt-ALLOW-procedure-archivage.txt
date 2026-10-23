@@ -1,7 +1,38 @@
-Procédure d'archivage des dossiers administratifs
+PROCÉDURE INTERNE — ARCHIVAGE DES DOSSIERS ADMINISTRATIFS
+Version 3.1 — Direction des Affaires Administratives
 
-1. Classer les dossiers par année
-2. Étiqueter les boîtes d'archives
-3. Conserver selon le calendrier de conservation interne
+1. OBJET
+Cette procédure fixe les règles de classement, de conservation et d'élimination
+des dossiers administratifs produits par les services.
+
+2. CHAMP D'APPLICATION
+Elle s'applique à toutes les directions et à tous les supports : papier,
+fichiers bureautiques et documents numérisés.
+
+3. RÔLES
+- Le chef de service valide la liste des dossiers à archiver.
+- Le correspondant archives prépare les boîtes et le bordereau de versement.
+- Le service des archives contrôle, enregistre et range les boîtes.
+
+4. ÉTAPES
+4.1 Trier les dossiers clos depuis plus d'un an.
+4.2 Retirer les doublons, brouillons et copies de travail.
+4.3 Classer par année puis par ordre alphabétique d'intitulé.
+4.4 Remplir le bordereau de versement en deux exemplaires.
+4.5 Étiqueter chaque boîte : direction, intitulé, années extrêmes.
+4.6 Transmettre les boîtes au service des archives le premier lundi du mois.
+
+5. DURÉES DE CONSERVATION
+- Correspondance courante : 5 ans
+- Pièces comptables : 10 ans
+- Procès-verbaux des instances : conservation définitive
+- Dossiers de marchés publics : 10 ans après la clôture
+
+6. ÉLIMINATION
+L'élimination se fait par broyage, après visa du chef de service et du
+service des archives. Un procès-verbal d'élimination est conservé.
+
+7. CONTRÔLE
+Un audit interne vérifie chaque année l'application de cette procédure.
 
 Document générique — aucune donnée personnelle.

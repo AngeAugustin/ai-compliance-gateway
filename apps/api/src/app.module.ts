@@ -12,6 +12,7 @@ import { FrameworksController } from "./frameworks/frameworks.controller.js";
 import { AiServicesController } from "./ai-services/ai-services.controller.js";
 import { UsersController } from "./users/users.controller.js";
 import { HeartbeatMonitor } from "./heartbeat.monitor.js";
+import { ModelsController } from "./models/models.controller.js";
 
 @Module({
   controllers: [
@@ -24,6 +25,7 @@ import { HeartbeatMonitor } from "./heartbeat.monitor.js";
     FrameworksController,
     AiServicesController,
     UsersController,
+    ModelsController,
   ],
   providers: [EvaluateService, HeartbeatMonitor, { provide: APP_GUARD, useClass: JwtAuthGuard }],
 })

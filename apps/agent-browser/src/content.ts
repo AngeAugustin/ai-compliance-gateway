@@ -14,6 +14,7 @@ import {
   stripAttachmentUi,
   type PendingFileWire,
 } from "./files.js";
+import { rememberTokens } from "./rehydrate.js";
 
 type GateResponse = {
   action?: string;
@@ -24,6 +25,8 @@ type GateResponse = {
   attachmentCount?: number;
   sanitizedFileNames?: string[];
   sanitizedFiles?: PendingFileWire[];
+  /** Jeton → valeur d'origine : reste dans ce monde isolé, jamais renvoyé à la page. */
+  tokens?: Record<string, string>;
 };
 
 const overlayId = "acg-agent-banner";
@@ -198,12 +201,14 @@ async function gateText(text: string, files: PendingFileWire[] = pendingFiles())
   }
 
   try {
-    const res = await sendToBackground<GateResponse>({
+    const { tokens, ...res } = await sendToBackground<GateResponse>({
       type: "INTERCEPT",
       text: trimmed,
       host: location.hostname,
       files,
     });
+    // Les valeurs d'origine ne doivent pas atteindre le page-hook (monde MAIN, lisible par la page).
+    rememberTokens(tokens);
     lastGate = { text: cacheKey, res, at: Date.now() };
     return res;
   } catch (err) {
@@ -545,3 +550,8 @@ window.addEventListener("message", (ev: MessageEvent) => {
     }
   })();
 });
+
+// Après un rechargement d'onglet : récupère les jetons de la conversation pour restaurer l'historique.
+void sendToBackground<{ tokens?: Record<string, string> }>({ type: "GET_TOKENS" })
+  .then((r) => rememberTokens(r?.tokens))
+  .catch(() => undefined);

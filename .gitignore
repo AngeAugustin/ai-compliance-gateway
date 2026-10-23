@@ -15,6 +15,7 @@ models/*.onnx
 models/*.gguf
 models/**/*.bin
 models/**/*.safetensors
+models/ner-browser/
 
 # Artefacts d'agent
 apps/agent-cli/build/
@@ -24,3 +25,4 @@ apps/agent-cli/acg-shim*.exe
 
 # Données locales d'agent
 .acg/
+db/backups/

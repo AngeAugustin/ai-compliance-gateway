@@ -185,16 +185,14 @@ if (cmd === "daemon") {
     process.exit(0);
   });
   process.on("exit", cleanup);
-  await runtime.start({ heartbeat: true });
+  await runtime.start({ heartbeat: true, heartbeatRef: true });
   if (!runtime.isEnrolled()) {
     console.error("Agent A2 non enrôlé — impossible de démarrer le démon.");
     cleanup();
     process.exit(1);
   }
   console.log(`Démon A2 actif agentId=${runtime.getConfig().agentId} pid=${process.pid}`);
-  await new Promise(() => {
-    /* keep-alive : le heartbeat du runtime maintient la boucle */
-  });
+  // Le timer heartbeat est ref'd (heartbeatRef) : il retient le process Node.
 } else if (cmd === "intercept") {
   const rest = args.slice(1);
   const sep = rest.indexOf("--");

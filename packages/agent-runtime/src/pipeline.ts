@@ -1,5 +1,5 @@
 import { DetectionEngine } from "@acg/detection-engine";
-import { applyMasking, residualQuasiIdentifiers } from "@acg/detection-engine";
+import { applyMasking, residualQuasiIdentifiers, type TokenBinding } from "@acg/detection-engine";
 import { buildPolicyContext, decidePolicy } from "@acg/policy-engine";
 import { computeRiskScore, type ScoreConfig } from "@acg/risk-scoring";
 import { sanitizeExtractedFile, type ExtractedFile, type SanitizedFile } from "@acg/file-extract";
@@ -34,6 +34,8 @@ export interface LocalDecision {
   sanitizedFileNames: string[];
   /** Contenu fichier déjà jetonné (à renvoyer à la place de l'original) */
   sanitizedFiles: SanitizedFile[];
+  /** Jetons connus après cette interaction (à réutiliser pour la suivante, puis restaurer la réponse). */
+  tokenBindings: TokenBinding[];
 }
 
 export interface PipelineInput {
@@ -47,6 +49,8 @@ export interface PipelineInput {
   engine: DetectionEngine;
   cache: DecisionCache;
   failClosedDepartments?: string[];
+  /** Jetons déjà attribués dans la conversation : une même valeur garde le même jeton. */
+  tokenBindings?: TokenBinding[];
 }
 
 /**
@@ -121,7 +125,8 @@ export async function decideLocally(input: PipelineInput): Promise<LocalDecision
   });
 
   const promptEntities = entitiesInPromptOnly(promptText, detection.entities);
-  let masked = applyMasking(promptText, promptEntities);
+  const previousBindings = input.tokenBindings ?? [];
+  let masked = applyMasking(promptText, promptEntities, previousBindings);
   const residual = residualQuasiIdentifiers(masked.text, detection.entities);
   let decision = decidePolicy({
     policies: snapshot.policies,
@@ -188,7 +193,7 @@ export async function decideLocally(input: PipelineInput): Promise<LocalDecision
         userMessage: fileGate.reason,
       };
       blockAttachments = true;
-      masked = { text: promptText, tokens: [], replacements: [] };
+      masked = { text: promptText, tokens: [], replacements: [], bindings: previousBindings };
     } else {
       for (const file of extractedFiles) {
         const fileEntities = detection.entities.filter((e) => file.text.includes(e.value ?? ""));
@@ -209,7 +214,7 @@ export async function decideLocally(input: PipelineInput): Promise<LocalDecision
   }
 
   if (decision.action !== "MASK") {
-    masked = { text: promptText, tokens: [], replacements: [] };
+    masked = { text: promptText, tokens: [], replacements: [], bindings: previousBindings };
   } else {
     decision = { ...decision, maskedTokens: masked.tokens };
   }
@@ -238,6 +243,7 @@ export async function decideLocally(input: PipelineInput): Promise<LocalDecision
     blockAttachments,
     sanitizedFileNames,
     sanitizedFiles,
+    tokenBindings: masked.bindings,
   };
 }
 

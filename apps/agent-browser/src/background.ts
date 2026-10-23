@@ -1,7 +1,8 @@
 import { AgentRuntime, memoryConfigStore } from "@acg/agent-runtime";
-import { DetectionEngine } from "@acg/detection-engine";
+import { DetectionEngine, type TokenBinding } from "@acg/detection-engine";
 import type { AgentPersistedConfig } from "@acg/agent-runtime";
 import { catalogMatches, injectOpenTabs, registerCatalogScripts } from "./coverage.js";
+import { OffscreenNerLayer } from "./ner-offscreen.js";
 
 const store = {
   async load() {
@@ -13,10 +14,11 @@ const store = {
   },
 };
 
-const runtime = new AgentRuntime({
+const runtime: AgentRuntime = new AgentRuntime({
   module: "A1",
   store,
-  engine: new DetectionEngine(),
+  // Couche 2 (NER) exécutée localement dans le document offscreen ; règles seules tant qu'elle charge.
+  engine: new DetectionEngine({ extraLayers: [new OffscreenNerLayer((): string | null => runtime.getConfig().apiUrl || null)] }),
   queuePersist: {
     persist: async (raw) => {
       await chrome.storage.local.set({ acgQueue: raw });
@@ -59,7 +61,40 @@ chrome.alarms.onAlarm.addListener((a) => {
   }
 });
 
-chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+/**
+ * Jetons attribués par onglet (PERSONNE_001 → valeur). Stockés en storage.session :
+ * mémoire uniquement, jamais écrits sur disque, vidés à la fermeture du navigateur
+ * ou de l'onglet. Sert à réutiliser les jetons et à restaurer les réponses de l'IA.
+ */
+const TOKEN_TTL_MS = 4 * 3600_000;
+
+function tokenKey(tabId: number): string {
+  return `acgTokens:${tabId}`;
+}
+
+async function loadTokens(tabId: number | undefined): Promise<TokenBinding[]> {
+  if (tabId === undefined) return [];
+  const raw = (await chrome.storage.session.get(tokenKey(tabId)))[tokenKey(tabId)] as { at: number; bindings: TokenBinding[] } | undefined;
+  if (!raw || Date.now() - raw.at > TOKEN_TTL_MS) return [];
+  return raw.bindings;
+}
+
+async function saveTokens(tabId: number | undefined, bindings: TokenBinding[]): Promise<void> {
+  if (tabId === undefined || bindings.length === 0) return;
+  await chrome.storage.session.set({ [tokenKey(tabId)]: { at: Date.now(), bindings } });
+}
+
+function tokenMap(bindings: TokenBinding[]): Record<string, string> {
+  return Object.fromEntries(bindings.map((b) => [b.token, b.value]));
+}
+
+chrome.tabs.onRemoved.addListener((tabId) => {
+  void chrome.storage.session.remove(tokenKey(tabId));
+});
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.target === "offscreen") return false;
+  const tabId = (sender as { tab?: { id?: number } } | undefined)?.tab?.id;
   void (async () => {
     await ensureStarted();
     if (message.type === "GET_STATUS") {
@@ -91,6 +126,10 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       sendResponse({ ok: true });
       return;
     }
+    if (message.type === "GET_TOKENS") {
+      sendResponse({ tokens: tokenMap(await loadTokens(tabId)) });
+      return;
+    }
     if (message.type === "INTERCEPT") {
       const filesWire = (message.files ?? []) as { fileName: string; mimeType?: string; base64: string }[];
       const files = filesWire.map((f) => ({
@@ -98,9 +137,16 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         mimeType: f.mimeType,
         data: Uint8Array.from(atob(f.base64), (c) => c.charCodeAt(0)),
       }));
-      const decision = await runtime.intercept(String(message.text ?? ""), "browser", String(message.host ?? ""), files, {
-        enableOcr: false,
-      });
+      const previous = await loadTokens(tabId);
+      const decision = await runtime.intercept(
+        String(message.text ?? ""),
+        "browser",
+        String(message.host ?? ""),
+        files,
+        { enableOcr: false },
+        previous,
+      );
+      await saveTokens(tabId, decision.tokenBindings);
       sendResponse({
         action: decision.action,
         outbound: runtime.outboundText(decision),
@@ -115,6 +161,8 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
           mimeType: f.mimeType,
           base64: uint8ToBase64(f.data),
         })),
+        // Valeurs restaurées localement dans la réponse de l'IA (jamais envoyées au service).
+        tokens: tokenMap(decision.tokenBindings),
       });
     }
   })().catch((err) => sendResponse({ error: String(err) }));

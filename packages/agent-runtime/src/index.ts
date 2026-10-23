@@ -1,4 +1,4 @@
-import { DetectionEngine } from "@acg/detection-engine";
+import { DetectionEngine, type TokenBinding } from "@acg/detection-engine";
 import {
   generateAgentKeyPair,
   importPrivateKey,
@@ -29,6 +29,11 @@ export interface AgentRuntimeOptions {
 export interface AgentStartOptions {
   /** Si false, sync + file mais pas de heartbeat (le démon A2 s'en charge). */
   heartbeat?: boolean;
+  /**
+   * Si true, le timer heartbeat retient le process Node (démon A2).
+   * Par défaut false : `unref()` pour ne pas bloquer la sortie (intercept, MV3).
+   */
+  heartbeatRef?: boolean;
 }
 
 /**
@@ -84,7 +89,7 @@ export class AgentRuntime {
           );
         }
       }
-      if (opts.heartbeat !== false) this.startHeartbeat();
+      if (opts.heartbeat !== false) this.startHeartbeat(opts.heartbeatRef === true);
     } else if (!this.cache.get()) {
       this.cache.hydrate(
         this.cache.fallback({
@@ -128,7 +133,7 @@ export class AgentRuntime {
     this.config.enrollmentToken = null;
     await this.options.store.save(this.config);
     await this.sync();
-    if (opts.heartbeat !== false) this.startHeartbeat();
+    if (opts.heartbeat !== false) this.startHeartbeat(opts.heartbeatRef === true);
   }
 
   async sync(): Promise<void> {
@@ -148,6 +153,8 @@ export class AgentRuntime {
     hostnameOrCommand: string,
     files: IncomingFile[] = [],
     extractOpts?: ExtractEngineOptions,
+    /** Jetons déjà attribués dans la conversation (A1 : par onglet). */
+    tokenBindings?: TokenBinding[],
   ): Promise<LocalDecision> {
     let prepared = await prepareFileAnalysis(text, files, extractOpts);
 
@@ -216,6 +223,7 @@ export class AgentRuntime {
       hostnameOrCommand,
       engine: this.options.engine,
       cache: this.cache,
+      tokenBindings,
     });
     const wire: EvaluateInteractionRequest = {
       interactionId: decision.interactionId,
@@ -291,14 +299,16 @@ export class AgentRuntime {
     this.heartbeatTimer = null;
   }
 
-  private startHeartbeat(): void {
+  private startHeartbeat(keepProcessAlive = false): void {
     if (this.heartbeatTimer) clearInterval(this.heartbeatTimer);
     const tick = () => {
       void this.sendHeartbeat();
     };
     tick();
     this.heartbeatTimer = setInterval(tick, this.config.heartbeatIntervalSeconds * 1000);
-    this.heartbeatTimer.unref?.();
+    // unref : ne pas empêcher la sortie du process (intercept CLI, extension).
+    // keepProcessAlive : démon A2 — le timer doit retenir la boucle d'événements.
+    if (!keepProcessAlive) this.heartbeatTimer.unref?.();
   }
 
   private async sendHeartbeat(): Promise<void> {

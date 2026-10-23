@@ -3,6 +3,7 @@ import { aggregateResults } from "./aggregate.js";
 import { KeywordContextLayer } from "./layers/keyword-context.js";
 import { RulesLayer } from "./layers/rules/index.js";
 import type { DetectionLayerProvider, LayerStatus } from "./layers/types.js";
+import { tuneEntities, type DetectionTuning } from "./tuning.js";
 
 export type { DetectionLayerProvider } from "./layers/types.js";
 
@@ -10,6 +11,8 @@ export interface DetectionEngineOptions {
   extraLayers?: DetectionLayerProvider[];
   /** Si true, n'exécute pas le repli mots-clés lorsque la couche LLM a réussi. */
   skipKeywordWhenLlmReady?: boolean;
+  /** Bonus de contexte, seuils par type, listes d'autorisation / d'exclusion. */
+  tuning?: DetectionTuning;
 }
 
 /**
@@ -19,6 +22,7 @@ export interface DetectionEngineOptions {
 export class DetectionEngine {
   private readonly layers: DetectionLayerProvider[];
   private initialized = false;
+  private tuning: DetectionTuning;
 
   constructor(options: DetectionEngineOptions = {}) {
     const rules = new RulesLayer();
@@ -31,6 +35,12 @@ export class DetectionEngine {
     } else {
       this.layers.push(keyword);
     }
+    this.tuning = options.tuning ?? {};
+  }
+
+  /** Met à jour les réglages à chaud (ex. après synchronisation des politiques). */
+  setTuning(tuning: DetectionTuning): void {
+    this.tuning = tuning;
   }
 
   async initialize(): Promise<LayerStatus[]> {
@@ -49,6 +59,8 @@ export class DetectionEngine {
     for (const layer of this.layers) {
       results.push(await layer.detect(text));
     }
-    return aggregateResults(results);
+    const aggregated = aggregateResults(results);
+    const degraded = results.some((r, i) => r.degraded && !this.layers[i]!.optional);
+    return { ...aggregated, degraded, entities: tuneEntities(text, aggregated.entities, this.tuning) };
   }
 }

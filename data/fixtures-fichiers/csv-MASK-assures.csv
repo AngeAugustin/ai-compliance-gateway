@@ -1,3 +1,6 @@
-nom,prenom,numero_cnss,email
-Agbodji,Marie,cnss A12345678,marie.agbodji@cnss.bj
-Mensah,Koffi,cnss B99887766,koffi.mensah@cnss.bj
+nom,prenom,numero_cnss,email,statut
+Agbodji,Marie,cnss A12345678,marie.agbodji@cnss.bj,Actif
+Mensah,Koffi,cnss B99887766,koffi.mensah@cnss.bj,Actif
+Bello,Aïcha,cnss C77889900,aicha.bello@cnss.bj,Suspendu
+Houngbédji,Rodrigue,cnss D55443322,rodrigue.houngbedji@cnss.bj,Actif
+Dossou,Fatou,cnss E11223344,fatou.dossou@cnss.bj,Radié

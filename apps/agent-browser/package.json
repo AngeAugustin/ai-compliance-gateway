@@ -10,6 +10,7 @@
   "dependencies": {
     "@acg/agent-runtime": "workspace:*",
     "@acg/detection-engine": "workspace:*",
-    "@acg/shared": "workspace:*"
+    "@acg/shared": "workspace:*",
+    "@huggingface/transformers": "4.3.1"
   }
 }

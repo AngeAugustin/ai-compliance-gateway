@@ -18,6 +18,12 @@ export interface LlmLocalConfig {
 
 export class LlmLocalLayer implements DetectionLayerProvider {
   readonly layer = "llm_context" as const;
+  /**
+   * Sans modèle GGUF, la classification de contexte se rabat sur les mots-clés :
+   * les entités restent toutes détectées, seul le facteur « contexte » (15 %) est
+   * moins fin. Ce n'est pas une raison de passer en fail-closed.
+   */
+  readonly optional = true;
   private ready = false;
   private session: { prompt: (p: string) => Promise<string>; dispose?: () => Promise<void> } | null = null;
   private integrity: ModelIntegrityResult | null = null;

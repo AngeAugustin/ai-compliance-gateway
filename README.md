@@ -52,4 +52,22 @@ ADR-005 : le shim A2 est en TypeScript/Node, pas Rust.
 - L'API charge NER en arrière-plan (hub Xenova si `NER_MODEL_PATH` est vide). Sans `@huggingface/transformers`, la couche reste dégradée : règles + mots-clés suffisent.
 - Installation optionnelle : `pnpm add @huggingface/transformers --filter @acg/detection-engine`
 - Désactiver le hub : `NER_DISABLE_HUB=1`
+
+### NER de l'extension A1 servi par l'API
+
+L'extension exécute le NER localement (document offscreen). Elle récupère les poids du modèle **d'abord sur l'API ACG** (réseau interne), puis sur Hugging Face en repli. Dans les deux cas, chaque fichier est refusé si son SHA-256 ne correspond pas à l'empreinte figée dans `packages/shared/src/domain/ner-model.ts` (révision `263e82c`, `model_quantized.onnx`, 170 Mo).
+
+Déposer le modèle sur le serveur de l'API (une seule fois) :
+
+```powershell
+pnpm models:ner
+```
+
+Sans accès Internet sur le serveur, copier les fichiers depuis un autre poste ou une clé USB (même arborescence : `config.json`, `tokenizer.json`, `tokenizer_config.json`, `onnx/model_quantized.onnx`) :
+
+```powershell
+pnpm models:ner -- --from E:\modeles\ner-browser
+```
+
+Vérification : `GET /v1/models/ner/manifest` doit renvoyer `"available": true`. Un fichier altéré sur le serveur n'est jamais servi (HTTP 503) ; changer de modèle demande une nouvelle version de l'agent.
 - HTTPS local : renseigner `API_TLS_CERT` et `API_TLS_KEY`, et aligner `API_PUBLIC_URL` / `VITE_API_URL` sur `https://…`

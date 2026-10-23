@@ -1,3 +1,8 @@
-theme,description
-Archivage,Procédure interne générique
-Formation,Module d'accueil nouveaux agents
+theme,description,public,duree_heures
+Archivage,Procédure interne de classement et de conservation,Agents administratifs,3
+Formation,Module d'accueil des nouveaux agents,Nouveaux arrivants,7
+Qualité,Démarche d'amélioration continue des processus,Chefs de service,4
+Sécurité informatique,Bonnes pratiques mots de passe et hameçonnage,Tous les agents,2
+Relation usager,Accueil au guichet et traitement des réclamations,Agents d'accueil,6
+Bureautique,Tableur niveau intermédiaire,Agents administratifs,7
+Communication,Rédaction de courriers administratifs,Secrétariats,4

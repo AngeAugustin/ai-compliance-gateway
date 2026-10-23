@@ -2,6 +2,8 @@
 
 Régénérer : `pnpm fixtures:fichiers`
 
+Toutes les données sont **fictives**. Le préfixe du nom annonce l'action attendue ; le test `packages/agent-runtime/src/fixtures-actions.test.ts` vérifie qu'elle est tenue (direction Cotisations, risque élevé) et qu'un fichier MASK réécrit ne contient plus aucune valeur sensible.
+
 Guides détaillés par format (ALLOW / WARN / MASK / BLOCK) :
 
 → [`docs/tests-fichiers-par-format/`](../../docs/tests-fichiers-par-format/README.md)

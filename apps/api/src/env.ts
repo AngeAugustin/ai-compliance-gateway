@@ -1,4 +1,5 @@
 import { config } from "dotenv";
+import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 
 config({ path: resolve(process.cwd(), ".env") });
@@ -37,6 +38,14 @@ export const env = {
   llmModelSha256: process.env.LLM_MODEL_SHA256 || undefined,
   nerDisableHub: process.env.NER_DISABLE_HUB === "1",
   nerHubModel: process.env.NER_HUB_MODEL || undefined,
+  /** Fichiers du modèle NER servis à l'agent A1 (voir pnpm models:ner). */
+  nerBrowserModelDir: process.env.NER_BROWSER_MODEL_DIR || defaultModelDir("ner-browser"),
   apiTlsCert: process.env.API_TLS_CERT || undefined,
   apiTlsKey: process.env.API_TLS_KEY || undefined,
 };
+
+/** models/<nom> à la racine du dépôt (l'API tourne depuis apps/api ou depuis la racine). */
+function defaultModelDir(name: string): string {
+  const root = existsSync(resolve(process.cwd(), "../../pnpm-workspace.yaml")) ? resolve(process.cwd(), "../..") : process.cwd();
+  return resolve(root, "models", name);
+}

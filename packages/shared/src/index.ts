@@ -2,6 +2,7 @@ export * from "./domain/entities.js";
 export * from "./domain/actions.js";
 export * from "./domain/ai-services.js";
 export * from "./domain/frameworks.js";
+export * from "./domain/ner-model.js";
 export * from "./contracts/detection.js";
 export * from "./contracts/risk.js";
 export * from "./contracts/policy.js";

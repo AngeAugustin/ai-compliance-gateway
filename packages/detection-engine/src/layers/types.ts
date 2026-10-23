@@ -11,6 +11,11 @@ export interface LayerStatus {
 /** Interface commune à chaque couche de détection (contrat de sortie unique, DAT §8). */
 export interface DetectionLayerProvider {
   readonly layer: DetectionLayer;
+  /**
+   * Couche d'appoint (ex. NER en cours de téléchargement dans A1) : son indisponibilité
+   * ne met pas le moteur en mode dégradé, donc ne déclenche pas le fail-closed.
+   */
+  readonly optional?: boolean;
   /** Charge le modèle si nécessaire ; ne lève jamais : renvoie un statut. */
   initialize(): Promise<LayerStatus>;
   status(): LayerStatus;
