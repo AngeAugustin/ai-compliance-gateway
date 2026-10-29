@@ -12,8 +12,15 @@ import type { Rng } from "./rng.js";
  * La personne est ré-identifiée si un seul candidat reste et que c'est la bonne.
  */
 
-export type ReidVariant = "direct" | "quasi-identifiants" | "identifiants" | "contact";
+export type ReidVariant = "direct" | "quasi-identifiants" | "identifiants" | "contact" | "temoin-commune" | "temoin-fonction";
 export const REID_VARIANTS: ReidVariant[] = ["direct", "quasi-identifiants", "identifiants", "contact"];
+/**
+ * Témoins peu exposés : une commune seule (environ 130 assurés chacune), ou une fonction
+ * et une commune (une dizaine). Ils servent de point de comparaison à l'expérience sur le
+ * scoring ; l'expérience de ré-identification proprement dite ne les inclut pas.
+ */
+export const CONTROL_VARIANTS: ReidVariant[] = ["temoin-commune", "temoin-fonction"];
+export const ALL_VARIANTS: ReidVariant[] = [...REID_VARIANTS, ...CONTROL_VARIANTS];
 
 export interface ReidScenario extends AnnotatedSource {
   targetId: number;
@@ -32,11 +39,15 @@ const BUILDERS: Record<ReidVariant, (rng: Rng, p: Person) => string> = {
     `L'assuré${e(p)} n° ${A("CNSS_INSURED_NUMBER", p.assure)}, joignable au ${A("PHONE", p.telephone)}, demande le relevé de sa carrière. Prépare la réponse.`,
   contact: (_rng, p) =>
     `Prépare le message pour ${A("PERSON", `${p.prenom} ${p.nom}`)} (${A("EMAIL", p.email)}) : son dossier déposé à ${A("ADDRESS", p.commune)} est complet.`,
+  "temoin-commune": (_rng, p) =>
+    `Un assuré habitant ${A("ADDRESS", p.commune)} demande comment obtenir son relevé de carrière. Rédige une réponse type.`,
+  "temoin-fonction": (_rng, p) =>
+    `Un${e(p)} ${A("JOB_TITLE", p.fonction)} habitant ${A("ADDRESS", p.commune)} demande comment obtenir son relevé de carrière. Rédige une réponse type.`,
 };
 
-export function generateReidScenarios(rng: Rng, people: Person[], perVariant: number): ReidScenario[] {
+export function generateReidScenarios(rng: Rng, people: Person[], perVariant: number, variants: ReidVariant[] = REID_VARIANTS): ReidScenario[] {
   const out: ReidScenario[] = [];
-  for (const variant of REID_VARIANTS) {
+  for (const variant of variants) {
     for (let i = 0; i < perVariant; i++) {
       const p = rng.pick(people);
       out.push({

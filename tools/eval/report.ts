@@ -2,7 +2,8 @@ import { ENTITY_DEFINITIONS, type EntityType } from "../../packages/shared/src/i
 import type { EvalSample, Split } from "./annotation.js";
 import type { ContextReport, ReidLine, SystemReport } from "./evaluate.js";
 import type { MatchMode } from "./metrics.js";
-import { REID_VARIANTS } from "./reidentification.js";
+import { ALL_VARIANTS, REID_VARIANTS } from "./reidentification.js";
+import { EXPOSURE_LABEL, EXPOSURES, type RiskResponseLine } from "./risk-response.js";
 import type { SystemsSetup } from "./systems.js";
 
 export interface RunMeta {
@@ -31,6 +32,7 @@ export interface FullReport {
   systems: SystemReport[];
   context: ContextReport[];
   reidentification: ReidLine[];
+  riskResponse: RiskResponseLine[];
 }
 
 const pct = (x: number, digits = 1) => `${(x * 100).toFixed(digits).replace(".", ",")} %`;
@@ -243,7 +245,9 @@ export function renderMarkdown(r: FullReport): string {
     ),
   );
 
-  out.push(`## 9. Analyse d'erreurs (${best?.label ?? "—"})`);
+  renderRiskResponse(out, r);
+
+  out.push(`## 10. Analyse d'erreurs (${best?.label ?? "—"})`);
   if (best) {
     out.push(`### Données sensibles manquées (extrait, corpus manuel en premier)`);
     out.push(
@@ -263,4 +267,57 @@ export function renderMarkdown(r: FullReport): string {
     );
   }
   return out.join("\n\n") + "\n";
+}
+
+function renderRiskResponse(out: string[], r: FullReport): void {
+  out.push(`## 9. Réponse du scoring au risque de ré-identification`);
+  out.push(
+    `L'expérience précédente mesure le masquage seul. Ici, chaque scénario passe par le pipeline de décision complet de l'agent ` +
+      `(score de risque → politiques équivalentes au seed → masquage → escalade sur quasi-identifiants résiduels), pour un utilisateur ` +
+      `d'une direction à risque modéré écrivant à ChatGPT. Les scénarios sont classés selon leur exposition **en clair** (attaque sur le texte original). ` +
+      `L'attaquant voit ensuite ce qui sort réellement : rien si BLOCK, le texte masqué si MASK, le texte en clair si ALLOW ou WARN. ` +
+      `**Facteur neutralisé** : même pipeline avec le poids du facteur « combinaison de quasi-identifiants » à 0 et les trois autres renormalisés.`,
+  );
+  const lines = r.riskResponse;
+  if (!lines.length) return;
+  out.push(
+    table(
+      ["Configuration", "Facteur", "Exposition en clair", "n", "Score moyen", "Facteur QI moyen", "Bandes faible/modérée/élevée/critique", "ALLOW/WARN/MASK/BLOCK", "Laissés en clair", "Ré-identifiés après passerelle"],
+      lines.flatMap((l) =>
+        EXPOSURES.map((e) => {
+          const g = l.byExposure[e];
+          return [
+            l.label,
+            l.variant === "facteur-actif" ? "actif" : "neutralisé",
+            EXPOSURE_LABEL[e],
+            g.n,
+            g.meanScore,
+            g.meanQiFactor,
+            `${g.bands.low}/${g.bands.moderate}/${g.bands.high}/${g.bands.critical}`,
+            `${g.actions.ALLOW}/${g.actions.WARN}/${g.actions.MASK}/${g.actions.BLOCK}`,
+            g.n ? pct(g.passedInClear / g.n, 0) : "—",
+            g.n ? pct(g.reidentifiedAfter / g.n, 0) : "—",
+          ];
+        }),
+      ),
+      ["l", "l", "l", "r", "r", "r", "r", "r", "r", "r"],
+    ),
+  );
+  const variants = ALL_VARIANTS.filter((v) => lines.some((l) => l.byVariant[v]));
+  out.push(`### Par variante de scénario (facteur actif)`);
+  out.push(
+    table(
+      ["Configuration", ...variants.map((v) => `${v} : score moyen · ALLOW/WARN/MASK/BLOCK · ré-id. après`)],
+      lines
+        .filter((l) => l.variant === "facteur-actif")
+        .map((l) => [
+          l.label,
+          ...variants.map((v) => {
+            const g = l.byVariant[v];
+            if (!g) return "—";
+            return `${g.meanScore} · ${g.actions.ALLOW}/${g.actions.WARN}/${g.actions.MASK}/${g.actions.BLOCK} · ${pct(g.reidentifiedAfter / Math.max(1, g.n), 0)}`;
+          }),
+        ]),
+    ),
+  );
 }

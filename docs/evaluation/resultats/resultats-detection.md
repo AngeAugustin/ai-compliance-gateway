@@ -1,17 +1,17 @@
 # Résultats de l'évaluation de la détection
 
-> Rapport généré par `pnpm eval:detection` le 2026-10-29 — graine 2026, 3 répétitions de latence, Node 24.12.0 (win32-x64, Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz), durée 416 s. Protocole : [protocole-detection.md](../protocole-detection.md). Ne pas modifier à la main.
+> Rapport généré par `pnpm eval:detection` le 2026-10-29 — graine 2026, 3 répétitions de latence, Node 24.12.0 (win32-x64, Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz), durée 353 s. Protocole : [protocole-detection.md](../protocole-detection.md). Ne pas modifier à la main.
 
-NER : chargé en 4557 ms. LLM de contexte : non évalué (LLM_MODEL_PATH non renseigné).
+NER : chargé en 2123 ms. LLM de contexte : non évalué (LLM_MODEL_PATH non renseigné).
 
 ## 1. Synthèse
 
 | Configuration | Précision | Rappel | F1 (IC 95 %) | F1 strict | Rappel protection | Latence p50 / p95 |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: |
-| **Règles seules** | 96,5 % | 50,9 % | 66,6 % (63,8 % – 69,0 %) | 65,0 % | 52,3 % | 0,27 / 1,70 ms |
-| **NER seul** | 78,7 % | 40,6 % | 53,6 % (50,9 % – 56,3 %) | 51,2 % | 42,8 % | 81,3 / 275 ms |
-| **Moteur sans NER** | 96,5 % | 50,9 % | 66,6 % (63,8 % – 69,0 %) | 65,0 % | 52,3 % | 0,65 / 3,04 ms |
-| **Moteur complet** | 90,2 % | 91,4 % | 90,8 % (89,3 % – 92,2 %) | 87,8 % | 93,6 % | 113 / 407 ms |
+| **Règles seules** | 96,5 % | 50,9 % | 66,6 % (63,8 % – 69,0 %) | 65,0 % | 52,3 % | 0,13 / 0,72 ms |
+| **NER seul** | 78,7 % | 40,6 % | 53,6 % (50,9 % – 56,3 %) | 51,2 % | 42,8 % | 64,9 / 264 ms |
+| **Moteur sans NER** | 96,5 % | 50,9 % | 66,6 % (63,8 % – 69,0 %) | 65,0 % | 52,3 % | 0,22 / 0,95 ms |
+| **Moteur complet** | 90,2 % | 91,4 % | 90,8 % (89,3 % – 92,2 %) | 87,8 % | 93,6 % | 65,6 / 236 ms |
 
 Appariement **partiel** (même type, chevauchement) sauf mention contraire, micro-moyenne sur tout le corpus. **Rappel protection** : part des données sensibles recouvertes par une détection, quel que soit le type — c'est ce qui conditionne le masquage.
 
@@ -163,19 +163,19 @@ Faux positifs les plus fréquents :
 
 | Configuration | Mesures | p50 | p95 | p99 | Moyenne | Max | Débit |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Règles seules | 1155 | 0,27 ms | 1,70 ms | 6,32 ms | 0,57 ms | 25,3 ms | 358 464 car./s |
-| NER seul | 1155 | 81,3 ms | 275 ms | 1544 ms | 131 ms | 3145 ms | 1 555 car./s |
-| Moteur sans NER | 1155 | 0,65 ms | 3,04 ms | 8,37 ms | 1,07 ms | 17,5 ms | 190 483 car./s |
-| Moteur complet | 1155 | 113 ms | 407 ms | 1758 ms | 170 ms | 3117 ms | 1 198 car./s |
+| Règles seules | 1155 | 0,13 ms | 0,72 ms | 2,72 ms | 0,26 ms | 10,7 ms | 793 382 car./s |
+| NER seul | 1155 | 64,9 ms | 264 ms | 1128 ms | 104 ms | 1831 ms | 1 966 car./s |
+| Moteur sans NER | 1155 | 0,22 ms | 0,95 ms | 2,47 ms | 0,36 ms | 4,04 ms | 568 414 car./s |
+| Moteur complet | 1155 | 65,6 ms | 236 ms | 999 ms | 97,4 ms | 1790 ms | 2 093 car./s |
 
 | Configuration | Court (< 200 car.) p50 / p95 | Moyen (200–1 000) p50 / p95 | Long (> 1 000) p50 / p95 |
 | :--- | ---: | ---: | ---: |
-| Règles seules | 0,25 / 0,98 ms (n=1092) | 1,67 / 3,19 ms (n=33) | 4,70 / 9,85 ms (n=30) |
-| NER seul | 79,7 / 138 ms (n=1092) | 370 / 663 ms (n=33) | 1463 / 3119 ms (n=30) |
-| Moteur sans NER | 0,62 / 2,35 ms (n=1092) | 2,46 / 4,09 ms (n=33) | 7,26 / 16,2 ms (n=30) |
-| Moteur complet | 110 / 196 ms (n=1092) | 520 / 663 ms (n=33) | 1650 / 3109 ms (n=30) |
+| Règles seules | 0,12 / 0,52 ms (n=1092) | 0,70 / 1,73 ms (n=33) | 1,70 / 3,28 ms (n=30) |
+| NER seul | 63,5 / 134 ms (n=1092) | 284 / 517 ms (n=33) | 1015 / 1826 ms (n=30) |
+| Moteur sans NER | 0,21 / 0,69 ms (n=1092) | 0,76 / 1,28 ms (n=33) | 2,31 / 3,99 ms (n=30) |
+| Moteur complet | 64,1 / 107 ms (n=1092) | 272 / 371 ms (n=33) | 956 / 1756 ms (n=30) |
 
-Temps mesuré autour de `detect()` en processus, après échauffement, hors réseau et hors politique côté serveur. Le chargement initial du modèle NER (4557 ms) n'est payé qu'une fois par processus.
+Temps mesuré autour de `detect()` en processus, après échauffement, hors réseau et hors politique côté serveur. Le chargement initial du modèle NER (2123 ms) n'est payé qu'une fois par processus.
 
 ## 7. Masquage : données encore lisibles après la passerelle
 
@@ -227,7 +227,47 @@ Attaquant disposant du registre complet (2000 assurés synthétiques) et du prom
 | Moteur sans NER | 100 % / 100 % | 66 % / 100 % | 0 % / 0 % | 90 % / 100 % | 64,0 % | 1 |
 | Moteur complet | 0 % / 0 % | 0 % / 2 % | 0 % / 0 % | 8 % / 18 % | 2,0 % | 77 |
 
-## 9. Analyse d'erreurs (Moteur complet)
+## 9. Réponse du scoring au risque de ré-identification
+
+L'expérience précédente mesure le masquage seul. Ici, chaque scénario passe par le pipeline de décision complet de l'agent (score de risque → politiques équivalentes au seed → masquage → escalade sur quasi-identifiants résiduels), pour un utilisateur d'une direction à risque modéré écrivant à ChatGPT. Les scénarios sont classés selon leur exposition **en clair** (attaque sur le texte original). L'attaquant voit ensuite ce qui sort réellement : rien si BLOCK, le texte masqué si MASK, le texte en clair si ALLOW ou WARN. **Facteur neutralisé** : même pipeline avec le poids du facteur « combinaison de quasi-identifiants » à 0 et les trois autres renormalisés.
+
+| Configuration | Facteur | Exposition en clair | n | Score moyen | Facteur QI moyen | Bandes faible/modérée/élevée/critique | ALLOW/WARN/MASK/BLOCK | Laissés en clair | Ré-identifiés après passerelle |
+| :--- | :--- | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Règles seules | actif | Ré-identifiable en clair (k = 1) | 199 | 40.8 | 0 | 0/149/50/0 | 100/0/99/0 | 50 % | 73 % |
+| Règles seules | actif | Quasi ré-identifiable (2 ≤ k ≤ 5) | 6 | 20.8 | 0 | 5/1/0/0 | 5/0/1/0 | 83 % | 0 % |
+| Règles seules | actif | Peu exposé (k > 5) | 95 | 17 | 0 | 95/0/0/0 | 95/0/0/0 | 100 % | 0 % |
+| Règles seules | neutralisé | Ré-identifiable en clair (k = 1) | 199 | 54.8 | 0 | 0/100/99/0 | 100/0/99/0 | 50 % | 73 % |
+| Règles seules | neutralisé | Quasi ré-identifiable (2 ≤ k ≤ 5) | 6 | 27.2 | 0 | 5/0/1/0 | 5/0/1/0 | 83 % | 0 % |
+| Règles seules | neutralisé | Peu exposé (k > 5) | 95 | 22 | 0 | 95/0/0/0 | 95/0/0/0 | 100 % | 0 % |
+| NER seul | actif | Ré-identifiable en clair (k = 1) | 199 | 41.9 | 31.7 | 50/91/58/0 | 141/0/58/0 | 71 % | 99 % |
+| NER seul | actif | Quasi ré-identifiable (2 ≤ k ≤ 5) | 6 | 38 | 5.8 | 0/6/0/0 | 6/0/0/0 | 100 % | 0 % |
+| NER seul | actif | Peu exposé (k > 5) | 95 | 36 | 0 | 0/95/0/0 | 95/0/0/0 | 100 % | 0 % |
+| NER seul | neutralisé | Ré-identifiable en clair (k = 1) | 199 | 45.2 | 31.7 | 50/42/107/0 | 92/49/58/0 | 71 % | 99 % |
+| NER seul | neutralisé | Quasi ré-identifiable (2 ≤ k ≤ 5) | 6 | 49.7 | 5.8 | 0/5/1/0 | 5/1/0/0 | 100 % | 0 % |
+| NER seul | neutralisé | Peu exposé (k > 5) | 95 | 49 | 0 | 0/95/0/0 | 95/0/0/0 | 100 % | 0 % |
+| Moteur sans NER | actif | Ré-identifiable en clair (k = 1) | 199 | 41.8 | 0 | 0/149/50/0 | 100/0/99/0 | 50 % | 73 % |
+| Moteur sans NER | actif | Quasi ré-identifiable (2 ≤ k ≤ 5) | 6 | 20.8 | 0 | 5/1/0/0 | 5/0/1/0 | 83 % | 0 % |
+| Moteur sans NER | actif | Peu exposé (k > 5) | 95 | 17 | 0 | 95/0/0/0 | 95/0/0/0 | 100 % | 0 % |
+| Moteur sans NER | neutralisé | Ré-identifiable en clair (k = 1) | 199 | 55.8 | 0 | 0/50/149/0 | 50/50/99/0 | 50 % | 73 % |
+| Moteur sans NER | neutralisé | Quasi ré-identifiable (2 ≤ k ≤ 5) | 6 | 27.2 | 0 | 5/0/1/0 | 5/0/1/0 | 83 % | 0 % |
+| Moteur sans NER | neutralisé | Peu exposé (k > 5) | 95 | 22 | 0 | 95/0/0/0 | 95/0/0/0 | 100 % | 0 % |
+| Moteur complet | actif | Ré-identifiable en clair (k = 1) | 199 | 58 | 50.7 | 0/0/199/0 | 0/3/196/0 | 2 % | 4 % |
+| Moteur complet | actif | Quasi ré-identifiable (2 ≤ k ≤ 5) | 6 | 39.7 | 10 | 0/5/1/0 | 5/0/1/0 | 83 % | 0 % |
+| Moteur complet | actif | Peu exposé (k > 5) | 95 | 36 | 0 | 0/95/0/0 | 95/0/0/0 | 100 % | 0 % |
+| Moteur complet | neutralisé | Ré-identifiable en clair (k = 1) | 199 | 60.2 | 50.7 | 0/0/199/0 | 0/3/196/0 | 2 % | 4 % |
+| Moteur complet | neutralisé | Quasi ré-identifiable (2 ≤ k ≤ 5) | 6 | 49.5 | 10 | 0/5/1/0 | 5/0/1/0 | 83 % | 0 % |
+| Moteur complet | neutralisé | Peu exposé (k > 5) | 95 | 48 | 0 | 0/95/0/0 | 95/0/0/0 | 100 % | 0 % |
+
+### Par variante de scénario (facteur actif)
+
+| Configuration | direct : score moyen · ALLOW/WARN/MASK/BLOCK · ré-id. après | quasi-identifiants : score moyen · ALLOW/WARN/MASK/BLOCK · ré-id. après | identifiants : score moyen · ALLOW/WARN/MASK/BLOCK · ré-id. après | contact : score moyen · ALLOW/WARN/MASK/BLOCK · ré-id. après | temoin-commune : score moyen · ALLOW/WARN/MASK/BLOCK · ré-id. après | temoin-fonction : score moyen · ALLOW/WARN/MASK/BLOCK · ré-id. après |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Règles seules | 36 · 50/0/0/0 · 100 % | 36 · 50/0/0/0 · 100 % | 51 · 0/0/50/0 · 0 % | 40 · 0/0/50/0 · 90 % | 17 · 50/0/0/0 · 0 % | 17 · 50/0/0/0 · 0 % |
+| NER seul | 57 · 0/0/50/0 · 98 % | 47.5 · 42/0/8/0 · 100 % | 17 · 50/0/0/0 · 100 % | 46.1 · 50/0/0/0 · 98 % | 36 · 50/0/0/0 · 0 % | 36 · 50/0/0/0 · 0 % |
+| Moteur sans NER | 36 · 50/0/0/0 · 100 % | 40 · 50/0/0/0 · 100 % | 51 · 0/0/50/0 · 0 % | 40 · 0/0/50/0 · 90 % | 17 · 50/0/0/0 · 0 % | 17 · 50/0/0/0 · 0 % |
+| Moteur complet | 65 · 0/0/50/0 · 0 % | 59.4 · 0/3/47/0 · 6 % | 51 · 0/0/50/0 · 0 % | 56.6 · 0/0/50/0 · 8 % | 36 · 50/0/0/0 · 0 % | 36 · 50/0/0/0 · 0 % |
+
+## 10. Analyse d'erreurs (Moteur complet)
 
 ### Données sensibles manquées (extrait, corpus manuel en premier)
 

@@ -7,6 +7,8 @@ import { bootstrapInterval, macroF1, matchEntities, prf, type PredEntity } from 
 import { beninIban, generatePopulation, visaCard } from "../../tools/eval/population.js";
 import { attack, buildAttackIndex, generateReidScenarios } from "../../tools/eval/reidentification.js";
 import { createRng } from "../../tools/eval/rng.js";
+import { decide, exposureOf, outgoingText } from "../../tools/eval/risk-response.js";
+import { DEFAULT_RISK_BAND_THRESHOLDS, DEFAULT_RISK_WEIGHTS } from "../../packages/shared/src/index.js";
 
 describe("annotation", () => {
   it("calcule les positions dans le texte nettoyé", () => {
@@ -118,6 +120,54 @@ describe("ré-identification", () => {
     for (const sc of scenarios) {
       const masked = sc.markup.replace(/⟦([A-Z_]+)\|[^⟧]*⟧/g, "[$1_1]");
       expect(attack(masked, sc.targetId, index).reidentified, sc.id).toBe(false);
+    }
+  });
+});
+
+describe("réponse du scoring au risque de ré-identification", () => {
+  it("classe l'exposition en clair d'après l'attaque", () => {
+    expect(exposureOf(1, true)).toBe("reidentifiable");
+    expect(exposureOf(4, false)).toBe("k2-5");
+    expect(exposureOf(1, false)).toBe("k2-5"); // un seul candidat mais ce n'est pas la cible
+    expect(exposureOf(40, false)).toBe("anonyme");
+  });
+
+  it("l'attaquant ne voit rien après BLOCK, le masqué après MASK, le clair sinon", () => {
+    expect(outgoingText("BLOCK", "clair", "masqué")).toBeNull();
+    expect(outgoingText("MASK", "clair", "masqué")).toBe("masqué");
+    expect(outgoingText("WARN", "clair", "masqué")).toBe("clair");
+    expect(outgoingText("ALLOW", "clair", "masqué")).toBe("clair");
+  });
+
+  it("le facteur quasi-identifiants s'active et relève le score sur un scénario sans nom", async () => {
+    const people = generatePopulation(createRng(2026), 2000);
+    const sc = generateReidScenarios(createRng(5), people, 3).find((s) => s.variant === "quasi-identifiants")!;
+    const { text, gold } = parseAnnotated(sc.markup);
+    // Détecteur oracle (annotations de référence) : isole le scoring des erreurs de détection.
+    const system = {
+      id: "oracle",
+      label: "oracle",
+      description: "",
+      coverage: new Set<never>(),
+      detect: async () => ({ entities: gold.map((g) => ({ ...g, confidence: 1, layer: "rules" as const })), context: null }),
+    };
+    const active = await decide(system, text, { weights: { ...DEFAULT_RISK_WEIGHTS }, thresholds: { ...DEFAULT_RISK_BAND_THRESHOLDS } });
+    const neutral = await decide(system, text, {
+      weights: { ...DEFAULT_RISK_WEIGHTS, quasi_identifier_combination: 0 },
+      thresholds: { ...DEFAULT_RISK_BAND_THRESHOLDS },
+    });
+    expect(active.qiFactor).toBeGreaterThan(0);
+    expect(active.score).toBeGreaterThan(neutral.score);
+  });
+});
+
+describe("témoins peu exposés", () => {
+  it("une commune seule ne ré-identifie personne en clair", () => {
+    const people = generatePopulation(createRng(2026), 2000);
+    const index = buildAttackIndex(people);
+    for (const sc of generateReidScenarios(createRng(9), people, 15, ["temoin-commune"])) {
+      const r = attack(parseAnnotated(sc.markup).text, sc.targetId, index);
+      expect(r.candidates, sc.id).toBeGreaterThan(5);
     }
   });
 });

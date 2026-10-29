@@ -137,6 +137,14 @@ async function main() {
       frameworks: ["MALABO-ART14", "APDP-BJ"],
     },
     {
+      name: "Identifiant direct",
+      description: "E-mail, téléphone, IBAN, carte… : une seule valeur suffit à retrouver la personne, masquage systématique.",
+      condition: `direct_identifier_count >= 1`,
+      action: "MASK",
+      priority: 15,
+      frameworks: ["MALABO-ART14", "APDP-BJ", "OWASP-LLM02"],
+    },
+    {
       name: "Combinaison de quasi-identifiants",
       description: "Risque de ré-identification (H2).",
       condition: `quasi_identifier_count >= 3`,

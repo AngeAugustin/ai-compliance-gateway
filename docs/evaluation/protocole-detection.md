@@ -109,14 +109,28 @@ Objectif : vérifier que le masquage **protège réellement les personnes**, au-
 
 **Mesures**, pour le texte en clair puis pour chaque configuration : taux de **ré-identification** (un seul candidat et c'est la cible), taux de **k ≤ 5** (la cible est parmi au plus 5 candidats), **k médian** (taille de l'ensemble d'anonymat).
 
-Les quasi-identifiants seuls suffisent souvent à ré-identifier : c'est la raison d'être de la politique `quasi_identifier_count` côté passerelle, que cette expérience ne mesure pas (elle mesure la détection et le masquage seuls).
+Les quasi-identifiants seuls suffisent souvent à ré-identifier : c'est la raison d'être du facteur de risque « combinaison de quasi-identifiants » et de la politique `quasi_identifier_count`. Cette expérience mesure la détection et le masquage seuls ; l'expérience suivante mesure la décision.
+
+### 5 bis. Réponse du scoring au risque de ré-identification
+
+Objectif : vérifier que le facteur « combinaison de quasi-identifiants » (poids 25 %) **relève la bande de risque** des prompts qui désignent effectivement une personne, et que la décision qui en résulte les protège ([tools/eval/risk-response.ts](../../tools/eval/risk-response.ts)).
+
+**Méthode.** Mêmes scénarios que ci-dessus, plus **100 témoins peu exposés** (50 par variante) pour disposer d'un point de comparaison : `temoin-commune` (une commune seule, environ 130 assurés par commune) et `temoin-fonction` (fonction et commune, une dizaine d'assurés). Pour chaque scénario :
+
+1. **Exposition en clair** : l'attaque appliquée au texte original classe le scénario en *ré-identifiable* (k = 1, c'est la cible), *quasi ré-identifiable* (2 ≤ k ≤ 5) ou *peu exposé* (k > 5). C'est la vérité terrain du risque.
+2. **Décision** : pipeline de l'agent (score de risque → politiques équivalentes au seed, dont la règle « identifiant direct → MASK » ajoutée après la première mesure → masquage → escalade MASK → BLOCK si au moins 2 quasi-identifiants restent après masquage), pour un utilisateur d'une direction à risque modéré écrivant à ChatGPT (hébergé hors juridiction).
+3. **Sortie réelle** : l'attaquant voit rien si BLOCK, le texte masqué si MASK, le texte en clair si ALLOW ou WARN.
+
+**Ablation.** Même pipeline avec le poids du facteur à 0 et les trois autres renormalisés (somme = 1). La différence de bandes et d'actions isole la contribution du facteur ; la politique `quasi_identifier_count ≥ 3` reste active dans les deux cas.
+
+**Mesures**, par classe d'exposition : score moyen, valeur moyenne du facteur, répartition des bandes et des actions, **taux laissé en clair** (ALLOW ou WARN) et **taux encore ré-identifié après la passerelle**. Le résultat attendu : score et bande croissants avec l'exposition, et aucun scénario ré-identifiable laissé en clair.
 
 ## 6. Reproductibilité
 
 - Générateur pseudo-aléatoire à graine (mulberry32, [tools/eval/rng.ts](../../tools/eval/rng.ts)) ; flux séparés pour la population, le corpus généré, les documents longs et les scénarios.
 - Le rapport inscrit la date, la graine, la version de Node, la plateforme, le processeur et l'état du NER / LLM.
 - Sortie Markdown lisible et JSON complet (`resultats-detection.json`) pour retraiter les chiffres.
-- Tests du protocole lui-même ([tests/eval/protocole.test.ts](../../tests/eval/protocole.test.ts)) : parseur, appariement dans les trois modes, conventions P/R/F1, déterminisme du bootstrap, validité des IBAN et cartes du corpus, reproductibilité du générateur, et contrôle de l'attaque (réussite en clair, échec après masquage total).
+- Tests du protocole lui-même ([tests/eval/protocole.test.ts](../../tests/eval/protocole.test.ts)) : parseur, appariement dans les trois modes, conventions P/R/F1, déterminisme du bootstrap, validité des IBAN et cartes du corpus, reproductibilité du générateur, et contrôle de l'attaque (réussite en clair, échec après masquage total), classement de l'exposition, texte vu par l'attaquant selon l'action, et activation du facteur quasi-identifiants avec un détecteur oracle.
 
 ## 7. Lecture des résultats
 

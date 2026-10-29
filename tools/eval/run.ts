@@ -19,7 +19,8 @@ import { parseAnnotated, toSample, type EvalSample } from "./annotation.js";
 import { generateLongDocuments, generateSamples } from "./corpus-genere.js";
 import { evaluateContext, evaluateReidentification, evaluateSystem, type SystemReport } from "./evaluate.js";
 import { generatePopulation } from "./population.js";
-import { generateReidScenarios } from "./reidentification.js";
+import { CONTROL_VARIANTS, generateReidScenarios } from "./reidentification.js";
+import { evaluateRiskResponse } from "./risk-response.js";
 import { describeCorpus, renderMarkdown, type FullReport } from "./report.js";
 import { createRng } from "./rng.js";
 import { buildSystems } from "./systems.js";
@@ -53,8 +54,12 @@ const scenarios = generateReidScenarios(createRng(seed + 3), people, Number(args
   ...s,
   text: parseAnnotated(s.markup).text,
 }));
+const controls = generateReidScenarios(createRng(seed + 4), people, Number(args.reid), CONTROL_VARIANTS).map((s) => ({
+  ...s,
+  text: parseAnnotated(s.markup).text,
+}));
 const corpus = describeCorpus(samples, scenarios.length);
-log(`corpus : ${corpus.samples} prompts, ${corpus.entities} entités, ${corpus.negatives} négatifs, ${scenarios.length} scénarios de ré-identification`);
+log(`corpus : ${corpus.samples} prompts, ${corpus.entities} entités, ${corpus.negatives} négatifs, ${scenarios.length} scénarios de ré-identification + ${controls.length} témoins`);
 
 const setup = await buildSystems({ withNer: !args["sans-ner"] });
 log(`NER : ${setup.ner.available ? `chargé en ${setup.ner.initMs} ms` : `indisponible — ${setup.ner.detail}`}`);
@@ -79,6 +84,13 @@ for (const l of reidentification) {
   log(`  ${l.label} : ${l.global.reidentified}/${l.global.n} ré-identifiés, k médian ${l.global.medianK}`);
 }
 
+log("réponse du scoring au risque de ré-identification…");
+const riskResponse = await evaluateRiskResponse(setup.systems, [...scenarios, ...controls], people);
+for (const l of riskResponse.filter((x) => x.variant === "facteur-actif")) {
+  const g = l.byExposure.reidentifiable;
+  log(`  ${l.label} : k=1 en clair ${g.n}, score moyen ${g.meanScore}, laissés en clair ${g.passedInClear}, ré-identifiés après passerelle ${g.reidentifiedAfter}`);
+}
+
 const full: FullReport = {
   meta: {
     date: new Date().toISOString().slice(0, 10),
@@ -95,6 +107,7 @@ const full: FullReport = {
   systems: reports,
   context,
   reidentification,
+  riskResponse,
 };
 
 const outDir = resolve(args.sortie);

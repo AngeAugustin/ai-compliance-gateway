@@ -109,6 +109,17 @@ export const SEED_EQUIVALENT_POLICIES: Policy[] = [
     referenceFrameworks: ["MALABO-ART14", "APDP-BJ"],
   },
   {
+    id: "pol-direct",
+    name: "Identifiant direct",
+    description: "Une seule valeur suffit à retrouver la personne.",
+    conditionExpr: `direct_identifier_count >= 1`,
+    action: "MASK",
+    priority: 15,
+    version: 1,
+    enabled: true,
+    referenceFrameworks: ["MALABO-ART14", "APDP-BJ", "OWASP-LLM02"],
+  },
+  {
     id: "pol-quasi",
     name: "Combinaison de quasi-identifiants",
     description: "Ré-identification (H2).",

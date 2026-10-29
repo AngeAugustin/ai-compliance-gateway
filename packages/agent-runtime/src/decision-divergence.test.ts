@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { DetectionEngine } from "@acg/detection-engine";
 import { buildPolicyContext, decidePolicy } from "@acg/policy-engine";
 import { computeRiskScore } from "@acg/risk-scoring";
-import { DEFAULT_AI_SERVICES, DEFAULT_RISK_BAND_THRESHOLDS, DEFAULT_RISK_WEIGHTS } from "@acg/shared";
+import { DEFAULT_AI_SERVICES, DEFAULT_RISK_BAND_THRESHOLDS, DEFAULT_RISK_WEIGHTS, type SensitiveEntity } from "@acg/shared";
 import { DecisionCache } from "./cache.js";
 import { decideLocally } from "./pipeline.js";
 import { SEED_EQUIVALENT_POLICIES, TEXT_E2E_SCENARIOS, type TextE2EScenario } from "./e2e-texte.scenarios.js";
@@ -93,7 +93,44 @@ describe("écart entre décision locale et recalcul serveur", () => {
       if (server.action !== local.action) divergent.push(`${scenario.id} : poste ${local.action}, serveur ${server.action}`);
     }
 
+    // Avec la règle « identifiant direct → MASK », les scénarios E2E ne divergent plus ;
+    // l'écart reste possible (cas ci-dessous), d'où la journalisation de l'action appliquée.
     console.info(`Décisions divergentes (${divergent.length}/${TEXT_E2E_SCENARIOS.length}) :\n  ${divergent.join("\n  ")}`);
-    expect(divergent.length).toBeGreaterThan(0);
+  });
+
+  it("l'escalade sur quasi-identifiants résiduels n'existe que sur le poste", () => {
+    const entity = (entityType: SensitiveEntity["entityType"], value: string): SensitiveEntity => ({
+      entityType,
+      value,
+      span: [0, 0],
+      confidence: 1,
+      layer: "rules",
+    });
+    // Trois quasi-identifiants détectés ; deux restent lisibles après masquage (occurrences manquées).
+    const entities = [entity("JOB_TITLE", "comptable"), entity("ORGANIZATION", "SOBEBRA"), entity("DATE_OF_BIRTH", "12/03/1981")];
+    const risk = computeRiskScore({
+      entities,
+      contextCategory: null,
+      departmentRiskLevel: "moderate",
+      userJurisdiction: "BJ",
+      aiHostingRegion: "US",
+      aiRiskBaseline: 30,
+    });
+    const ctx = buildPolicyContext({
+      risk,
+      entities,
+      contextCategory: null,
+      contextConfidence: 0,
+      department: "RH",
+      channel: "browser",
+      degradedMode: false,
+      textLength: 120,
+      aiService: { id: "chatgpt.com", hosting_region: "US", free_access: true, risk_baseline: 30 },
+      user: { jurisdiction: "BJ", department: "RH", role: "USER" },
+    });
+    const local = decidePolicy({ policies: SEED_EQUIVALENT_POLICIES, risk, context: ctx, entities, residualEntities: entities.slice(0, 2) });
+    const server = decidePolicy({ policies: SEED_EQUIVALENT_POLICIES, risk, context: ctx, entities });
+    expect(local.action).toBe("BLOCK");
+    expect(server.action).toBe("MASK");
   });
 });
