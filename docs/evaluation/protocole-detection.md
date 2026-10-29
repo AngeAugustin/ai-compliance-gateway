@@ -86,7 +86,9 @@ Pour chaque entité annotée, on applique `applyMasking` aux prédictions et on 
 
 ### Contexte
 
-Exactitude, macro-F1 et matrice de confusion sur les prompts étiquetés (les documents multi-demandes, multi-thèmes, sont exclus).
+Exactitude, macro-F1 et matrice de confusion sur les prompts étiquetés (les documents multi-demandes, multi-thèmes, sont exclus), plus l'exactitude **par corpus**.
+
+Les lexiques de repli (version 2) ont été réglés en n'examinant que les erreurs du **corpus généré**. Le **corpus manuel n'a pas été regardé** pendant le réglage : son exactitude est la mesure honnête de généralisation, le score sur le généré est optimiste par construction. Version 1 → version 2 : généré 80,0 % → 97,7 %, manuel 56,9 % → 61,5 %. Les erreurs restantes du manuel sont surtout des prompts sans terme métier explicite (« annoncer qu'elle n'a pas été retenue », « ma clé ne doit pas fuiter ») : une limite de toute approche par lexique, que la couche LLM est censée combler.
 
 ### Latence
 

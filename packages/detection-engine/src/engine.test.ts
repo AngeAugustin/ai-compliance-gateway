@@ -61,4 +61,20 @@ describe("keyword context", () => {
   it("classe un prompt RH", () => {
     expect(classifyByKeywords("Voici le CV du candidat et son salaire d'embauche").contextCategory).toBe("RH");
   });
+
+  it("compare sans accents ni casse, en mots entiers", () => {
+    expect(classifyByKeywords("Patient HOSPITALISÉ pour paludisme").contextCategory).toBe("Medical");
+    expect(classifyByKeywords("Ecris une requete SQL sur la table des prestations").contextCategory).toBe("Technique");
+    // « cv » à l'intérieur d'un jeton encodé n'est pas un mot RH.
+    expect(classifyByKeywords("Résume ce texte : xYguCvOVbnSQ6w3pj").contextCategory).toBe("Generique");
+  });
+
+  it("un seul terme ambigu reste générique", () => {
+    expect(classifyByKeywords("Quel est le montant total ?").contextCategory).toBe("Generique");
+    expect(classifyByKeywords("Résume cet article de presse").contextCategory).toBe("Generique");
+  });
+
+  it("à score égal, la catégorie la plus sensible l'emporte", () => {
+    expect(classifyByKeywords("Envoie la facture du médecin").contextCategory).toBe("Medical");
+  });
 });

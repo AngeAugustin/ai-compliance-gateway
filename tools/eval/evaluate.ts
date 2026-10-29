@@ -75,6 +75,8 @@ export interface ContextReport {
   accuracy: number;
   macroF1: number;
   confusion: Record<string, Record<string, number>>;
+  /** Exactitude par corpus : le manuel est la référence (le généré a servi à régler les lexiques). */
+  bySplit: Record<string, { n: number; correct: number }>;
 }
 
 export interface ReidLine {
@@ -265,10 +267,16 @@ export async function evaluateContext(setup: SystemsSetup, samples: EvalSample[]
     const confusion: Record<string, Record<string, number>> = {};
     for (const g of CONTEXT_CATEGORIES) confusion[g] = Object.fromEntries(CONTEXT_CATEGORIES.map((p) => [p, 0]));
     let correct = 0;
+    const bySplit: ContextReport["bySplit"] = {};
     for (const s of labelled) {
       const predicted = (await classifier.classify(s.text))?.contextCategory ?? "Generique";
       confusion[s.context]![predicted]!++;
-      if (predicted === s.context) correct++;
+      const split = (bySplit[s.split] ??= { n: 0, correct: 0 });
+      split.n++;
+      if (predicted === s.context) {
+        correct++;
+        split.correct++;
+      }
     }
     const f1s = CONTEXT_CATEGORIES.map((c) => {
       const tp = confusion[c]![c]!;
@@ -283,6 +291,7 @@ export async function evaluateContext(setup: SystemsSetup, samples: EvalSample[]
       accuracy: correct / Math.max(1, labelled.length),
       macroF1: f1s.reduce((a, b) => a + b, 0) / Math.max(1, f1s.length),
       confusion,
+      bySplit,
     });
   }
   return reports;

@@ -164,7 +164,10 @@ export function renderMarkdown(r: FullReport): string {
   if (r.context.length === 0) out.push(`Aucun classifieur évalué.`);
   for (const c of r.context) {
     out.push(`### ${c.label}`);
-    out.push(`${c.n} prompts étiquetés — exactitude ${pct(c.accuracy)}, macro-F1 ${pct(c.macroF1)}.`);
+    const splits = Object.entries(c.bySplit ?? {})
+      .map(([split, v]) => `${split} ${pct(v.correct / Math.max(1, v.n))} (${v.correct}/${v.n})`)
+      .join(" · ");
+    out.push(`${c.n} prompts étiquetés — exactitude ${pct(c.accuracy)}, macro-F1 ${pct(c.macroF1)}. Par corpus : ${splits}.`);
     const cats = Object.keys(c.confusion);
     out.push(table(["Attendu \\ Prédit", ...cats], cats.map((g) => [g, ...cats.map((p) => c.confusion[g]![p]!)])));
   }
