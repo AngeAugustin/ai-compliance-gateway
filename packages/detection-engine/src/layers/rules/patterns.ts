@@ -162,7 +162,11 @@ export const RULE_PATTERNS: RulePattern[] = [
     id: "cnss-insured",
     entityType: "CNSS_INSURED_NUMBER",
     confidence: 0.9,
-    regex: /\bcnss\s+([A-Z0-9]{6,14})\b/gi,
+    // « CNSS B20481736 », « assuré n° … », « n° d'assuré … », « numéro d'assurée … », « matricule CNSS … ».
+    regex:
+      /\b(?:cnss|assur[ée]e?\s+(?:cnss\s+)?n[°o]\.?|n[°o]\.?\s*d['’]\s*assur[ée]e?|num[ée]ro\s+d['’]\s*assur[ée]e?|matricule\s+(?:cnss|assur[ée]e?))\s*[:\s]\s*([A-Z0-9]{6,14})\b/gi,
+    // Un identifiant contient des chiffres : « CNSS Parakou » n'en est pas un.
+    validate: (m) => /\d/.test(m.split(/[:\s]+/).pop() ?? ""),
   },
   {
     id: "cnss-employer",
@@ -209,7 +213,10 @@ export const RULE_PATTERNS: RulePattern[] = [
     id: "salary",
     entityType: "SALARY",
     confidence: 0.82,
-    regex: /\b(?:salaire(?:\s+(?:brut|net|mensuel))?|cotisation(?:s)?(?:\s+sociale(?:s)?)?|r[ée]mun[ée]ration)\s*[:\s]*([\d]{1,3}(?:[ \u00a0.]?\d{3})*(?:[.,]\d{1,2})?\s*(?:FCFA|XOF|EUR|€)?)/gi,
+    // Le mot-clé peut être suivi de quelques mots (« salaire brut mensuel de », « cotisations du
+    // trimestre : », « prime de transport ») ; seul le montant est capturé, sans la devise.
+    regex:
+      /\b(?:salaires?|cotisations?|r[ée]mun[ée]rations?|primes?|appointements)(?:\s+(?!\d)[\p{L}'’]+){0,4}?\s*[:=]?\s*(\d{1,3}(?:[ \u00a0.]?\d{3})+(?:[.,]\d{1,2})?)(?=\s*(?:F\b|FCFA|XOF|EUR|€|francs?\b)|[\s.,;)]|$)/giu,
   },
   {
     id: "financial-amount",

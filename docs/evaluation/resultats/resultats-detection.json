@@ -1,0 +1,4894 @@
+{
+  "meta": {
+    "date": "2026-10-29",
+    "seed": 2026,
+    "repetitions": 3,
+    "node": "24.12.0",
+    "platform": "win32-x64",
+    "cpu": "Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz",
+    "durationMs": 416027.92809999996,
+    "populationSize": 2000
+  },
+  "setup": {
+    "ner": {
+      "available": true,
+      "initMs": 4557
+    },
+    "llm": {
+      "available": false,
+      "detail": "LLM_MODEL_PATH non renseigné"
+    }
+  },
+  "corpus": {
+    "samples": 385,
+    "bySplit": {
+      "manuel": 65,
+      "genere": 300,
+      "long": 20
+    },
+    "entities": 975,
+    "entitiesByType": {
+      "FINANCIAL_AMOUNT": 54,
+      "IBAN": 38,
+      "MOBILE_MONEY": 13,
+      "PERSON": 267,
+      "EMAIL": 27,
+      "API_KEY": 39,
+      "CNSS_INSURED_NUMBER": 38,
+      "PHONE": 27,
+      "JOB_TITLE": 44,
+      "SALARY": 36,
+      "DATE_OF_BIRTH": 43,
+      "ADDRESS": 55,
+      "NATIONAL_ID": 17,
+      "ORGANIZATION": 90,
+      "CREDIT_CARD": 18,
+      "CNSS_EMPLOYER_NUMBER": 16,
+      "TAX_ID": 14,
+      "INTERNAL_ID": 27,
+      "CONNECTION_STRING": 17,
+      "IP_ADDRESS": 15,
+      "INTERNAL_URL": 15,
+      "PASSWORD": 11,
+      "PRIVATE_KEY": 1,
+      "MEDICAL": 53
+    },
+    "negatives": 103,
+    "contexts": {
+      "Finance": 81,
+      "RH": 71,
+      "Technique": 63,
+      "Juridique": 43,
+      "Medical": 45,
+      "Generique": 62
+    },
+    "reidScenarios": 200
+  },
+  "systems": [
+    {
+      "id": "regles",
+      "label": "Règles seules",
+      "description": "Couche 1 (regex + validateurs), sortie brute",
+      "coverage": [
+        "API_KEY",
+        "CNSS_EMPLOYER_NUMBER",
+        "CNSS_INSURED_NUMBER",
+        "CONNECTION_STRING",
+        "CREDIT_CARD",
+        "DATE_OF_BIRTH",
+        "EMAIL",
+        "FINANCIAL_AMOUNT",
+        "IBAN",
+        "INTERNAL_ID",
+        "INTERNAL_URL",
+        "IP_ADDRESS",
+        "MEDICAL",
+        "MOBILE_MONEY",
+        "NATIONAL_ID",
+        "PASSWORD",
+        "PHONE",
+        "PRIVATE_KEY",
+        "SALARY",
+        "TAX_ID"
+      ],
+      "global": {
+        "strict": {
+          "counts": {
+            "tp": 484,
+            "fp": 30,
+            "fn": 491
+          },
+          "prf": {
+            "precision": 0.9416342412451362,
+            "recall": 0.49641025641025643,
+            "f1": 0.6501007387508395
+          },
+          "ci95": {
+            "low": 0.6232114467408585,
+            "high": 0.6737967914438503
+          }
+        },
+        "partiel": {
+          "counts": {
+            "tp": 496,
+            "fp": 18,
+            "fn": 479
+          },
+          "prf": {
+            "precision": 0.9649805447470817,
+            "recall": 0.5087179487179487,
+            "f1": 0.6662189388851579
+          },
+          "ci95": {
+            "low": 0.6377383300460224,
+            "high": 0.6897767332549941
+          }
+        },
+        "protection": {
+          "counts": {
+            "tp": 510,
+            "fp": 4,
+            "fn": 465
+          },
+          "prf": {
+            "precision": 0.9922178988326849,
+            "recall": 0.5230769230769231,
+            "f1": 0.6850235057085293
+          },
+          "ci95": {
+            "low": 0.6578366445916115,
+            "high": 0.7071380920613742
+          }
+        }
+      },
+      "bySplit": {
+        "manuel": {
+          "strict": {
+            "counts": {
+              "tp": 44,
+              "fp": 5,
+              "fn": 53
+            },
+            "prf": {
+              "precision": 0.8979591836734694,
+              "recall": 0.4536082474226804,
+              "f1": 0.6027397260273972
+            }
+          },
+          "partiel": {
+            "counts": {
+              "tp": 44,
+              "fp": 5,
+              "fn": 53
+            },
+            "prf": {
+              "precision": 0.8979591836734694,
+              "recall": 0.4536082474226804,
+              "f1": 0.6027397260273972
+            }
+          },
+          "protection": {
+            "counts": {
+              "tp": 45,
+              "fp": 4,
+              "fn": 52
+            },
+            "prf": {
+              "precision": 0.9183673469387755,
+              "recall": 0.4639175257731959,
+              "f1": 0.6164383561643836
+            }
+          }
+        },
+        "genere": {
+          "strict": {
+            "counts": {
+              "tp": 257,
+              "fp": 17,
+              "fn": 281
+            },
+            "prf": {
+              "precision": 0.9379562043795621,
+              "recall": 0.47769516728624534,
+              "f1": 0.6330049261083743
+            }
+          },
+          "partiel": {
+            "counts": {
+              "tp": 263,
+              "fp": 11,
+              "fn": 275
+            },
+            "prf": {
+              "precision": 0.9598540145985401,
+              "recall": 0.4888475836431227,
+              "f1": 0.6477832512315271
+            }
+          },
+          "protection": {
+            "counts": {
+              "tp": 274,
+              "fp": 0,
+              "fn": 264
+            },
+            "prf": {
+              "precision": 1,
+              "recall": 0.5092936802973977,
+              "f1": 0.6748768472906403
+            }
+          }
+        },
+        "long": {
+          "strict": {
+            "counts": {
+              "tp": 183,
+              "fp": 8,
+              "fn": 157
+            },
+            "prf": {
+              "precision": 0.9581151832460733,
+              "recall": 0.538235294117647,
+              "f1": 0.6892655367231639
+            }
+          },
+          "partiel": {
+            "counts": {
+              "tp": 189,
+              "fp": 2,
+              "fn": 151
+            },
+            "prf": {
+              "precision": 0.9895287958115183,
+              "recall": 0.5558823529411765,
+              "f1": 0.711864406779661
+            }
+          },
+          "protection": {
+            "counts": {
+              "tp": 191,
+              "fp": 0,
+              "fn": 149
+            },
+            "prf": {
+              "precision": 1,
+              "recall": 0.5617647058823529,
+              "f1": 0.71939736346516
+            }
+          }
+        }
+      },
+      "byType": [
+        {
+          "entityType": "PERSON",
+          "support": 267,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 267
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "ORGANIZATION",
+          "support": 90,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 90
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "ADDRESS",
+          "support": 55,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 55
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "FINANCIAL_AMOUNT",
+          "support": 54,
+          "counts": {
+            "tp": 52,
+            "fp": 2,
+            "fn": 2
+          },
+          "prf": {
+            "precision": 0.9629629629629629,
+            "recall": 0.9629629629629629,
+            "f1": 0.9629629629629629
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "MEDICAL",
+          "support": 53,
+          "counts": {
+            "tp": 49,
+            "fp": 0,
+            "fn": 4
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0.9245283018867925,
+            "f1": 0.9607843137254902
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "JOB_TITLE",
+          "support": 44,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 44
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "DATE_OF_BIRTH",
+          "support": 43,
+          "counts": {
+            "tp": 41,
+            "fp": 0,
+            "fn": 2
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0.9534883720930233,
+            "f1": 0.9761904761904763
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "API_KEY",
+          "support": 39,
+          "counts": {
+            "tp": 39,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "CNSS_INSURED_NUMBER",
+          "support": 38,
+          "counts": {
+            "tp": 38,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "IBAN",
+          "support": 38,
+          "counts": {
+            "tp": 38,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "SALARY",
+          "support": 36,
+          "counts": {
+            "tp": 36,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "EMAIL",
+          "support": 27,
+          "counts": {
+            "tp": 27,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "INTERNAL_ID",
+          "support": 27,
+          "counts": {
+            "tp": 27,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "PHONE",
+          "support": 27,
+          "counts": {
+            "tp": 27,
+            "fp": 1,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 0.9642857142857143,
+            "recall": 1,
+            "f1": 0.9818181818181818
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "CREDIT_CARD",
+          "support": 18,
+          "counts": {
+            "tp": 18,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "CONNECTION_STRING",
+          "support": 17,
+          "counts": {
+            "tp": 17,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "NATIONAL_ID",
+          "support": 17,
+          "counts": {
+            "tp": 16,
+            "fp": 14,
+            "fn": 1
+          },
+          "prf": {
+            "precision": 0.5333333333333333,
+            "recall": 0.9411764705882353,
+            "f1": 0.6808510638297872
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "CNSS_EMPLOYER_NUMBER",
+          "support": 16,
+          "counts": {
+            "tp": 16,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "INTERNAL_URL",
+          "support": 15,
+          "counts": {
+            "tp": 15,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "IP_ADDRESS",
+          "support": 15,
+          "counts": {
+            "tp": 15,
+            "fp": 1,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 0.9375,
+            "recall": 1,
+            "f1": 0.967741935483871
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "TAX_ID",
+          "support": 14,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 14
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "MOBILE_MONEY",
+          "support": 13,
+          "counts": {
+            "tp": 13,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "PASSWORD",
+          "support": 11,
+          "counts": {
+            "tp": 11,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "PRIVATE_KEY",
+          "support": 1,
+          "counts": {
+            "tp": 1,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        }
+      ],
+      "macroF1": 0.7720978722504487,
+      "perimetre": {
+        "counts": {
+          "tp": 496,
+          "fp": 18,
+          "fn": 23
+        },
+        "prf": {
+          "precision": 0.9649805447470817,
+          "recall": 0.9556840077071291,
+          "f1": 0.9603097773475315
+        }
+      },
+      "latency": {
+        "runs": 1155,
+        "p50": 0.26670000000012806,
+        "p95": 1.6983000000000175,
+        "p99": 6.319400000000314,
+        "mean": 0.5687682251082324,
+        "max": 25.29740000000129,
+        "charsPerMs": 358.46432322114936,
+        "byLength": {
+          "court": {
+            "n": 1092,
+            "p50": 0.24529999999867869,
+            "p95": 0.9766999999992549
+          },
+          "moyen": {
+            "n": 33,
+            "p50": 1.671200000000681,
+            "p95": 3.1859000000004016
+          },
+          "long": {
+            "n": 30,
+            "p50": 4.69970000000103,
+            "p95": 9.84809999999925
+          }
+        }
+      },
+      "masking": {
+        "global": {
+          "total": 975,
+          "complet": 508,
+          "partiel": 2,
+          "aucun": 465
+        },
+        "byType": [
+          {
+            "entityType": "PERSON",
+            "line": {
+              "total": 267,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 267
+            }
+          },
+          {
+            "entityType": "ORGANIZATION",
+            "line": {
+              "total": 90,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 90
+            }
+          },
+          {
+            "entityType": "ADDRESS",
+            "line": {
+              "total": 55,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 55
+            }
+          },
+          {
+            "entityType": "FINANCIAL_AMOUNT",
+            "line": {
+              "total": 54,
+              "complet": 52,
+              "partiel": 0,
+              "aucun": 2
+            }
+          },
+          {
+            "entityType": "MEDICAL",
+            "line": {
+              "total": 53,
+              "complet": 47,
+              "partiel": 2,
+              "aucun": 4
+            }
+          },
+          {
+            "entityType": "JOB_TITLE",
+            "line": {
+              "total": 44,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 44
+            }
+          },
+          {
+            "entityType": "DATE_OF_BIRTH",
+            "line": {
+              "total": 43,
+              "complet": 41,
+              "partiel": 0,
+              "aucun": 2
+            }
+          },
+          {
+            "entityType": "API_KEY",
+            "line": {
+              "total": 39,
+              "complet": 39,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "IBAN",
+            "line": {
+              "total": 38,
+              "complet": 38,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "CNSS_INSURED_NUMBER",
+            "line": {
+              "total": 38,
+              "complet": 38,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "SALARY",
+            "line": {
+              "total": 36,
+              "complet": 36,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "EMAIL",
+            "line": {
+              "total": 27,
+              "complet": 27,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "PHONE",
+            "line": {
+              "total": 27,
+              "complet": 27,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "INTERNAL_ID",
+            "line": {
+              "total": 27,
+              "complet": 27,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "CREDIT_CARD",
+            "line": {
+              "total": 18,
+              "complet": 18,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "NATIONAL_ID",
+            "line": {
+              "total": 17,
+              "complet": 16,
+              "partiel": 0,
+              "aucun": 1
+            }
+          },
+          {
+            "entityType": "CONNECTION_STRING",
+            "line": {
+              "total": 17,
+              "complet": 17,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "CNSS_EMPLOYER_NUMBER",
+            "line": {
+              "total": 16,
+              "complet": 16,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "IP_ADDRESS",
+            "line": {
+              "total": 15,
+              "complet": 15,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "INTERNAL_URL",
+            "line": {
+              "total": 15,
+              "complet": 15,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "TAX_ID",
+            "line": {
+              "total": 14,
+              "complet": 14,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "MOBILE_MONEY",
+            "line": {
+              "total": 13,
+              "complet": 13,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "PASSWORD",
+            "line": {
+              "total": 11,
+              "complet": 11,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "PRIVATE_KEY",
+            "line": {
+              "total": 1,
+              "complet": 1,
+              "partiel": 0,
+              "aucun": 0
+            }
+          }
+        ]
+      },
+      "missed": [
+        {
+          "sample": "man-003",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Jean Dupont",
+          "excerpt": "Voici le CV de Jean Dupont, jean.dupont@cnss.bj, candida…"
+        },
+        {
+          "sample": "man-006",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Rosine Akakpo",
+          "excerpt": "…crire un mail pour annoncer à Rosine Akakpo qu'elle n'a pas été retenue ?…"
+        },
+        {
+          "sample": "man-007",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "KOSSI HOUNKANRIN",
+          "excerpt": "Fiche de paie de KOSSI HOUNKANRIN — magasinier — salaire de bas…"
+        },
+        {
+          "sample": "man-007",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "magasinier",
+          "excerpt": "…de paie de KOSSI HOUNKANRIN — magasinier — salaire de base 185 000 F, …"
+        },
+        {
+          "sample": "man-008",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "mathias zinsou",
+          "excerpt": "…ards répétés à l'attention de mathias zinsou (chauffeur), sans être trop d…"
+        },
+        {
+          "sample": "man-008",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "chauffeur",
+          "excerpt": "…'attention de mathias zinsou (chauffeur), sans être trop dur stp"
+        },
+        {
+          "sample": "man-009",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Aïcha Yessoufou",
+          "excerpt": "Liste des agents à former : Aïcha Yessoufou, Romuald Gbaguidi et Sidonie …"
+        },
+        {
+          "sample": "man-009",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Romuald Gbaguidi",
+          "excerpt": "…s à former : Aïcha Yessoufou, Romuald Gbaguidi et Sidonie Tossou. Prévoir le…"
+        },
+        {
+          "sample": "man-009",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Sidonie Tossou",
+          "excerpt": "…essoufou, Romuald Gbaguidi et Sidonie Tossou. Prévoir le déjeuner pour 3 p…"
+        },
+        {
+          "sample": "man-011",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Grâce Dossou",
+          "excerpt": "… confirmons l'embauche de Mme Grâce Dossou, née le 7 juillet 1994, domic…"
+        },
+        {
+          "sample": "man-011",
+          "split": "manuel",
+          "entityType": "ADDRESS",
+          "value": "Fidjrossè",
+          "excerpt": "… 7 juillet 1994, domiciliée à Fidjrossè, en qualité de secrétaire de …"
+        },
+        {
+          "sample": "man-011",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "secrétaire de direction",
+          "excerpt": "…ée à Fidjrossè, en qualité de secrétaire de direction. »"
+        },
+        {
+          "sample": "man-013",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Codjo Sossa",
+          "excerpt": "…our le dossier retraite de M. Codjo Sossa (NPI 1093456728), il manque l…"
+        },
+        {
+          "sample": "man-013",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "Imprimerie du Zou",
+          "excerpt": "…station de l'ancien employeur Imprimerie du Zou. Rédige la relance."
+        },
+        {
+          "sample": "man-014",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Hermann Lokossou",
+          "excerpt": "…you translate into English: « Hermann Lokossou a été promu contrôleur de ges…"
+        },
+        {
+          "sample": "man-014",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "contrôleur de gestion",
+          "excerpt": "… Hermann Lokossou a été promu contrôleur de gestion à compter du 1er janvier. »"
+        },
+        {
+          "sample": "man-017",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Félicité Agbo",
+          "excerpt": "…r le Moov Money 0195873412 de Félicité Agbo et prépare le SMS de confirma…"
+        },
+        {
+          "sample": "man-019",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "Boulangerie La Lagune",
+          "excerpt": "…n échéancier pour l'employeur Boulangerie La Lagune, dette de 1.250.000 FCFA, en …"
+        },
+        {
+          "sample": "man-022",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "Transports Alafia",
+          "excerpt": "Société Transports Alafia, IFU 3201912345678 : rédige l…"
+        },
+        {
+          "sample": "man-022",
+          "split": "manuel",
+          "entityType": "TAX_ID",
+          "value": "3201912345678",
+          "excerpt": "…ociété Transports Alafia, IFU 3201912345678 : rédige l'attestation de rég…"
+        },
+        {
+          "sample": "man-023",
+          "split": "manuel",
+          "entityType": "FINANCIAL_AMOUNT",
+          "value": "15000",
+          "excerpt": "envoie 15000F a +229 01 51 22 33 44 sur MT…"
+        },
+        {
+          "sample": "man-024",
+          "split": "manuel",
+          "entityType": "FINANCIAL_AMOUNT",
+          "value": "275 000",
+          "excerpt": "Le virement de 275 000 € a été reçu le 3 octobre, me…"
+        },
+        {
+          "sample": "man-026",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "Groupe Atlantique Services",
+          "excerpt": "… l'affaire opposant la CNSS à Groupe Atlantique Services devant le tribunal de commerc…"
+        },
+        {
+          "sample": "man-026",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Clarisse Tchibozo",
+          "excerpt": "… Cotonou. Notre avocat est Me Clarisse Tchibozo."
+        },
+        {
+          "sample": "man-028",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Hortense Assogba",
+          "excerpt": "Mme Hortense Assogba conteste le refus de sa pensi…"
+        }
+      ],
+      "spurious": [
+        {
+          "sample": "man-020",
+          "split": "manuel",
+          "entityType": "FINANCIAL_AMOUNT",
+          "value": "500 000",
+          "excerpt": "…ale, exemples pour 100 000 et 500 000 FCFA."
+        },
+        {
+          "sample": "man-022",
+          "split": "manuel",
+          "entityType": "NATIONAL_ID",
+          "value": "3201912345678",
+          "excerpt": "…ociété Transports Alafia, IFU 3201912345678 : rédige l'attestation de rég…"
+        },
+        {
+          "sample": "man-034",
+          "split": "manuel",
+          "entityType": "IP_ADDRESS",
+          "value": "8.8.8.8",
+          "excerpt": "… IPv6 avec des exemples comme 8.8.8.8."
+        },
+        {
+          "sample": "man-058",
+          "split": "manuel",
+          "entityType": "FINANCIAL_AMOUNT",
+          "value": "52 000",
+          "excerpt": "…septembre 2023 fixe le SMIG à 52 000 FCFA. Explique son impact."
+        },
+        {
+          "sample": "man-060",
+          "split": "manuel",
+          "entityType": "PHONE",
+          "value": "4111 2233",
+          "excerpt": "…usé, et le numéro de commande 4111 2233 n'apparaît pas. Que faire ?"
+        },
+        {
+          "sample": "gen-020",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "3744748326841",
+          "excerpt": "…ciété Société Ouémé Agro, IFU 3744748326841, virement vers BJ67 BE88 0450…"
+        },
+        {
+          "sample": "gen-129",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1355227568084",
+          "excerpt": "…été Collège Les Lauriers, IFU 1355227568084, virement vers BJ92BE71737077…"
+        },
+        {
+          "sample": "gen-140",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1056795755318",
+          "excerpt": "…té Savonnerie de l'Ouémé, IFU 1056795755318, virement vers BJ17BJ58649604…"
+        },
+        {
+          "sample": "gen-162",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1951546735664",
+          "excerpt": "…été Collège Les Lauriers, IFU 1951546735664, virement vers BJ53BE45057863…"
+        },
+        {
+          "sample": "gen-208",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1678399941790",
+          "excerpt": "…ociété Imprimerie du Zou, IFU 1678399941790, virement vers BJ64BE61054783…"
+        },
+        {
+          "sample": "gen-222",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "3859901067286",
+          "excerpt": "…été Collège Les Lauriers, IFU 3859901067286, virement vers BJ72 CB40 9965…"
+        },
+        {
+          "sample": "gen-265",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1988349248332",
+          "excerpt": "…ociété Transports Alafia, IFU 1988349248332, virement vers BJ52 OB05 1407…"
+        },
+        {
+          "sample": "gen-267",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1456870266338",
+          "excerpt": "…ciété Hôtel Le Belvédère, IFU 1456870266338, virement vers BJ45EC27346898…"
+        },
+        {
+          "sample": "gen-275",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "3586345617741",
+          "excerpt": "…té BTP Mono Construction, IFU 3586345617741, virement vers BJ59 EC43 5921…"
+        },
+        {
+          "sample": "gen-292",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "3980322183985",
+          "excerpt": "…ciété Société Ouémé Agro, IFU 3980322183985, virement vers BJ47OB23934048…"
+        },
+        {
+          "sample": "gen-298",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1459335215563",
+          "excerpt": "…té Clinique Les Palmiers, IFU 1459335215563, virement vers BJ06 EC27 4680…"
+        },
+        {
+          "sample": "long-04",
+          "split": "long",
+          "entityType": "NATIONAL_ID",
+          "value": "3761088055690",
+          "excerpt": "…té Savonnerie de l'Ouémé, IFU 3761088055690, virement vers BJ81CB94807803…"
+        },
+        {
+          "sample": "long-13",
+          "split": "long",
+          "entityType": "NATIONAL_ID",
+          "value": "1773237240861",
+          "excerpt": "…ciété Société Ouémé Agro, IFU 1773237240861, virement vers BJ40OB43841459…"
+        }
+      ]
+    },
+    {
+      "id": "ner",
+      "label": "NER seul",
+      "description": "Couche 2 (BERT multilingue quantifié, transformers.js), sortie brute",
+      "coverage": [
+        "ADDRESS",
+        "ORGANIZATION",
+        "PERSON"
+      ],
+      "global": {
+        "strict": {
+          "counts": {
+            "tp": 378,
+            "fp": 125,
+            "fn": 597
+          },
+          "prf": {
+            "precision": 0.7514910536779325,
+            "recall": 0.38769230769230767,
+            "f1": 0.5115020297699595
+          },
+          "ci95": {
+            "low": 0.48243870112657383,
+            "high": 0.541444866920152
+          }
+        },
+        "partiel": {
+          "counts": {
+            "tp": 396,
+            "fp": 107,
+            "fn": 579
+          },
+          "prf": {
+            "precision": 0.7872763419483101,
+            "recall": 0.40615384615384614,
+            "f1": 0.5358592692828146
+          },
+          "ci95": {
+            "low": 0.5093425605536333,
+            "high": 0.5632107023411371
+          }
+        },
+        "protection": {
+          "counts": {
+            "tp": 417,
+            "fp": 86,
+            "fn": 558
+          },
+          "prf": {
+            "precision": 0.8290258449304175,
+            "recall": 0.4276923076923077,
+            "f1": 0.564276048714479
+          },
+          "ci95": {
+            "low": 0.5389473684210526,
+            "high": 0.590186592950933
+          }
+        }
+      },
+      "bySplit": {
+        "manuel": {
+          "strict": {
+            "counts": {
+              "tp": 29,
+              "fp": 27,
+              "fn": 68
+            },
+            "prf": {
+              "precision": 0.5178571428571429,
+              "recall": 0.29896907216494845,
+              "f1": 0.3790849673202615
+            }
+          },
+          "partiel": {
+            "counts": {
+              "tp": 33,
+              "fp": 23,
+              "fn": 64
+            },
+            "prf": {
+              "precision": 0.5892857142857143,
+              "recall": 0.3402061855670103,
+              "f1": 0.43137254901960786
+            }
+          },
+          "protection": {
+            "counts": {
+              "tp": 34,
+              "fp": 22,
+              "fn": 63
+            },
+            "prf": {
+              "precision": 0.6071428571428571,
+              "recall": 0.35051546391752575,
+              "f1": 0.4444444444444444
+            }
+          }
+        },
+        "genere": {
+          "strict": {
+            "counts": {
+              "tp": 229,
+              "fp": 49,
+              "fn": 309
+            },
+            "prf": {
+              "precision": 0.8237410071942446,
+              "recall": 0.4256505576208178,
+              "f1": 0.5612745098039216
+            }
+          },
+          "partiel": {
+            "counts": {
+              "tp": 235,
+              "fp": 43,
+              "fn": 303
+            },
+            "prf": {
+              "precision": 0.8453237410071942,
+              "recall": 0.4368029739776952,
+              "f1": 0.5759803921568628
+            }
+          },
+          "protection": {
+            "counts": {
+              "tp": 252,
+              "fp": 26,
+              "fn": 286
+            },
+            "prf": {
+              "precision": 0.9064748201438849,
+              "recall": 0.4684014869888476,
+              "f1": 0.6176470588235293
+            }
+          }
+        },
+        "long": {
+          "strict": {
+            "counts": {
+              "tp": 120,
+              "fp": 49,
+              "fn": 220
+            },
+            "prf": {
+              "precision": 0.7100591715976331,
+              "recall": 0.35294117647058826,
+              "f1": 0.47151277013752463
+            }
+          },
+          "partiel": {
+            "counts": {
+              "tp": 128,
+              "fp": 41,
+              "fn": 212
+            },
+            "prf": {
+              "precision": 0.757396449704142,
+              "recall": 0.3764705882352941,
+              "f1": 0.5029469548133596
+            }
+          },
+          "protection": {
+            "counts": {
+              "tp": 131,
+              "fp": 38,
+              "fn": 209
+            },
+            "prf": {
+              "precision": 0.7751479289940828,
+              "recall": 0.38529411764705884,
+              "f1": 0.5147347740667977
+            }
+          }
+        }
+      },
+      "byType": [
+        {
+          "entityType": "PERSON",
+          "support": 267,
+          "counts": {
+            "tp": 260,
+            "fp": 10,
+            "fn": 7
+          },
+          "prf": {
+            "precision": 0.9629629629629629,
+            "recall": 0.9737827715355806,
+            "f1": 0.968342644320298
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "ORGANIZATION",
+          "support": 90,
+          "counts": {
+            "tp": 86,
+            "fp": 59,
+            "fn": 4
+          },
+          "prf": {
+            "precision": 0.593103448275862,
+            "recall": 0.9555555555555556,
+            "f1": 0.7319148936170213
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "ADDRESS",
+          "support": 55,
+          "counts": {
+            "tp": 50,
+            "fp": 38,
+            "fn": 5
+          },
+          "prf": {
+            "precision": 0.5681818181818182,
+            "recall": 0.9090909090909091,
+            "f1": 0.6993006993006994
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "FINANCIAL_AMOUNT",
+          "support": 54,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 54
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "MEDICAL",
+          "support": 53,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 53
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "JOB_TITLE",
+          "support": 44,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 44
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "DATE_OF_BIRTH",
+          "support": 43,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 43
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "API_KEY",
+          "support": 39,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 39
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "CNSS_INSURED_NUMBER",
+          "support": 38,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 38
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "IBAN",
+          "support": 38,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 38
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "SALARY",
+          "support": 36,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 36
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "EMAIL",
+          "support": 27,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 27
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "INTERNAL_ID",
+          "support": 27,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 27
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "PHONE",
+          "support": 27,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 27
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "CREDIT_CARD",
+          "support": 18,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 18
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "CONNECTION_STRING",
+          "support": 17,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 17
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "NATIONAL_ID",
+          "support": 17,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 17
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "CNSS_EMPLOYER_NUMBER",
+          "support": 16,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 16
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "INTERNAL_URL",
+          "support": 15,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 15
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "IP_ADDRESS",
+          "support": 15,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 15
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "TAX_ID",
+          "support": 14,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 14
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "MOBILE_MONEY",
+          "support": 13,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 13
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "PASSWORD",
+          "support": 11,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 11
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "PRIVATE_KEY",
+          "support": 1,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 1
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        }
+      ],
+      "macroF1": 0.09998159321825077,
+      "perimetre": {
+        "counts": {
+          "tp": 396,
+          "fp": 107,
+          "fn": 16
+        },
+        "prf": {
+          "precision": 0.7872763419483101,
+          "recall": 0.9611650485436893,
+          "f1": 0.8655737704918033
+        }
+      },
+      "latency": {
+        "runs": 1155,
+        "p50": 81.32450000000244,
+        "p95": 274.99969999999666,
+        "p99": 1543.6103000000003,
+        "mean": 131.09269125541138,
+        "max": 3144.8631999999925,
+        "charsPerMs": 1.5552592210185536,
+        "byLength": {
+          "court": {
+            "n": 1092,
+            "p50": 79.6952999999994,
+            "p95": 138.27550000000338
+          },
+          "moyen": {
+            "n": 33,
+            "p50": 370.2823000000062,
+            "p95": 663.241800000018
+          },
+          "long": {
+            "n": 30,
+            "p50": 1462.8366999999998,
+            "p95": 3118.8269000000146
+          }
+        }
+      },
+      "masking": {
+        "global": {
+          "total": 975,
+          "complet": 395,
+          "partiel": 22,
+          "aucun": 558
+        },
+        "byType": [
+          {
+            "entityType": "PERSON",
+            "line": {
+              "total": 267,
+              "complet": 259,
+              "partiel": 4,
+              "aucun": 4
+            }
+          },
+          {
+            "entityType": "ORGANIZATION",
+            "line": {
+              "total": 90,
+              "complet": 83,
+              "partiel": 3,
+              "aucun": 4
+            }
+          },
+          {
+            "entityType": "ADDRESS",
+            "line": {
+              "total": 55,
+              "complet": 53,
+              "partiel": 1,
+              "aucun": 1
+            }
+          },
+          {
+            "entityType": "FINANCIAL_AMOUNT",
+            "line": {
+              "total": 54,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 54
+            }
+          },
+          {
+            "entityType": "MEDICAL",
+            "line": {
+              "total": 53,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 53
+            }
+          },
+          {
+            "entityType": "JOB_TITLE",
+            "line": {
+              "total": 44,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 44
+            }
+          },
+          {
+            "entityType": "DATE_OF_BIRTH",
+            "line": {
+              "total": 43,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 43
+            }
+          },
+          {
+            "entityType": "API_KEY",
+            "line": {
+              "total": 39,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 39
+            }
+          },
+          {
+            "entityType": "IBAN",
+            "line": {
+              "total": 38,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 38
+            }
+          },
+          {
+            "entityType": "CNSS_INSURED_NUMBER",
+            "line": {
+              "total": 38,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 38
+            }
+          },
+          {
+            "entityType": "SALARY",
+            "line": {
+              "total": 36,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 36
+            }
+          },
+          {
+            "entityType": "EMAIL",
+            "line": {
+              "total": 27,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 27
+            }
+          },
+          {
+            "entityType": "PHONE",
+            "line": {
+              "total": 27,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 27
+            }
+          },
+          {
+            "entityType": "INTERNAL_ID",
+            "line": {
+              "total": 27,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 27
+            }
+          },
+          {
+            "entityType": "CREDIT_CARD",
+            "line": {
+              "total": 18,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 18
+            }
+          },
+          {
+            "entityType": "NATIONAL_ID",
+            "line": {
+              "total": 17,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 17
+            }
+          },
+          {
+            "entityType": "CONNECTION_STRING",
+            "line": {
+              "total": 17,
+              "complet": 0,
+              "partiel": 5,
+              "aucun": 12
+            }
+          },
+          {
+            "entityType": "CNSS_EMPLOYER_NUMBER",
+            "line": {
+              "total": 16,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 16
+            }
+          },
+          {
+            "entityType": "IP_ADDRESS",
+            "line": {
+              "total": 15,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 15
+            }
+          },
+          {
+            "entityType": "INTERNAL_URL",
+            "line": {
+              "total": 15,
+              "complet": 0,
+              "partiel": 8,
+              "aucun": 7
+            }
+          },
+          {
+            "entityType": "TAX_ID",
+            "line": {
+              "total": 14,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 14
+            }
+          },
+          {
+            "entityType": "MOBILE_MONEY",
+            "line": {
+              "total": 13,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 13
+            }
+          },
+          {
+            "entityType": "PASSWORD",
+            "line": {
+              "total": 11,
+              "complet": 0,
+              "partiel": 1,
+              "aucun": 10
+            }
+          },
+          {
+            "entityType": "PRIVATE_KEY",
+            "line": {
+              "total": 1,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 1
+            }
+          }
+        ]
+      },
+      "missed": [
+        {
+          "sample": "man-001",
+          "split": "manuel",
+          "entityType": "FINANCIAL_AMOUNT",
+          "value": "2 500 000",
+          "excerpt": "Rédige un virement de 2 500 000 FCFA vers FR76 3000 6000 0112…"
+        },
+        {
+          "sample": "man-001",
+          "split": "manuel",
+          "entityType": "IBAN",
+          "value": "FR76 3000 6000 0112 3456 7890 189",
+          "excerpt": "…rement de 2 500 000 FCFA vers FR76 3000 6000 0112 3456 7890 189 pour les cotisations."
+        },
+        {
+          "sample": "man-002",
+          "split": "manuel",
+          "entityType": "FINANCIAL_AMOUNT",
+          "value": "80 000",
+          "excerpt": "Envoie 80 000 FCFA via MoMo 01 97 12 34 56 …"
+        },
+        {
+          "sample": "man-002",
+          "split": "manuel",
+          "entityType": "MOBILE_MONEY",
+          "value": "01 97 12 34 56",
+          "excerpt": "Envoie 80 000 FCFA via MoMo 01 97 12 34 56 à l'assuré."
+        },
+        {
+          "sample": "man-003",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Jean Dupont",
+          "excerpt": "Voici le CV de Jean Dupont, jean.dupont@cnss.bj, candida…"
+        },
+        {
+          "sample": "man-003",
+          "split": "manuel",
+          "entityType": "EMAIL",
+          "value": "jean.dupont@cnss.bj",
+          "excerpt": "Voici le CV de Jean Dupont, jean.dupont@cnss.bj, candidat au poste d'analyste…"
+        },
+        {
+          "sample": "man-004",
+          "split": "manuel",
+          "entityType": "API_KEY",
+          "value": "sk-abcdefghijklmnopqrstuvwxyz012345",
+          "excerpt": "Ma clé OpenAI sk-abcdefghijklmnopqrstuvwxyz012345 ne doit pas fuiter."
+        },
+        {
+          "sample": "man-005",
+          "split": "manuel",
+          "entityType": "CNSS_INSURED_NUMBER",
+          "value": "A12345678",
+          "excerpt": "Le n° assuré CNSS A12345678 a un impayé de cotisation."
+        },
+        {
+          "sample": "man-006",
+          "split": "manuel",
+          "entityType": "PHONE",
+          "value": "01 66 45 21 08",
+          "excerpt": "…omptable, son numéro c'est le 01 66 45 21 08."
+        },
+        {
+          "sample": "man-007",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "magasinier",
+          "excerpt": "…de paie de KOSSI HOUNKANRIN — magasinier — salaire de base 185 000 F, …"
+        },
+        {
+          "sample": "man-007",
+          "split": "manuel",
+          "entityType": "SALARY",
+          "value": "185 000",
+          "excerpt": "… magasinier — salaire de base 185 000 F, prime de transport 15 000 …"
+        },
+        {
+          "sample": "man-007",
+          "split": "manuel",
+          "entityType": "SALARY",
+          "value": "15 000",
+          "excerpt": "…185 000 F, prime de transport 15 000 F. Vérifie le calcul de l'ITS…"
+        },
+        {
+          "sample": "man-008",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "mathias zinsou",
+          "excerpt": "…ards répétés à l'attention de mathias zinsou (chauffeur), sans être trop d…"
+        },
+        {
+          "sample": "man-008",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "chauffeur",
+          "excerpt": "…'attention de mathias zinsou (chauffeur), sans être trop dur stp"
+        },
+        {
+          "sample": "man-011",
+          "split": "manuel",
+          "entityType": "DATE_OF_BIRTH",
+          "value": "7 juillet 1994",
+          "excerpt": "…e de Mme Grâce Dossou, née le 7 juillet 1994, domiciliée à Fidjrossè, en q…"
+        },
+        {
+          "sample": "man-011",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "secrétaire de direction",
+          "excerpt": "…ée à Fidjrossè, en qualité de secrétaire de direction. »"
+        },
+        {
+          "sample": "man-013",
+          "split": "manuel",
+          "entityType": "NATIONAL_ID",
+          "value": "1093456728",
+          "excerpt": "…traite de M. Codjo Sossa (NPI 1093456728), il manque l'attestation de …"
+        },
+        {
+          "sample": "man-014",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "contrôleur de gestion",
+          "excerpt": "… Hermann Lokossou a été promu contrôleur de gestion à compter du 1er janvier. »"
+        },
+        {
+          "sample": "man-015",
+          "split": "manuel",
+          "entityType": "IBAN",
+          "value": "FR1420041010050500013M02606",
+          "excerpt": "IBAN du bénéficiaire : FR1420041010050500013M02606 — merci de vérifier le format…"
+        },
+        {
+          "sample": "man-016",
+          "split": "manuel",
+          "entityType": "CREDIT_CARD",
+          "value": "4111 1111 1111 1111",
+          "excerpt": "…e client a payé avec sa carte 4111 1111 1111 1111 mais le paiement est refusé. …"
+        },
+        {
+          "sample": "man-017",
+          "split": "manuel",
+          "entityType": "FINANCIAL_AMOUNT",
+          "value": "42 500",
+          "excerpt": "Rembourse 42 500 FCFA sur le Moov Money 019587…"
+        },
+        {
+          "sample": "man-017",
+          "split": "manuel",
+          "entityType": "MOBILE_MONEY",
+          "value": "0195873412",
+          "excerpt": "…42 500 FCFA sur le Moov Money 0195873412 de Félicité Agbo et prépare l…"
+        },
+        {
+          "sample": "man-018",
+          "split": "manuel",
+          "entityType": "SALARY",
+          "value": "3 456 780",
+          "excerpt": "…es cotisations du trimestre : 3 456 780 FCFA pour 27 salariés. Fais-m…"
+        },
+        {
+          "sample": "man-019",
+          "split": "manuel",
+          "entityType": "FINANCIAL_AMOUNT",
+          "value": "1.250.000",
+          "excerpt": "…ulangerie La Lagune, dette de 1.250.000 FCFA, en 6 mensualités."
+        },
+        {
+          "sample": "man-021",
+          "split": "manuel",
+          "entityType": "CNSS_EMPLOYER_NUMBER",
+          "value": "45102938",
+          "excerpt": "Le n° employeur 45102938 correspond à quelle société ?…"
+        }
+      ],
+      "spurious": [
+        {
+          "sample": "man-002",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "FCFA",
+          "excerpt": "Envoie 80 000 FCFA via MoMo 01 97 12 34 56 à l'a…"
+        },
+        {
+          "sample": "man-002",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "MoM",
+          "excerpt": "Envoie 80 000 FCFA via MoMo 01 97 12 34 56 à l'assuré."
+        },
+        {
+          "sample": "man-007",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "KO",
+          "excerpt": "Fiche de paie de KOSSI HOUNKANRIN — magasinier — …"
+        },
+        {
+          "sample": "man-007",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "SSI",
+          "excerpt": "Fiche de paie de KOSSI HOUNKANRIN — magasinier — sal…"
+        },
+        {
+          "sample": "man-007",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "HO",
+          "excerpt": "Fiche de paie de KOSSI HOUNKANRIN — magasinier — salair…"
+        },
+        {
+          "sample": "man-007",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "UNKA",
+          "excerpt": "Fiche de paie de KOSSI HOUNKANRIN — magasinier — salaire de…"
+        },
+        {
+          "sample": "man-010",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "énin",
+          "excerpt": "…alarié en période d'essai au Bénin ? Durée maximale, rupture, pr…"
+        },
+        {
+          "sample": "man-023",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "MT",
+          "excerpt": "…00F a +229 01 51 22 33 44 sur MTN momo c'est pour le rembourse…"
+        },
+        {
+          "sample": "man-026",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "CNSS",
+          "excerpt": "…ns dans l'affaire opposant la CNSS à Groupe Atlantique Services …"
+        },
+        {
+          "sample": "man-026",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "tribunal de commerce",
+          "excerpt": "…Atlantique Services devant le tribunal de commerce de Cotonou. Notre avocat est …"
+        },
+        {
+          "sample": "man-026",
+          "split": "manuel",
+          "entityType": "ADDRESS",
+          "value": "Cotonou",
+          "excerpt": "…nt le tribunal de commerce de Cotonou. Notre avocat est Me Clarisse…"
+        },
+        {
+          "sample": "man-027",
+          "split": "manuel",
+          "entityType": "ADDRESS",
+          "value": "Bénin",
+          "excerpt": "…s vers un prestataire hors du Bénin ?"
+        },
+        {
+          "sample": "man-029",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "APDP",
+          "excerpt": "…orme aux recommandations de l'APDP."
+        },
+        {
+          "sample": "man-031",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "Prisma",
+          "excerpt": "…is://10.20.4.18:6379 pourquoi Prisma ne se connecte pas ?"
+        },
+        {
+          "sample": "man-032",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "GitHub",
+          "excerpt": "…KDM — comment je la mets dans GitHub Actions ?"
+        },
+        {
+          "sample": "man-043",
+          "split": "manuel",
+          "entityType": "ADDRESS",
+          "value": "Bénin",
+          "excerpt": "…professionnelles reconnues au Bénin, avec un tableau."
+        },
+        {
+          "sample": "man-045",
+          "split": "manuel",
+          "entityType": "ADDRESS",
+          "value": "Comlan Ahouandjinou",
+          "excerpt": "… diabète de type 2. Patient : Comlan Ahouandjinou, 12/04/1968."
+        },
+        {
+          "sample": "man-048",
+          "split": "manuel",
+          "entityType": "ADDRESS",
+          "value": "Parakou",
+          "excerpt": "… Les agent de la direction de Parakou sont convié a la reunion du 1…"
+        },
+        {
+          "sample": "man-050",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "CNSS",
+          "excerpt": "Quel est le numéro vert de la CNSS pour les assurés ? Fais une a…"
+        },
+        {
+          "sample": "man-059",
+          "split": "manuel",
+          "entityType": "ADDRESS",
+          "value": "Cotonou",
+          "excerpt": "…u, carré 1245, quartier Agla, Cotonou, demande une attestation de c…"
+        },
+        {
+          "sample": "man-064",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "RGPD/APDP",
+          "excerpt": "…léphone ? Quelles précautions RGPD/APDP ?"
+        },
+        {
+          "sample": "man-065",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "LinkedIn",
+          "excerpt": "Rédige un post LinkedIn pour célébrer les 55 ans de l…"
+        },
+        {
+          "sample": "man-065",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "CNSS",
+          "excerpt": "…our célébrer les 55 ans de la CNSS, ton institutionnel, avec tro…"
+        },
+        {
+          "sample": "gen-002",
+          "split": "genere",
+          "entityType": "ORGANIZATION",
+          "value": "CN",
+          "excerpt": "…de Gisèle Hounkanrin, assurée CNSS C05305926. Citer la procédu…"
+        },
+        {
+          "sample": "gen-005",
+          "split": "genere",
+          "entityType": "ADDRESS",
+          "value": "Benin",
+          "excerpt": "… ? postgres://app_prestations:Benin#2020!@10.30.105.86:5432/prest…"
+        }
+      ]
+    },
+    {
+      "id": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "description": "Règles + mots-clés + réglages (seuils, contexte) — mode dégradé",
+      "coverage": [
+        "API_KEY",
+        "CNSS_EMPLOYER_NUMBER",
+        "CNSS_INSURED_NUMBER",
+        "CONNECTION_STRING",
+        "CREDIT_CARD",
+        "DATE_OF_BIRTH",
+        "EMAIL",
+        "FINANCIAL_AMOUNT",
+        "IBAN",
+        "INTERNAL_ID",
+        "INTERNAL_URL",
+        "IP_ADDRESS",
+        "MEDICAL",
+        "MOBILE_MONEY",
+        "NATIONAL_ID",
+        "PASSWORD",
+        "PHONE",
+        "PRIVATE_KEY",
+        "SALARY",
+        "TAX_ID"
+      ],
+      "global": {
+        "strict": {
+          "counts": {
+            "tp": 484,
+            "fp": 30,
+            "fn": 491
+          },
+          "prf": {
+            "precision": 0.9416342412451362,
+            "recall": 0.49641025641025643,
+            "f1": 0.6501007387508395
+          },
+          "ci95": {
+            "low": 0.6232114467408585,
+            "high": 0.6737967914438503
+          }
+        },
+        "partiel": {
+          "counts": {
+            "tp": 496,
+            "fp": 18,
+            "fn": 479
+          },
+          "prf": {
+            "precision": 0.9649805447470817,
+            "recall": 0.5087179487179487,
+            "f1": 0.6662189388851579
+          },
+          "ci95": {
+            "low": 0.6377383300460224,
+            "high": 0.6897767332549941
+          }
+        },
+        "protection": {
+          "counts": {
+            "tp": 510,
+            "fp": 4,
+            "fn": 465
+          },
+          "prf": {
+            "precision": 0.9922178988326849,
+            "recall": 0.5230769230769231,
+            "f1": 0.6850235057085293
+          },
+          "ci95": {
+            "low": 0.6578366445916115,
+            "high": 0.7071380920613742
+          }
+        }
+      },
+      "bySplit": {
+        "manuel": {
+          "strict": {
+            "counts": {
+              "tp": 44,
+              "fp": 5,
+              "fn": 53
+            },
+            "prf": {
+              "precision": 0.8979591836734694,
+              "recall": 0.4536082474226804,
+              "f1": 0.6027397260273972
+            }
+          },
+          "partiel": {
+            "counts": {
+              "tp": 44,
+              "fp": 5,
+              "fn": 53
+            },
+            "prf": {
+              "precision": 0.8979591836734694,
+              "recall": 0.4536082474226804,
+              "f1": 0.6027397260273972
+            }
+          },
+          "protection": {
+            "counts": {
+              "tp": 45,
+              "fp": 4,
+              "fn": 52
+            },
+            "prf": {
+              "precision": 0.9183673469387755,
+              "recall": 0.4639175257731959,
+              "f1": 0.6164383561643836
+            }
+          }
+        },
+        "genere": {
+          "strict": {
+            "counts": {
+              "tp": 257,
+              "fp": 17,
+              "fn": 281
+            },
+            "prf": {
+              "precision": 0.9379562043795621,
+              "recall": 0.47769516728624534,
+              "f1": 0.6330049261083743
+            }
+          },
+          "partiel": {
+            "counts": {
+              "tp": 263,
+              "fp": 11,
+              "fn": 275
+            },
+            "prf": {
+              "precision": 0.9598540145985401,
+              "recall": 0.4888475836431227,
+              "f1": 0.6477832512315271
+            }
+          },
+          "protection": {
+            "counts": {
+              "tp": 274,
+              "fp": 0,
+              "fn": 264
+            },
+            "prf": {
+              "precision": 1,
+              "recall": 0.5092936802973977,
+              "f1": 0.6748768472906403
+            }
+          }
+        },
+        "long": {
+          "strict": {
+            "counts": {
+              "tp": 183,
+              "fp": 8,
+              "fn": 157
+            },
+            "prf": {
+              "precision": 0.9581151832460733,
+              "recall": 0.538235294117647,
+              "f1": 0.6892655367231639
+            }
+          },
+          "partiel": {
+            "counts": {
+              "tp": 189,
+              "fp": 2,
+              "fn": 151
+            },
+            "prf": {
+              "precision": 0.9895287958115183,
+              "recall": 0.5558823529411765,
+              "f1": 0.711864406779661
+            }
+          },
+          "protection": {
+            "counts": {
+              "tp": 191,
+              "fp": 0,
+              "fn": 149
+            },
+            "prf": {
+              "precision": 1,
+              "recall": 0.5617647058823529,
+              "f1": 0.71939736346516
+            }
+          }
+        }
+      },
+      "byType": [
+        {
+          "entityType": "PERSON",
+          "support": 267,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 267
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "ORGANIZATION",
+          "support": 90,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 90
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "ADDRESS",
+          "support": 55,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 55
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "FINANCIAL_AMOUNT",
+          "support": 54,
+          "counts": {
+            "tp": 52,
+            "fp": 2,
+            "fn": 2
+          },
+          "prf": {
+            "precision": 0.9629629629629629,
+            "recall": 0.9629629629629629,
+            "f1": 0.9629629629629629
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "MEDICAL",
+          "support": 53,
+          "counts": {
+            "tp": 49,
+            "fp": 0,
+            "fn": 4
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0.9245283018867925,
+            "f1": 0.9607843137254902
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "JOB_TITLE",
+          "support": 44,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 44
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "DATE_OF_BIRTH",
+          "support": 43,
+          "counts": {
+            "tp": 41,
+            "fp": 0,
+            "fn": 2
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0.9534883720930233,
+            "f1": 0.9761904761904763
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "API_KEY",
+          "support": 39,
+          "counts": {
+            "tp": 39,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "CNSS_INSURED_NUMBER",
+          "support": 38,
+          "counts": {
+            "tp": 38,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "IBAN",
+          "support": 38,
+          "counts": {
+            "tp": 38,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "SALARY",
+          "support": 36,
+          "counts": {
+            "tp": 36,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "EMAIL",
+          "support": 27,
+          "counts": {
+            "tp": 27,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "INTERNAL_ID",
+          "support": 27,
+          "counts": {
+            "tp": 27,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "PHONE",
+          "support": 27,
+          "counts": {
+            "tp": 27,
+            "fp": 1,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 0.9642857142857143,
+            "recall": 1,
+            "f1": 0.9818181818181818
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "CREDIT_CARD",
+          "support": 18,
+          "counts": {
+            "tp": 18,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "CONNECTION_STRING",
+          "support": 17,
+          "counts": {
+            "tp": 17,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "NATIONAL_ID",
+          "support": 17,
+          "counts": {
+            "tp": 16,
+            "fp": 14,
+            "fn": 1
+          },
+          "prf": {
+            "precision": 0.5333333333333333,
+            "recall": 0.9411764705882353,
+            "f1": 0.6808510638297872
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "CNSS_EMPLOYER_NUMBER",
+          "support": 16,
+          "counts": {
+            "tp": 16,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "INTERNAL_URL",
+          "support": 15,
+          "counts": {
+            "tp": 15,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "IP_ADDRESS",
+          "support": 15,
+          "counts": {
+            "tp": 15,
+            "fp": 1,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 0.9375,
+            "recall": 1,
+            "f1": 0.967741935483871
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "TAX_ID",
+          "support": 14,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 14
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "MOBILE_MONEY",
+          "support": 13,
+          "counts": {
+            "tp": 13,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "PASSWORD",
+          "support": 11,
+          "counts": {
+            "tp": 11,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "PRIVATE_KEY",
+          "support": 1,
+          "counts": {
+            "tp": 1,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        }
+      ],
+      "macroF1": 0.7720978722504487,
+      "perimetre": {
+        "counts": {
+          "tp": 496,
+          "fp": 18,
+          "fn": 23
+        },
+        "prf": {
+          "precision": 0.9649805447470817,
+          "recall": 0.9556840077071291,
+          "f1": 0.9603097773475315
+        }
+      },
+      "latency": {
+        "runs": 1155,
+        "p50": 0.6539999999804422,
+        "p95": 3.0425999999861233,
+        "p99": 8.370600000023842,
+        "mean": 1.0703478787877008,
+        "max": 17.47009999997681,
+        "charsPerMs": 190.4830391349393,
+        "byLength": {
+          "court": {
+            "n": 1092,
+            "p50": 0.616699999984121,
+            "p95": 2.353399999992689
+          },
+          "moyen": {
+            "n": 33,
+            "p50": 2.4610000000102445,
+            "p95": 4.091100000019651
+          },
+          "long": {
+            "n": 30,
+            "p50": 7.255600000004051,
+            "p95": 16.222200000018347
+          }
+        }
+      },
+      "masking": {
+        "global": {
+          "total": 975,
+          "complet": 508,
+          "partiel": 2,
+          "aucun": 465
+        },
+        "byType": [
+          {
+            "entityType": "PERSON",
+            "line": {
+              "total": 267,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 267
+            }
+          },
+          {
+            "entityType": "ORGANIZATION",
+            "line": {
+              "total": 90,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 90
+            }
+          },
+          {
+            "entityType": "ADDRESS",
+            "line": {
+              "total": 55,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 55
+            }
+          },
+          {
+            "entityType": "FINANCIAL_AMOUNT",
+            "line": {
+              "total": 54,
+              "complet": 52,
+              "partiel": 0,
+              "aucun": 2
+            }
+          },
+          {
+            "entityType": "MEDICAL",
+            "line": {
+              "total": 53,
+              "complet": 47,
+              "partiel": 2,
+              "aucun": 4
+            }
+          },
+          {
+            "entityType": "JOB_TITLE",
+            "line": {
+              "total": 44,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 44
+            }
+          },
+          {
+            "entityType": "DATE_OF_BIRTH",
+            "line": {
+              "total": 43,
+              "complet": 41,
+              "partiel": 0,
+              "aucun": 2
+            }
+          },
+          {
+            "entityType": "API_KEY",
+            "line": {
+              "total": 39,
+              "complet": 39,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "IBAN",
+            "line": {
+              "total": 38,
+              "complet": 38,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "CNSS_INSURED_NUMBER",
+            "line": {
+              "total": 38,
+              "complet": 38,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "SALARY",
+            "line": {
+              "total": 36,
+              "complet": 36,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "EMAIL",
+            "line": {
+              "total": 27,
+              "complet": 27,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "PHONE",
+            "line": {
+              "total": 27,
+              "complet": 27,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "INTERNAL_ID",
+            "line": {
+              "total": 27,
+              "complet": 27,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "CREDIT_CARD",
+            "line": {
+              "total": 18,
+              "complet": 18,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "NATIONAL_ID",
+            "line": {
+              "total": 17,
+              "complet": 16,
+              "partiel": 0,
+              "aucun": 1
+            }
+          },
+          {
+            "entityType": "CONNECTION_STRING",
+            "line": {
+              "total": 17,
+              "complet": 17,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "CNSS_EMPLOYER_NUMBER",
+            "line": {
+              "total": 16,
+              "complet": 16,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "IP_ADDRESS",
+            "line": {
+              "total": 15,
+              "complet": 15,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "INTERNAL_URL",
+            "line": {
+              "total": 15,
+              "complet": 15,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "TAX_ID",
+            "line": {
+              "total": 14,
+              "complet": 14,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "MOBILE_MONEY",
+            "line": {
+              "total": 13,
+              "complet": 13,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "PASSWORD",
+            "line": {
+              "total": 11,
+              "complet": 11,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "PRIVATE_KEY",
+            "line": {
+              "total": 1,
+              "complet": 1,
+              "partiel": 0,
+              "aucun": 0
+            }
+          }
+        ]
+      },
+      "missed": [
+        {
+          "sample": "man-003",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Jean Dupont",
+          "excerpt": "Voici le CV de Jean Dupont, jean.dupont@cnss.bj, candida…"
+        },
+        {
+          "sample": "man-006",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Rosine Akakpo",
+          "excerpt": "…crire un mail pour annoncer à Rosine Akakpo qu'elle n'a pas été retenue ?…"
+        },
+        {
+          "sample": "man-007",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "KOSSI HOUNKANRIN",
+          "excerpt": "Fiche de paie de KOSSI HOUNKANRIN — magasinier — salaire de bas…"
+        },
+        {
+          "sample": "man-007",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "magasinier",
+          "excerpt": "…de paie de KOSSI HOUNKANRIN — magasinier — salaire de base 185 000 F, …"
+        },
+        {
+          "sample": "man-008",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "mathias zinsou",
+          "excerpt": "…ards répétés à l'attention de mathias zinsou (chauffeur), sans être trop d…"
+        },
+        {
+          "sample": "man-008",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "chauffeur",
+          "excerpt": "…'attention de mathias zinsou (chauffeur), sans être trop dur stp"
+        },
+        {
+          "sample": "man-009",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Aïcha Yessoufou",
+          "excerpt": "Liste des agents à former : Aïcha Yessoufou, Romuald Gbaguidi et Sidonie …"
+        },
+        {
+          "sample": "man-009",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Romuald Gbaguidi",
+          "excerpt": "…s à former : Aïcha Yessoufou, Romuald Gbaguidi et Sidonie Tossou. Prévoir le…"
+        },
+        {
+          "sample": "man-009",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Sidonie Tossou",
+          "excerpt": "…essoufou, Romuald Gbaguidi et Sidonie Tossou. Prévoir le déjeuner pour 3 p…"
+        },
+        {
+          "sample": "man-011",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Grâce Dossou",
+          "excerpt": "… confirmons l'embauche de Mme Grâce Dossou, née le 7 juillet 1994, domic…"
+        },
+        {
+          "sample": "man-011",
+          "split": "manuel",
+          "entityType": "ADDRESS",
+          "value": "Fidjrossè",
+          "excerpt": "… 7 juillet 1994, domiciliée à Fidjrossè, en qualité de secrétaire de …"
+        },
+        {
+          "sample": "man-011",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "secrétaire de direction",
+          "excerpt": "…ée à Fidjrossè, en qualité de secrétaire de direction. »"
+        },
+        {
+          "sample": "man-013",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Codjo Sossa",
+          "excerpt": "…our le dossier retraite de M. Codjo Sossa (NPI 1093456728), il manque l…"
+        },
+        {
+          "sample": "man-013",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "Imprimerie du Zou",
+          "excerpt": "…station de l'ancien employeur Imprimerie du Zou. Rédige la relance."
+        },
+        {
+          "sample": "man-014",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Hermann Lokossou",
+          "excerpt": "…you translate into English: « Hermann Lokossou a été promu contrôleur de ges…"
+        },
+        {
+          "sample": "man-014",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "contrôleur de gestion",
+          "excerpt": "… Hermann Lokossou a été promu contrôleur de gestion à compter du 1er janvier. »"
+        },
+        {
+          "sample": "man-017",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Félicité Agbo",
+          "excerpt": "…r le Moov Money 0195873412 de Félicité Agbo et prépare le SMS de confirma…"
+        },
+        {
+          "sample": "man-019",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "Boulangerie La Lagune",
+          "excerpt": "…n échéancier pour l'employeur Boulangerie La Lagune, dette de 1.250.000 FCFA, en …"
+        },
+        {
+          "sample": "man-022",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "Transports Alafia",
+          "excerpt": "Société Transports Alafia, IFU 3201912345678 : rédige l…"
+        },
+        {
+          "sample": "man-022",
+          "split": "manuel",
+          "entityType": "TAX_ID",
+          "value": "3201912345678",
+          "excerpt": "…ociété Transports Alafia, IFU 3201912345678 : rédige l'attestation de rég…"
+        },
+        {
+          "sample": "man-023",
+          "split": "manuel",
+          "entityType": "FINANCIAL_AMOUNT",
+          "value": "15000",
+          "excerpt": "envoie 15000F a +229 01 51 22 33 44 sur MT…"
+        },
+        {
+          "sample": "man-024",
+          "split": "manuel",
+          "entityType": "FINANCIAL_AMOUNT",
+          "value": "275 000",
+          "excerpt": "Le virement de 275 000 € a été reçu le 3 octobre, me…"
+        },
+        {
+          "sample": "man-026",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "Groupe Atlantique Services",
+          "excerpt": "… l'affaire opposant la CNSS à Groupe Atlantique Services devant le tribunal de commerc…"
+        },
+        {
+          "sample": "man-026",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Clarisse Tchibozo",
+          "excerpt": "… Cotonou. Notre avocat est Me Clarisse Tchibozo."
+        },
+        {
+          "sample": "man-028",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Hortense Assogba",
+          "excerpt": "Mme Hortense Assogba conteste le refus de sa pensi…"
+        }
+      ],
+      "spurious": [
+        {
+          "sample": "man-020",
+          "split": "manuel",
+          "entityType": "FINANCIAL_AMOUNT",
+          "value": "500 000",
+          "excerpt": "…ale, exemples pour 100 000 et 500 000 FCFA."
+        },
+        {
+          "sample": "man-022",
+          "split": "manuel",
+          "entityType": "NATIONAL_ID",
+          "value": "3201912345678",
+          "excerpt": "…ociété Transports Alafia, IFU 3201912345678 : rédige l'attestation de rég…"
+        },
+        {
+          "sample": "man-034",
+          "split": "manuel",
+          "entityType": "IP_ADDRESS",
+          "value": "8.8.8.8",
+          "excerpt": "… IPv6 avec des exemples comme 8.8.8.8."
+        },
+        {
+          "sample": "man-058",
+          "split": "manuel",
+          "entityType": "FINANCIAL_AMOUNT",
+          "value": "52 000",
+          "excerpt": "…septembre 2023 fixe le SMIG à 52 000 FCFA. Explique son impact."
+        },
+        {
+          "sample": "man-060",
+          "split": "manuel",
+          "entityType": "PHONE",
+          "value": "4111 2233",
+          "excerpt": "…usé, et le numéro de commande 4111 2233 n'apparaît pas. Que faire ?"
+        },
+        {
+          "sample": "gen-020",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "3744748326841",
+          "excerpt": "…ciété Société Ouémé Agro, IFU 3744748326841, virement vers BJ67 BE88 0450…"
+        },
+        {
+          "sample": "gen-129",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1355227568084",
+          "excerpt": "…été Collège Les Lauriers, IFU 1355227568084, virement vers BJ92BE71737077…"
+        },
+        {
+          "sample": "gen-140",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1056795755318",
+          "excerpt": "…té Savonnerie de l'Ouémé, IFU 1056795755318, virement vers BJ17BJ58649604…"
+        },
+        {
+          "sample": "gen-162",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1951546735664",
+          "excerpt": "…été Collège Les Lauriers, IFU 1951546735664, virement vers BJ53BE45057863…"
+        },
+        {
+          "sample": "gen-208",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1678399941790",
+          "excerpt": "…ociété Imprimerie du Zou, IFU 1678399941790, virement vers BJ64BE61054783…"
+        },
+        {
+          "sample": "gen-222",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "3859901067286",
+          "excerpt": "…été Collège Les Lauriers, IFU 3859901067286, virement vers BJ72 CB40 9965…"
+        },
+        {
+          "sample": "gen-265",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1988349248332",
+          "excerpt": "…ociété Transports Alafia, IFU 1988349248332, virement vers BJ52 OB05 1407…"
+        },
+        {
+          "sample": "gen-267",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1456870266338",
+          "excerpt": "…ciété Hôtel Le Belvédère, IFU 1456870266338, virement vers BJ45EC27346898…"
+        },
+        {
+          "sample": "gen-275",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "3586345617741",
+          "excerpt": "…té BTP Mono Construction, IFU 3586345617741, virement vers BJ59 EC43 5921…"
+        },
+        {
+          "sample": "gen-292",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "3980322183985",
+          "excerpt": "…ciété Société Ouémé Agro, IFU 3980322183985, virement vers BJ47OB23934048…"
+        },
+        {
+          "sample": "gen-298",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1459335215563",
+          "excerpt": "…té Clinique Les Palmiers, IFU 1459335215563, virement vers BJ06 EC27 4680…"
+        },
+        {
+          "sample": "long-04",
+          "split": "long",
+          "entityType": "NATIONAL_ID",
+          "value": "3761088055690",
+          "excerpt": "…té Savonnerie de l'Ouémé, IFU 3761088055690, virement vers BJ81CB94807803…"
+        },
+        {
+          "sample": "long-13",
+          "split": "long",
+          "entityType": "NATIONAL_ID",
+          "value": "1773237240861",
+          "excerpt": "…ciété Société Ouémé Agro, IFU 1773237240861, virement vers BJ40OB43841459…"
+        }
+      ]
+    },
+    {
+      "id": "moteur-complet",
+      "label": "Moteur complet",
+      "description": "Règles + NER + mots-clés + réglages — configuration de production",
+      "coverage": [
+        "ADDRESS",
+        "API_KEY",
+        "CNSS_EMPLOYER_NUMBER",
+        "CNSS_INSURED_NUMBER",
+        "CONNECTION_STRING",
+        "CREDIT_CARD",
+        "DATE_OF_BIRTH",
+        "EMAIL",
+        "FINANCIAL_AMOUNT",
+        "IBAN",
+        "INTERNAL_ID",
+        "INTERNAL_URL",
+        "IP_ADDRESS",
+        "MEDICAL",
+        "MOBILE_MONEY",
+        "NATIONAL_ID",
+        "ORGANIZATION",
+        "PASSWORD",
+        "PERSON",
+        "PHONE",
+        "PRIVATE_KEY",
+        "SALARY",
+        "TAX_ID"
+      ],
+      "global": {
+        "strict": {
+          "counts": {
+            "tp": 862,
+            "fp": 126,
+            "fn": 113
+          },
+          "prf": {
+            "precision": 0.8724696356275303,
+            "recall": 0.884102564102564,
+            "f1": 0.8782475802343351
+          },
+          "ci95": {
+            "low": 0.8593673965936739,
+            "high": 0.896116504854369
+          }
+        },
+        "partiel": {
+          "counts": {
+            "tp": 891,
+            "fp": 97,
+            "fn": 84
+          },
+          "prf": {
+            "precision": 0.9018218623481782,
+            "recall": 0.9138461538461539,
+            "f1": 0.9077941925624045
+          },
+          "ci95": {
+            "low": 0.8926038500506586,
+            "high": 0.9223300970873787
+          }
+        },
+        "protection": {
+          "counts": {
+            "tp": 913,
+            "fp": 75,
+            "fn": 62
+          },
+          "prf": {
+            "precision": 0.9240890688259109,
+            "recall": 0.9364102564102564,
+            "f1": 0.9302088639836985
+          },
+          "ci95": {
+            "low": 0.9177001127395716,
+            "high": 0.9414707353676839
+          }
+        }
+      },
+      "bySplit": {
+        "manuel": {
+          "strict": {
+            "counts": {
+              "tp": 73,
+              "fp": 27,
+              "fn": 24
+            },
+            "prf": {
+              "precision": 0.73,
+              "recall": 0.7525773195876289,
+              "f1": 0.7411167512690355
+            }
+          },
+          "partiel": {
+            "counts": {
+              "tp": 77,
+              "fp": 23,
+              "fn": 20
+            },
+            "prf": {
+              "precision": 0.77,
+              "recall": 0.7938144329896907,
+              "f1": 0.7817258883248732
+            }
+          },
+          "protection": {
+            "counts": {
+              "tp": 79,
+              "fp": 21,
+              "fn": 18
+            },
+            "prf": {
+              "precision": 0.79,
+              "recall": 0.8144329896907216,
+              "f1": 0.802030456852792
+            }
+          }
+        },
+        "genere": {
+          "strict": {
+            "counts": {
+              "tp": 486,
+              "fp": 49,
+              "fn": 52
+            },
+            "prf": {
+              "precision": 0.908411214953271,
+              "recall": 0.9033457249070632,
+              "f1": 0.9058713886300094
+            }
+          },
+          "partiel": {
+            "counts": {
+              "tp": 498,
+              "fp": 37,
+              "fn": 40
+            },
+            "prf": {
+              "precision": 0.930841121495327,
+              "recall": 0.9256505576208178,
+              "f1": 0.9282385834109972
+            }
+          },
+          "protection": {
+            "counts": {
+              "tp": 513,
+              "fp": 22,
+              "fn": 25
+            },
+            "prf": {
+              "precision": 0.9588785046728971,
+              "recall": 0.9535315985130112,
+              "f1": 0.9561975768872321
+            }
+          }
+        },
+        "long": {
+          "strict": {
+            "counts": {
+              "tp": 303,
+              "fp": 50,
+              "fn": 37
+            },
+            "prf": {
+              "precision": 0.8583569405099151,
+              "recall": 0.8911764705882353,
+              "f1": 0.8744588744588745
+            }
+          },
+          "partiel": {
+            "counts": {
+              "tp": 316,
+              "fp": 37,
+              "fn": 24
+            },
+            "prf": {
+              "precision": 0.8951841359773371,
+              "recall": 0.9294117647058824,
+              "f1": 0.911976911976912
+            }
+          },
+          "protection": {
+            "counts": {
+              "tp": 321,
+              "fp": 32,
+              "fn": 19
+            },
+            "prf": {
+              "precision": 0.9093484419263456,
+              "recall": 0.9441176470588235,
+              "f1": 0.9264069264069263
+            }
+          }
+        }
+      },
+      "byType": [
+        {
+          "entityType": "PERSON",
+          "support": 267,
+          "counts": {
+            "tp": 259,
+            "fp": 9,
+            "fn": 8
+          },
+          "prf": {
+            "precision": 0.9664179104477612,
+            "recall": 0.9700374531835206,
+            "f1": 0.9682242990654205
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "ORGANIZATION",
+          "support": 90,
+          "counts": {
+            "tp": 86,
+            "fp": 39,
+            "fn": 4
+          },
+          "prf": {
+            "precision": 0.688,
+            "recall": 0.9555555555555556,
+            "f1": 0.8
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "ADDRESS",
+          "support": 55,
+          "counts": {
+            "tp": 50,
+            "fp": 31,
+            "fn": 5
+          },
+          "prf": {
+            "precision": 0.6172839506172839,
+            "recall": 0.9090909090909091,
+            "f1": 0.7352941176470589
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "FINANCIAL_AMOUNT",
+          "support": 54,
+          "counts": {
+            "tp": 52,
+            "fp": 2,
+            "fn": 2
+          },
+          "prf": {
+            "precision": 0.9629629629629629,
+            "recall": 0.9629629629629629,
+            "f1": 0.9629629629629629
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "MEDICAL",
+          "support": 53,
+          "counts": {
+            "tp": 49,
+            "fp": 0,
+            "fn": 4
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0.9245283018867925,
+            "f1": 0.9607843137254902
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "JOB_TITLE",
+          "support": 44,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 44
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "DATE_OF_BIRTH",
+          "support": 43,
+          "counts": {
+            "tp": 41,
+            "fp": 0,
+            "fn": 2
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0.9534883720930233,
+            "f1": 0.9761904761904763
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "API_KEY",
+          "support": 39,
+          "counts": {
+            "tp": 39,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "CNSS_INSURED_NUMBER",
+          "support": 38,
+          "counts": {
+            "tp": 38,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "IBAN",
+          "support": 38,
+          "counts": {
+            "tp": 38,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "SALARY",
+          "support": 36,
+          "counts": {
+            "tp": 36,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "EMAIL",
+          "support": 27,
+          "counts": {
+            "tp": 27,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "INTERNAL_ID",
+          "support": 27,
+          "counts": {
+            "tp": 27,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "PHONE",
+          "support": 27,
+          "counts": {
+            "tp": 27,
+            "fp": 1,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 0.9642857142857143,
+            "recall": 1,
+            "f1": 0.9818181818181818
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "CREDIT_CARD",
+          "support": 18,
+          "counts": {
+            "tp": 18,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "CONNECTION_STRING",
+          "support": 17,
+          "counts": {
+            "tp": 17,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "NATIONAL_ID",
+          "support": 17,
+          "counts": {
+            "tp": 16,
+            "fp": 14,
+            "fn": 1
+          },
+          "prf": {
+            "precision": 0.5333333333333333,
+            "recall": 0.9411764705882353,
+            "f1": 0.6808510638297872
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "CNSS_EMPLOYER_NUMBER",
+          "support": 16,
+          "counts": {
+            "tp": 16,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "INTERNAL_URL",
+          "support": 15,
+          "counts": {
+            "tp": 15,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "IP_ADDRESS",
+          "support": 15,
+          "counts": {
+            "tp": 15,
+            "fp": 1,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 0.9375,
+            "recall": 1,
+            "f1": 0.967741935483871
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "TAX_ID",
+          "support": 14,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 14
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "MOBILE_MONEY",
+          "support": 13,
+          "counts": {
+            "tp": 13,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "PASSWORD",
+          "support": 11,
+          "counts": {
+            "tp": 11,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "PRIVATE_KEY",
+          "support": 1,
+          "counts": {
+            "tp": 1,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        }
+      ],
+      "macroF1": 0.8764111396134687,
+      "perimetre": {
+        "counts": {
+          "tp": 891,
+          "fp": 97,
+          "fn": 40
+        },
+        "prf": {
+          "precision": 0.9018218623481782,
+          "recall": 0.9570354457572503,
+          "f1": 0.9286086503387181
+        }
+      },
+      "latency": {
+        "runs": 1155,
+        "p50": 113.41859999997541,
+        "p95": 406.8997999999556,
+        "p99": 1758.4576000000234,
+        "mean": 170.20211835497827,
+        "max": 3116.518299999996,
+        "charsPerMs": 1.197888245185601,
+        "byLength": {
+          "court": {
+            "n": 1092,
+            "p50": 109.93249999999534,
+            "p95": 195.64360000001034
+          },
+          "moyen": {
+            "n": 33,
+            "p50": 520.4028000000399,
+            "p95": 663.3907000000472
+          },
+          "long": {
+            "n": 30,
+            "p50": 1649.6412000000128,
+            "p95": 3108.606300000043
+          }
+        }
+      },
+      "masking": {
+        "global": {
+          "total": 975,
+          "complet": 901,
+          "partiel": 12,
+          "aucun": 62
+        },
+        "byType": [
+          {
+            "entityType": "PERSON",
+            "line": {
+              "total": 267,
+              "complet": 257,
+              "partiel": 6,
+              "aucun": 4
+            }
+          },
+          {
+            "entityType": "ORGANIZATION",
+            "line": {
+              "total": 90,
+              "complet": 83,
+              "partiel": 3,
+              "aucun": 4
+            }
+          },
+          {
+            "entityType": "ADDRESS",
+            "line": {
+              "total": 55,
+              "complet": 53,
+              "partiel": 1,
+              "aucun": 1
+            }
+          },
+          {
+            "entityType": "FINANCIAL_AMOUNT",
+            "line": {
+              "total": 54,
+              "complet": 52,
+              "partiel": 0,
+              "aucun": 2
+            }
+          },
+          {
+            "entityType": "MEDICAL",
+            "line": {
+              "total": 53,
+              "complet": 47,
+              "partiel": 2,
+              "aucun": 4
+            }
+          },
+          {
+            "entityType": "JOB_TITLE",
+            "line": {
+              "total": 44,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 44
+            }
+          },
+          {
+            "entityType": "DATE_OF_BIRTH",
+            "line": {
+              "total": 43,
+              "complet": 41,
+              "partiel": 0,
+              "aucun": 2
+            }
+          },
+          {
+            "entityType": "API_KEY",
+            "line": {
+              "total": 39,
+              "complet": 39,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "IBAN",
+            "line": {
+              "total": 38,
+              "complet": 38,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "CNSS_INSURED_NUMBER",
+            "line": {
+              "total": 38,
+              "complet": 38,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "SALARY",
+            "line": {
+              "total": 36,
+              "complet": 36,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "EMAIL",
+            "line": {
+              "total": 27,
+              "complet": 27,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "PHONE",
+            "line": {
+              "total": 27,
+              "complet": 27,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "INTERNAL_ID",
+            "line": {
+              "total": 27,
+              "complet": 27,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "CREDIT_CARD",
+            "line": {
+              "total": 18,
+              "complet": 18,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "NATIONAL_ID",
+            "line": {
+              "total": 17,
+              "complet": 16,
+              "partiel": 0,
+              "aucun": 1
+            }
+          },
+          {
+            "entityType": "CONNECTION_STRING",
+            "line": {
+              "total": 17,
+              "complet": 17,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "CNSS_EMPLOYER_NUMBER",
+            "line": {
+              "total": 16,
+              "complet": 16,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "IP_ADDRESS",
+            "line": {
+              "total": 15,
+              "complet": 15,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "INTERNAL_URL",
+            "line": {
+              "total": 15,
+              "complet": 15,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "TAX_ID",
+            "line": {
+              "total": 14,
+              "complet": 14,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "MOBILE_MONEY",
+            "line": {
+              "total": 13,
+              "complet": 13,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "PASSWORD",
+            "line": {
+              "total": 11,
+              "complet": 11,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "PRIVATE_KEY",
+            "line": {
+              "total": 1,
+              "complet": 1,
+              "partiel": 0,
+              "aucun": 0
+            }
+          }
+        ]
+      },
+      "missed": [
+        {
+          "sample": "man-003",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Jean Dupont",
+          "excerpt": "Voici le CV de Jean Dupont, jean.dupont@cnss.bj, candida…"
+        },
+        {
+          "sample": "man-007",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "magasinier",
+          "excerpt": "…de paie de KOSSI HOUNKANRIN — magasinier — salaire de base 185 000 F, …"
+        },
+        {
+          "sample": "man-008",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "mathias zinsou",
+          "excerpt": "…ards répétés à l'attention de mathias zinsou (chauffeur), sans être trop d…"
+        },
+        {
+          "sample": "man-008",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "chauffeur",
+          "excerpt": "…'attention de mathias zinsou (chauffeur), sans être trop dur stp"
+        },
+        {
+          "sample": "man-011",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "secrétaire de direction",
+          "excerpt": "…ée à Fidjrossè, en qualité de secrétaire de direction. »"
+        },
+        {
+          "sample": "man-014",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "contrôleur de gestion",
+          "excerpt": "… Hermann Lokossou a été promu contrôleur de gestion à compter du 1er janvier. »"
+        },
+        {
+          "sample": "man-022",
+          "split": "manuel",
+          "entityType": "TAX_ID",
+          "value": "3201912345678",
+          "excerpt": "…ociété Transports Alafia, IFU 3201912345678 : rédige l'attestation de rég…"
+        },
+        {
+          "sample": "man-023",
+          "split": "manuel",
+          "entityType": "FINANCIAL_AMOUNT",
+          "value": "15000",
+          "excerpt": "envoie 15000F a +229 01 51 22 33 44 sur MT…"
+        },
+        {
+          "sample": "man-024",
+          "split": "manuel",
+          "entityType": "FINANCIAL_AMOUNT",
+          "value": "275 000",
+          "excerpt": "Le virement de 275 000 € a été reçu le 3 octobre, me…"
+        },
+        {
+          "sample": "man-041",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "aide-soignante",
+          "excerpt": "…ge pour Nafissatou Bio Sanni, aide-soignante à la Clinique Les Palmiers, s…"
+        },
+        {
+          "sample": "man-041",
+          "split": "manuel",
+          "entityType": "MEDICAL",
+          "value": "drépanocytose",
+          "excerpt": "…Les Palmiers, suivie pour une drépanocytose depuis l'enfance."
+        },
+        {
+          "sample": "man-044",
+          "split": "manuel",
+          "entityType": "MEDICAL",
+          "value": "séropositif",
+          "excerpt": "M. Ange Houénou est séropositif, il demande que son employeur…"
+        },
+        {
+          "sample": "man-045",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Comlan Ahouandjinou",
+          "excerpt": "… diabète de type 2. Patient : Comlan Ahouandjinou, 12/04/1968."
+        },
+        {
+          "sample": "man-045",
+          "split": "manuel",
+          "entityType": "DATE_OF_BIRTH",
+          "value": "12/04/1968",
+          "excerpt": "…atient : Comlan Ahouandjinou, 12/04/1968."
+        },
+        {
+          "sample": "man-046",
+          "split": "manuel",
+          "entityType": "MEDICAL",
+          "value": "AVC",
+          "excerpt": "Ma collègue a eu un AVC la semaine dernière, comment …"
+        },
+        {
+          "sample": "man-056",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "électricien",
+          "excerpt": "…e ? « Boris Amoussou, 34 ans, électricien chez BTP Mono Construction, h…"
+        },
+        {
+          "sample": "man-061",
+          "split": "manuel",
+          "entityType": "DATE_OF_BIRTH",
+          "value": "1985-06-21",
+          "excerpt": "…ntrôle médical, Gildas Sagbo, 1985-06-21, 2045789013, déclare une hern…"
+        },
+        {
+          "sample": "man-061",
+          "split": "manuel",
+          "entityType": "NATIONAL_ID",
+          "value": "2045789013",
+          "excerpt": "…al, Gildas Sagbo, 1985-06-21, 2045789013, déclare une hernie discale s…"
+        },
+        {
+          "sample": "man-061",
+          "split": "manuel",
+          "entityType": "MEDICAL",
+          "value": "hernie discale",
+          "excerpt": "…6-21, 2045789013, déclare une hernie discale suite à un accident du travai…"
+        },
+        {
+          "sample": "man-063",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "chef de garage",
+          "excerpt": "…ou, 32 ans de service, ancien chef de garage. Ton chaleureux."
+        },
+        {
+          "sample": "gen-002",
+          "split": "genere",
+          "entityType": "ORGANIZATION",
+          "value": "Transports Alafia",
+          "excerpt": "…se en demeure à l'encontre de Transports Alafia pour non-déclaration de Gisèl…"
+        },
+        {
+          "sample": "gen-015",
+          "split": "genere",
+          "entityType": "JOB_TITLE",
+          "value": "enseignant",
+          "excerpt": "…il de Mme Gisèle Gnonlonfoun, enseignant, pour un salaire brut mensuel…"
+        },
+        {
+          "sample": "gen-020",
+          "split": "genere",
+          "entityType": "TAX_ID",
+          "value": "3744748326841",
+          "excerpt": "…ciété Société Ouémé Agro, IFU 3744748326841, virement vers BJ67 BE88 0450…"
+        },
+        {
+          "sample": "gen-031",
+          "split": "genere",
+          "entityType": "JOB_TITLE",
+          "value": "chauffeur",
+          "excerpt": "…ail de Mme Yasmine Yessoufou, chauffeur, pour un salaire brut mensuel…"
+        },
+        {
+          "sample": "gen-036",
+          "split": "genere",
+          "entityType": "JOB_TITLE",
+          "value": "électricien",
+          "excerpt": "…ge Les Lauriers en qualité de électricien, NPI 0020196226."
+        }
+      ],
+      "spurious": [
+        {
+          "sample": "man-002",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "FCFA",
+          "excerpt": "Envoie 80 000 FCFA via MoMo 01 97 12 34 56 à l'a…"
+        },
+        {
+          "sample": "man-007",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "SSI",
+          "excerpt": "Fiche de paie de KOSSI HOUNKANRIN — magasinier — sal…"
+        },
+        {
+          "sample": "man-007",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "HO",
+          "excerpt": "Fiche de paie de KOSSI HOUNKANRIN — magasinier — salair…"
+        },
+        {
+          "sample": "man-020",
+          "split": "manuel",
+          "entityType": "FINANCIAL_AMOUNT",
+          "value": "500 000",
+          "excerpt": "…ale, exemples pour 100 000 et 500 000 FCFA."
+        },
+        {
+          "sample": "man-022",
+          "split": "manuel",
+          "entityType": "NATIONAL_ID",
+          "value": "3201912345678",
+          "excerpt": "…ociété Transports Alafia, IFU 3201912345678 : rédige l'attestation de rég…"
+        },
+        {
+          "sample": "man-026",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "CNSS",
+          "excerpt": "…ns dans l'affaire opposant la CNSS à Groupe Atlantique Services …"
+        },
+        {
+          "sample": "man-026",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "tribunal de commerce",
+          "excerpt": "…Atlantique Services devant le tribunal de commerce de Cotonou. Notre avocat est …"
+        },
+        {
+          "sample": "man-026",
+          "split": "manuel",
+          "entityType": "ADDRESS",
+          "value": "Cotonou",
+          "excerpt": "…nt le tribunal de commerce de Cotonou. Notre avocat est Me Clarisse…"
+        },
+        {
+          "sample": "man-027",
+          "split": "manuel",
+          "entityType": "ADDRESS",
+          "value": "Bénin",
+          "excerpt": "…s vers un prestataire hors du Bénin ?"
+        },
+        {
+          "sample": "man-029",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "APDP",
+          "excerpt": "…orme aux recommandations de l'APDP."
+        },
+        {
+          "sample": "man-031",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "Prisma",
+          "excerpt": "…is://10.20.4.18:6379 pourquoi Prisma ne se connecte pas ?"
+        },
+        {
+          "sample": "man-032",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "GitHub",
+          "excerpt": "…KDM — comment je la mets dans GitHub Actions ?"
+        },
+        {
+          "sample": "man-034",
+          "split": "manuel",
+          "entityType": "IP_ADDRESS",
+          "value": "8.8.8.8",
+          "excerpt": "… IPv6 avec des exemples comme 8.8.8.8."
+        },
+        {
+          "sample": "man-043",
+          "split": "manuel",
+          "entityType": "ADDRESS",
+          "value": "Bénin",
+          "excerpt": "…professionnelles reconnues au Bénin, avec un tableau."
+        },
+        {
+          "sample": "man-045",
+          "split": "manuel",
+          "entityType": "ADDRESS",
+          "value": "Comlan Ahouandjinou",
+          "excerpt": "… diabète de type 2. Patient : Comlan Ahouandjinou, 12/04/1968."
+        },
+        {
+          "sample": "man-048",
+          "split": "manuel",
+          "entityType": "ADDRESS",
+          "value": "Parakou",
+          "excerpt": "… Les agent de la direction de Parakou sont convié a la reunion du 1…"
+        },
+        {
+          "sample": "man-050",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "CNSS",
+          "excerpt": "Quel est le numéro vert de la CNSS pour les assurés ? Fais une a…"
+        },
+        {
+          "sample": "man-058",
+          "split": "manuel",
+          "entityType": "FINANCIAL_AMOUNT",
+          "value": "52 000",
+          "excerpt": "…septembre 2023 fixe le SMIG à 52 000 FCFA. Explique son impact."
+        },
+        {
+          "sample": "man-059",
+          "split": "manuel",
+          "entityType": "ADDRESS",
+          "value": "Cotonou",
+          "excerpt": "…u, carré 1245, quartier Agla, Cotonou, demande une attestation de c…"
+        },
+        {
+          "sample": "man-060",
+          "split": "manuel",
+          "entityType": "PHONE",
+          "value": "4111 2233",
+          "excerpt": "…usé, et le numéro de commande 4111 2233 n'apparaît pas. Que faire ?"
+        },
+        {
+          "sample": "man-064",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "RGPD/APDP",
+          "excerpt": "…léphone ? Quelles précautions RGPD/APDP ?"
+        },
+        {
+          "sample": "man-065",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "LinkedIn",
+          "excerpt": "Rédige un post LinkedIn pour célébrer les 55 ans de l…"
+        },
+        {
+          "sample": "man-065",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "CNSS",
+          "excerpt": "…our célébrer les 55 ans de la CNSS, ton institutionnel, avec tro…"
+        },
+        {
+          "sample": "gen-012",
+          "split": "genere",
+          "entityType": "ORGANIZATION",
+          "value": "Bénin",
+          "excerpt": "…le et cotisation patronale au Bénin, avec un exemple chiffré simp…"
+        },
+        {
+          "sample": "gen-020",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "3744748326841",
+          "excerpt": "…ciété Société Ouémé Agro, IFU 3744748326841, virement vers BJ67 BE88 0450…"
+        }
+      ]
+    }
+  ],
+  "context": [
+    {
+      "id": "mots-cles",
+      "label": "Lexiques (couche 3, repli)",
+      "n": 365,
+      "accuracy": 0.7589041095890411,
+      "macroF1": 0.754944564691578,
+      "confusion": {
+        "RH": {
+          "RH": 53,
+          "Finance": 0,
+          "Juridique": 0,
+          "Technique": 0,
+          "Medical": 0,
+          "Generique": 18
+        },
+        "Finance": {
+          "RH": 0,
+          "Finance": 80,
+          "Juridique": 0,
+          "Technique": 0,
+          "Medical": 0,
+          "Generique": 1
+        },
+        "Juridique": {
+          "RH": 0,
+          "Finance": 0,
+          "Juridique": 33,
+          "Technique": 0,
+          "Medical": 0,
+          "Generique": 10
+        },
+        "Technique": {
+          "RH": 1,
+          "Finance": 1,
+          "Juridique": 0,
+          "Technique": 32,
+          "Medical": 0,
+          "Generique": 29
+        },
+        "Medical": {
+          "RH": 0,
+          "Finance": 0,
+          "Juridique": 0,
+          "Technique": 0,
+          "Medical": 18,
+          "Generique": 27
+        },
+        "Generique": {
+          "RH": 0,
+          "Finance": 1,
+          "Juridique": 0,
+          "Technique": 0,
+          "Medical": 0,
+          "Generique": 61
+        }
+      }
+    }
+  ],
+  "reidentification": [
+    {
+      "system": "aucun",
+      "label": "Sans passerelle (texte en clair)",
+      "byVariant": {
+        "direct": {
+          "n": 50,
+          "reidentified": 50,
+          "kLe5": 50,
+          "medianK": 1
+        },
+        "quasi-identifiants": {
+          "n": 50,
+          "reidentified": 50,
+          "kLe5": 50,
+          "medianK": 1
+        },
+        "identifiants": {
+          "n": 50,
+          "reidentified": 50,
+          "kLe5": 50,
+          "medianK": 1
+        },
+        "contact": {
+          "n": 50,
+          "reidentified": 49,
+          "kLe5": 50,
+          "medianK": 1
+        }
+      },
+      "global": {
+        "n": 200,
+        "reidentified": 199,
+        "kLe5": 200,
+        "medianK": 1
+      }
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "byVariant": {
+        "direct": {
+          "n": 50,
+          "reidentified": 50,
+          "kLe5": 50,
+          "medianK": 1
+        },
+        "quasi-identifiants": {
+          "n": 50,
+          "reidentified": 33,
+          "kLe5": 50,
+          "medianK": 1
+        },
+        "identifiants": {
+          "n": 50,
+          "reidentified": 0,
+          "kLe5": 0,
+          "medianK": 1020
+        },
+        "contact": {
+          "n": 50,
+          "reidentified": 45,
+          "kLe5": 50,
+          "medianK": 1
+        }
+      },
+      "global": {
+        "n": 200,
+        "reidentified": 128,
+        "kLe5": 150,
+        "medianK": 1
+      }
+    },
+    {
+      "system": "ner",
+      "label": "NER seul",
+      "byVariant": {
+        "direct": {
+          "n": 50,
+          "reidentified": 49,
+          "kLe5": 50,
+          "medianK": 1
+        },
+        "quasi-identifiants": {
+          "n": 50,
+          "reidentified": 50,
+          "kLe5": 50,
+          "medianK": 1
+        },
+        "identifiants": {
+          "n": 50,
+          "reidentified": 50,
+          "kLe5": 50,
+          "medianK": 1
+        },
+        "contact": {
+          "n": 50,
+          "reidentified": 40,
+          "kLe5": 49,
+          "medianK": 1
+        }
+      },
+      "global": {
+        "n": 200,
+        "reidentified": 189,
+        "kLe5": 199,
+        "medianK": 1
+      }
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "byVariant": {
+        "direct": {
+          "n": 50,
+          "reidentified": 50,
+          "kLe5": 50,
+          "medianK": 1
+        },
+        "quasi-identifiants": {
+          "n": 50,
+          "reidentified": 33,
+          "kLe5": 50,
+          "medianK": 1
+        },
+        "identifiants": {
+          "n": 50,
+          "reidentified": 0,
+          "kLe5": 0,
+          "medianK": 1020
+        },
+        "contact": {
+          "n": 50,
+          "reidentified": 45,
+          "kLe5": 50,
+          "medianK": 1
+        }
+      },
+      "global": {
+        "n": 200,
+        "reidentified": 128,
+        "kLe5": 150,
+        "medianK": 1
+      }
+    },
+    {
+      "system": "moteur-complet",
+      "label": "Moteur complet",
+      "byVariant": {
+        "direct": {
+          "n": 50,
+          "reidentified": 0,
+          "kLe5": 0,
+          "medianK": 64
+        },
+        "quasi-identifiants": {
+          "n": 50,
+          "reidentified": 0,
+          "kLe5": 1,
+          "medianK": 66
+        },
+        "identifiants": {
+          "n": 50,
+          "reidentified": 0,
+          "kLe5": 0,
+          "medianK": 1020
+        },
+        "contact": {
+          "n": 50,
+          "reidentified": 4,
+          "kLe5": 9,
+          "medianK": 2000
+        }
+      },
+      "global": {
+        "n": 200,
+        "reidentified": 4,
+        "kLe5": 10,
+        "medianK": 77
+      }
+    }
+  ]
+}

@@ -54,6 +54,45 @@ describe("nouveaux motifs", () => {
     expect(isValidNir("1 85 03 75 112 345 67")).toBe(false);
     expect(await found("NIR 1 85 03 75 112 345 94")).toEqual(["NATIONAL_ID:1 85 03 75 112 345 94"]);
   });
+
+  it("numéro d'assuré CNSS avec ou sans le mot « CNSS », jamais un mot sans chiffre", async () => {
+    expect(await found("assuré CNSS B20481736")).toEqual(["CNSS_INSURED_NUMBER:B20481736"]);
+    expect(await found("Abdou Chabi, assuré n° B20481736, réclame")).toEqual(["CNSS_INSURED_NUMBER:B20481736"]);
+    expect(await found("son n° d'assurée : C30917264")).toEqual(["CNSS_INSURED_NUMBER:C30917264"]);
+    expect(await found("matricule CNSS 4401928")).toEqual(["CNSS_INSURED_NUMBER:4401928"]);
+    expect(await found("l'agence CNSS Parakou")).toEqual([]);
+  });
+
+  it("salaire et cotisation séparés du montant par quelques mots", async () => {
+    expect(await found("pour un salaire brut mensuel de 132 000 FCFA")).toEqual(["SALARY:132 000"]);
+    expect(await found("salaire de base 185 000 F, prime de transport 15 000 F")).toEqual(["SALARY:185 000", "SALARY:15 000"]);
+    expect(await found("cotisations du trimestre : 3 456 780 FCFA")).toEqual(["SALARY:3 456 780"]);
+    expect(await found("le SMIG est fixé à 52 000 FCFA")).toEqual(["FINANCIAL_AMOUNT:52 000"]);
+  });
+});
+
+describe("fusion des couches", () => {
+  const engine = (entities: SensitiveEntity[]) =>
+    new DetectionEngine({
+      extraLayers: [
+        {
+          layer: "ner",
+          initialize: async () => ({ layer: "ner", available: true, degraded: false }),
+          status: () => ({ layer: "ner", available: true, degraded: false }),
+          detect: async () => ({ layer: "ner", entities, processingTimeMs: 0 }),
+        } as unknown as DetectionLayerProvider,
+      ],
+    });
+
+  it("un fragment NER inclus dans une URL interne ne la tronque pas", async () => {
+    const text = "connexion refusée vers https://intranet.cnss.bj/prestations/api/v2/dossiers";
+    const e = engine([entity("ORGANIZATION", "api", text, 0.91)]);
+    await e.initialize();
+    const { entities } = await e.detect(text);
+    expect(entities.map((x) => `${x.entityType}:${text.slice(...x.span)}`)).toEqual([
+      "INTERNAL_URL:https://intranet.cnss.bj/prestations/api/v2/dossiers",
+    ]);
+  });
 });
 
 function entity(entityType: SensitiveEntity["entityType"], value: string, text: string, confidence: number): SensitiveEntity {

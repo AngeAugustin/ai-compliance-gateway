@@ -4,10 +4,16 @@ function overlaps(a: [number, number], b: [number, number]): boolean {
   return a[0] < b[1] && b[0] < a[1];
 }
 
+function contains(outer: [number, number], inner: [number, number]): boolean {
+  return outer[0] <= inner[0] && inner[1] <= outer[1] && outer[1] - outer[0] > inner[1] - inner[0];
+}
+
 /**
- * Fusionne les entités des couches : même span (chevauchement) et même type
- * → on conserve la confiance la plus haute. Types différents sur le même span
- * → on conserve le plus sensible (déjà ordonné par les couches, ici max confidence).
+ * Fusionne les entités des couches. Une entité incluse dans une autre cède toujours
+ * la place à l'englobante : un fragment (« api » vu comme organisation par le NER)
+ * ne doit pas tronquer une valeur structurée (l'URL qui le contient) et laisser
+ * le reste en clair. Sinon, même type → confiance la plus haute ; types différents
+ * → la nouvelle entité ne l'emporte qu'avec une confiance nettement supérieure.
  */
 export function mergeEntities(results: DetectionResult[]): SensitiveEntity[] {
   const merged: SensitiveEntity[] = [];
@@ -18,7 +24,10 @@ export function mergeEntities(results: DetectionResult[]): SensitiveEntity[] {
       merged.push(entity);
       continue;
     }
-    if (entity.entityType === clash.entityType) {
+    if (contains(clash.span, entity.span)) continue;
+    if (contains(entity.span, clash.span)) {
+      merged.splice(merged.indexOf(clash), 1, entity);
+    } else if (entity.entityType === clash.entityType) {
       if (entity.confidence > clash.confidence) {
         merged.splice(merged.indexOf(clash), 1, entity);
       }

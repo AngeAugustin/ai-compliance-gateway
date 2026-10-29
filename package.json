@@ -23,12 +23,12 @@
     "dev:dashboard": "pnpm --filter @acg/dashboard dev",
     "dev": "concurrently -n api,dashboard -c blue,magenta \"pnpm dev:api\" \"pnpm dev:dashboard\"",
     "agents:build": "pnpm --filter @acg/agent-runtime build && pnpm --filter @acg/agent-browser build && pnpm --filter @acg/agent-cli build",
-    "dataset:generate": "tsx data/synthetic/generate.ts",
-    "eval:detection": "tsx tools/evaluate-detection.ts",
+    "eval:detection": "tsx tools/eval/run.ts",
     "test:e2e:texte": "vitest run packages/agent-runtime/src/e2e-texte.test.ts",
     "test:e2e:fichiers": "vitest run packages/agent-runtime/src/e2e-fichiers.test.ts packages/file-extract/src/file-extract.test.ts",
     "fixtures:fichiers": "tsx data/fixtures-fichiers/generate.ts",
-    "models:ner": "tsx tools/prepare-ner-model.ts"
+    "models:ner": "tsx tools/prepare-ner-model.ts",
+    "eval:detection:rapide": "tsx tools/eval/run.ts --sans-ner --repetitions 1"
   },
   "dependencies": {
     "pg": "^8.16.3"
