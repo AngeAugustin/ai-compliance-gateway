@@ -127,11 +127,11 @@ export function PolicyFormPage() {
     setSaving(true);
     try {
       if (creating) {
-        await api("/v1/policies", { method: "POST", body: JSON.stringify(payload) });
-        toast.success(`${draft.name} créée.`);
+        const res = await api<PendingResult>("/v1/policies", { method: "POST", body: JSON.stringify(payload) });
+        toast.success(res.pendingApproval ? `${draft.name} : création soumise à double validation.` : `${draft.name} créée.`);
       } else {
-        await api(`/v1/policies/${encodeURIComponent(draft.id)}`, { method: "PUT", body: JSON.stringify(payload) });
-        toast.success(`${draft.name} enregistrée.`);
+        const res = await api<PendingResult>(`/v1/policies/${encodeURIComponent(draft.id)}`, { method: "PUT", body: JSON.stringify(payload) });
+        toast.success(res.pendingApproval ? `${draft.name} : modification soumise à double validation.` : `${draft.name} enregistrée.`);
       }
       navigate("/policies");
     } catch (err) {
@@ -157,8 +157,8 @@ export function PolicyFormPage() {
   async function confirmDelete() {
     setSaving(true);
     try {
-      await api(`/v1/policies/${encodeURIComponent(draft.id)}`, { method: "DELETE" });
-      toast.success(`${draft.name} supprimée.`);
+      const res = await api<PendingResult>(`/v1/policies/${encodeURIComponent(draft.id)}`, { method: "DELETE" });
+      toast.success(res.pendingApproval ? `${draft.name} : suppression soumise à double validation.` : `${draft.name} supprimée.`);
       setConfirmOpen(false);
       navigate("/policies");
     } catch (err) {
@@ -340,3 +340,6 @@ export function PolicyFormPage() {
     </div>
   );
 }
+
+/** Réponse 202 : changement touchant une règle BLOCK, en attente d'un second approbateur. */
+export type PendingResult = { pendingApproval?: boolean };

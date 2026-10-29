@@ -7,7 +7,11 @@ export interface QueuedEvent {
   attempts: number;
 }
 
-/** File persistante chiffrée côté agent — retransmission avec backoff (DAT §17.4). */
+/**
+ * File persistante côté agent — retransmission avec backoff (DAT §17.4).
+ * Stockage en clair (chrome.storage.local ou fichier) : elle ne doit recevoir que des
+ * événements sans valeur sensible (types, positions, scores, décision locale).
+ */
 export class SecureQueue {
   private items: QueuedEvent[] = [];
 

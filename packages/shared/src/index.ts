@@ -16,3 +16,4 @@ export * from "./crypto/canonical.js";
 export * from "./crypto/hash.js";
 export * from "./crypto/signing.js";
 export * from "./crypto/encoding.js";
+export * from "./crypto/escrow.js";

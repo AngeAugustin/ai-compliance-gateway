@@ -24,7 +24,8 @@ export class EventsController {
     const whereSql = where.length ? `WHERE ${where.join(" AND ")}` : "";
     params.push(Number(limit), Number(offset));
     const res = await query(
-      `SELECT e.*, COALESCE(e.client_ip, a.last_ip) AS client_ip
+      `SELECT e.*, COALESCE(e.client_ip, a.last_ip) AS client_ip,
+              EXISTS (SELECT 1 FROM vault.escrow s WHERE s.event_id = e.event_id) AS has_escrow
          FROM analytics.security_event e
          LEFT JOIN agent a ON a.agent_id = e.agent_id
          ${whereSql}
@@ -81,16 +82,18 @@ export function mapEvent(row: Record<string, unknown>): SecurityEvent {
     factorBreakdown: (row.factor_breakdown as SecurityEvent["factorBreakdown"]) ?? [],
     policyId: (row.policy_id as string | null) ?? null,
     action: row.action as SecurityEvent["action"],
+    serverDecision: (row.server_decision as SecurityEvent["serverDecision"] | null) ?? undefined,
     referenceFrameworks: (row.reference_frameworks as string[]) ?? [],
     degradedMode: Boolean(row.degraded_mode),
     processingTimeMs: row.processing_time_ms === null ? null : Number(row.processing_time_ms),
     detectionLayers: (row.detection_layers as string[]) ?? [],
     prevEventHash: row.prev_event_hash ? String(row.prev_event_hash).trim() : null,
     eventHash: String(row.event_hash).trim(),
+    hasEscrow: row.has_escrow === undefined ? undefined : Boolean(row.has_escrow),
   };
 }
 
 export function hashInputFromEvent(event: SecurityEvent, prevEventHash: string | null): SecurityEventHashInput {
-  const { sequence: _sequence, eventHash: _eventHash, clientIp: _clientIp, ...rest } = event;
+  const { sequence: _sequence, eventHash: _eventHash, clientIp: _clientIp, hasEscrow: _hasEscrow, ...rest } = event;
   return { ...rest, prevEventHash };
 }

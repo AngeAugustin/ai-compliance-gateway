@@ -14,6 +14,7 @@ export function UsersPage() {
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState<UserRecord | null>(null);
   const [busy, setBusy] = useState(false);
+  const [resetTarget, setResetTarget] = useState<UserRecord | null>(null);
   const { page, setPage, pageCount, pageItems, total, from, to } = usePagination(items);
 
   async function refresh() {
@@ -33,6 +34,23 @@ export function UsersPage() {
       toast.success(`${pending.displayName} désactivé.`);
       setPending(null);
       await refresh();
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message);
+      toast.error(message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function confirmResetMfa() {
+    if (!resetTarget) return;
+    setBusy(true);
+    setError(null);
+    try {
+      await api(`/v1/auth/mfa/reset/${encodeURIComponent(resetTarget.id)}`, { method: "POST" });
+      toast.success(`Second facteur de ${resetTarget.displayName} réinitialisé.`);
+      setResetTarget(null);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       setError(message);
@@ -99,6 +117,9 @@ export function UsersPage() {
                         <button type="button" className="btn btn-ghost" onClick={() => navigate(`/users/${u.id}/modifier`)}>
                           Modifier
                         </button>
+                        <button type="button" className="btn btn-ghost" disabled={busy} onClick={() => setResetTarget(u)}>
+                          Réinitialiser MFA
+                        </button>
                         {u.isActive ? (
                           <button type="button" className="btn btn-ghost" disabled={busy} onClick={() => setPending(u)}>
                             Désactiver
@@ -127,6 +148,21 @@ export function UsersPage() {
         busy={busy}
         onConfirm={() => void confirmDeactivate()}
         onCancel={() => !busy && setPending(null)}
+      />
+
+      <ConfirmModal
+        open={resetTarget != null}
+        title="Réinitialiser le second facteur ?"
+        description={
+          resetTarget
+            ? `Le second facteur de « ${resetTarget.displayName} » sera supprimé et ses sessions révoquées. À la prochaine connexion, il devra enrôler une nouvelle application d'authentification.`
+            : ""
+        }
+        confirmLabel="Réinitialiser"
+        danger
+        busy={busy}
+        onConfirm={() => void confirmResetMfa()}
+        onCancel={() => !busy && setResetTarget(null)}
       />
     </div>
   );

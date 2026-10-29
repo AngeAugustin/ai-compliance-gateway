@@ -2,10 +2,15 @@ import { config } from "dotenv";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 
+const production = process.env.NODE_ENV === "production";
+
 config({ path: resolve(process.cwd(), ".env") });
 config({ path: resolve(process.cwd(), "../../.env") });
-config({ path: resolve(process.cwd(), ".env.example"), override: false });
-config({ path: resolve(process.cwd(), "../../.env.example"), override: false });
+// Les valeurs d'exemple (publiques, versionnées) ne servent qu'au développement.
+if (!production) {
+  config({ path: resolve(process.cwd(), ".env.example"), override: false });
+  config({ path: resolve(process.cwd(), "../../.env.example"), override: false });
+}
 
 function req(name: string, fallback?: string): string {
   const v = process.env[name] ?? fallback;
@@ -13,11 +18,24 @@ function req(name: string, fallback?: string): string {
   return v;
 }
 
+/**
+ * Secret avec valeur de développement. En production (NODE_ENV=production), la variable
+ * doit être fournie et différer de cette valeur, publique puisque versionnée : sinon
+ * l'API refuse de démarrer plutôt que de signer des jetons ou chiffrer avec une clé connue.
+ */
+function secret(name: string, devValue: string): string {
+  if (!production) return req(name, devValue);
+  const v = process.env[name];
+  if (!v) throw new Error(`Variable d'environnement manquante en production : ${name}`);
+  if (v === devValue) throw new Error(`${name} a sa valeur de développement : interdit en production`);
+  return v;
+}
+
 export const env = {
   databaseUrl: req("DATABASE_URL", "postgres://postgres:postgres@localhost:5432/ai_compliance_gateway"),
   apiPort: Number(process.env.API_PORT ?? 4000),
   apiPublicUrl: req("API_PUBLIC_URL", "http://localhost:4000"),
-  jwtSecret: req("JWT_SECRET", "change-me-in-production-please-use-48-random-bytes"),
+  jwtSecret: secret("JWT_SECRET", "change-me-in-production-please-use-48-random-bytes"),
   /** Access token TTL (secondes). Court pour permettre une révocation efficace. */
   jwtTtlSeconds: Number(process.env.JWT_TTL_SECONDS ?? 900),
   /** Refresh token TTL (secondes). */
@@ -25,8 +43,17 @@ export const env = {
   loginMaxAttempts: Number(process.env.LOGIN_MAX_ATTEMPTS ?? 5),
   loginLockoutSeconds: Number(process.env.LOGIN_LOCKOUT_SECONDS ?? 900),
   loginRateLimitPerMinute: Number(process.env.LOGIN_RATE_LIMIT_PER_MINUTE ?? 5),
-  vaultMasterKey: req("VAULT_MASTER_KEY", "ZGV2LW9ubHktdmF1bHQta2V5LTMyLWJ5dGVzLS0tLS0tLQ=="),
-  auditUserSalt: req("AUDIT_USER_SALT", "dev-only-audit-salt"),
+  vaultMasterKey: secret("VAULT_MASTER_KEY", "ZGV2LW9ubHktdmF1bHQta2V5LTMyLWJ5dGVzLS0tLS0tLQ=="),
+  auditUserSalt: secret("AUDIT_USER_SALT", "dev-only-audit-salt"),
+  /** Durée de conservation des valeurs séquestrées (jours) ; au-delà, plus de levée d'anonymat. */
+  vaultRetentionDays: Number(process.env.VAULT_RETENTION_DAYS ?? 30),
+  /** Rôles qui doivent activer le second facteur TOTP avant d'accéder au dashboard. */
+  mfaRequiredRoles: (process.env.MFA_REQUIRED_ROLES ?? "ADMIN,RSSI,DPO")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean),
+  /** Libellé de l'émetteur affiché dans l'application d'authentification. */
+  mfaIssuer: process.env.MFA_ISSUER ?? "AI Compliance Gateway",
   heartbeatTimeoutSeconds: Number(process.env.HEARTBEAT_TIMEOUT_SECONDS ?? 300),
   heartbeatCheckIntervalSeconds: Number(process.env.HEARTBEAT_CHECK_INTERVAL_SECONDS ?? 30),
   organizationJurisdiction: req("ORGANIZATION_JURISDICTION", "BJ"),

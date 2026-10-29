@@ -8,7 +8,7 @@ import {
   type HeartbeatResponse,
   type IntegrityReport,
 } from "@acg/shared";
-import { signPayload } from "@acg/shared";
+import { agentRequestSigningPayload, signPayload } from "@acg/shared";
 
 export class AgentApiError extends Error {
   constructor(
@@ -97,7 +97,7 @@ export class GatewayClient {
       if (key && agentId) {
         const ts = new Date().toISOString();
         headers["X-Agent-Timestamp"] = ts;
-        headers["X-Agent-Signature"] = await signPayload(key, { agentId, method, path, ts });
+        headers["X-Agent-Signature"] = await signPayload(key, await agentRequestSigningPayload({ agentId, method, path, ts, body }));
       }
     }
     const res = await fetch(`${this.apiUrl}${path}`, {

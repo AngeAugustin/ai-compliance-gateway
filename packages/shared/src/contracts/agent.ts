@@ -131,5 +131,7 @@ export const AgentSyncResponseSchema = z.object({
   syncIntervalSeconds: z.number().int().positive(),
   /** Empreintes attendues des modèles locaux, pour la vérification d'intégrité */
   expectedModelHashes: z.record(z.string(), z.string()),
+  /** Clé publique de séquestre : l'agent y chiffre les valeurs masquées (null = pas de séquestre). */
+  escrowKey: z.object({ kid: z.string().min(1), publicKey: PublicKeyJwkSchema }).nullable().optional(),
 });
 export type AgentSyncResponse = z.infer<typeof AgentSyncResponseSchema>;

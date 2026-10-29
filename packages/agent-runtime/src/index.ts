@@ -12,6 +12,7 @@ import { GatewayClient, emptyIntegrity } from "./client.js";
 import { type AgentPersistedConfig, type ConfigStore, DEFAULT_AGENT_CONFIG } from "./config.js";
 import { prepareFileAnalysis, type IncomingFile } from "./files.js";
 import { decideLocally, userFacingText, type LocalDecision } from "./pipeline.js";
+import { escrowFor } from "./escrow.js";
 import type { ExtractEngineOptions } from "@acg/file-extract";
 import { SecureQueue } from "./queue.js";
 
@@ -251,10 +252,10 @@ export class AgentRuntime {
           ],
       textLength: prepared.analysisText.length,
       attachments: decision.attachments,
-      maskCandidates:
-        decision.action === "MASK"
-          ? decision.entities.filter((e) => e.value).map((e) => ({ entityType: e.entityType, value: e.value! }))
-          : [],
+      // Aucune valeur en clair ne quitte le poste : la tokenisation est locale (jetons gardés par
+      // l'agent pour la restauration) et les valeurs ne partent que chiffrées pour le séquestre —
+      // ce message peut finir dans la file hors ligne sur disque.
+      maskEscrow: await escrowFor(decision, this.cache.get()?.escrowKey),
       occurredAt: new Date().toISOString(),
       localDecision: {
         action: decision.action,
@@ -266,6 +267,9 @@ export class AgentRuntime {
         maskedTokens: decision.decision.maskedTokens,
       },
     };
+    // Le serveur n'accepte que des événements signés : un agent non enrôlé décide seul,
+    // sans journal central (ni file qui grossirait sans fin).
+    if (!this.isEnrolled()) return decision;
     try {
       await this.client.evaluate(wire);
       await this.flushQueue();

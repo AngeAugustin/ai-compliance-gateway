@@ -3,13 +3,13 @@ import { CHANNELS, POLICY_ACTIONS, RISK_BANDS } from "../domain/actions.js";
 import { AttachmentWireSchema } from "./attachment.js";
 import { DetectionResultWireSchema } from "./detection.js";
 import { RiskFactorBreakdownSchema } from "./risk.js";
+import { EscrowEnvelopeSchema } from "../crypto/escrow.js";
 
 /**
  * POST /v1/interactions/evaluate — requête (DAT §15).
- * L'agent envoie les résultats de détection SANS valeur en clair. Lorsqu'une
- * action MASK est possible, il fournit les entités à tokeniser sous forme
- * chiffrée pour le Vault (voir maskCandidates) ; le serveur ne voit jamais
- * la valeur en clair hors mémoire de traitement.
+ * L'agent envoie les résultats de détection SANS valeur en clair et la décision
+ * qu'il a appliquée (localDecision). La tokenisation est locale ; les valeurs
+ * masquées ne quittent le poste que chiffrées pour le séquestre (maskEscrow).
  */
 export const EvaluateInteractionRequestSchema = z.object({
   interactionId: z.string().min(1),
@@ -22,21 +22,16 @@ export const EvaluateInteractionRequestSchema = z.object({
   /** Métadonnées pièces jointes (jamais le binaire ni le texte extrait) */
   attachments: z.array(AttachmentWireSchema).max(20).default([]),
   /**
-   * Candidats au masquage : pour chaque entité, le type et la valeur en clair.
-   * Transmis uniquement si l'agent est configuré en tokenisation côté serveur
-   * (mode par défaut : tokenisation locale, ce champ est vide).
+   * Correspondances jeton → valeur de cette interaction, chiffrées avec la clé publique
+   * de séquestre (voir crypto/escrow). Le serveur les stocke sans pouvoir les lire hors
+   * levée d'anonymat. Absent si rien n'a été masqué.
    */
-  maskCandidates: z
-    .array(
-      z.object({
-        entityType: z.string(),
-        value: z.string().max(2000),
-      }),
-    )
-    .max(200)
-    .default([]),
+  maskEscrow: EscrowEnvelopeSchema.optional(),
   occurredAt: z.string().datetime(),
-  /** Décision prise localement si l'agent était hors ligne (journalisation a posteriori) */
+  /**
+   * Décision réellement appliquée sur le poste. C'est elle qui est journalisée ;
+   * la décision recalculée par le serveur est conservée à côté pour détecter les écarts.
+   */
   localDecision: z
     .object({
       action: z.enum(POLICY_ACTIONS),
@@ -61,9 +56,8 @@ export const EvaluateInteractionResponseSchema = z.object({
   policyId: z.string().min(1).nullable(),
   policyName: z.string().nullable(),
   referenceFrameworks: z.array(z.string()),
-  /** Correspondance valeur -> jeton, uniquement si maskCandidates a été fourni */
+  /** Jetons appliqués (jamais les valeurs) */
   maskedTokens: z.array(z.string()),
-  tokenMap: z.array(z.object({ value: z.string(), token: z.string() })).optional(),
   escalated: z.boolean(),
   escalationReason: z.string().nullable(),
   userMessage: z.string().nullable(),

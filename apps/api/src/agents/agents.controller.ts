@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Post, Req, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Delete, Get, Inject, NotFoundException, Param, Post, Req, UnauthorizedException } from "@nestjs/common";
 import {
   CreateEnrollmentTokenSchema,
   EnrollAgentRequestSchema,
@@ -16,13 +16,16 @@ import {
   onnxFile,
 } from "@acg/shared";
 import { query } from "../db.js";
-import { Public, Roles } from "../auth/guards.js";
+import { AgentAuth, Public, Roles } from "../auth/guards.js";
 import type { AuthUser } from "../auth/jwt.js";
 import { env } from "../env.js";
 import { clientIp } from "../client-ip.js";
+import { EscrowService } from "../vault/escrow.service.js";
 
 @Controller("/v1/agents")
 export class AgentsController {
+  constructor(@Inject(EscrowService) private readonly escrow: EscrowService) {}
+
   @Roles("RSSI", "ADMIN")
   @Get()
   async list() {
@@ -319,24 +322,17 @@ export class AgentsController {
     };
   }
 
-  @Public()
+  /** Signature obligatoire : les politiques et la clé de séquestre ne sont servies qu'à un agent authentifié. */
+  @AgentAuth()
   @Get("/sync")
-  async sync(@Req() req: { headers: Record<string, string | undefined> }): Promise<AgentSyncResponse> {
-    const agentId = req.headers["x-agent-id"];
-    if (!agentId) throw new UnauthorizedException("X-Agent-Id requis");
-    const ts = req.headers["x-agent-timestamp"];
-    const sig = req.headers["x-agent-signature"];
+  async sync(@Req() req: { agent: { agentId: string } }): Promise<AgentSyncResponse> {
+    const agentId = req.agent.agentId;
     const agent = await query<{ public_key: string; user_id: string | null; revoked_at: Date | null }>(
       `SELECT public_key, user_id, revoked_at FROM agent WHERE agent_id = $1`,
       [agentId],
     );
     const row = agent.rows[0];
     if (!row || row.revoked_at) throw new UnauthorizedException("Agent inconnu");
-    if (ts && sig) {
-      const key = await importPublicKey(JSON.parse(row.public_key));
-      const ok = await verifyPayload(key, { agentId, method: "GET", path: "/v1/agents/sync", ts }, sig);
-      if (!ok) throw new UnauthorizedException("Signature sync invalide");
-    }
 
     const userRow = row.user_id
       ? await query<{
@@ -421,6 +417,7 @@ export class AgentsController {
       },
       heartbeatIntervalSeconds: 60,
       syncIntervalSeconds: 300,
+      escrowKey: this.escrow.publicKey(),
       expectedModelHashes: {
         ...(env.nerModelSha256 ? { ner: env.nerModelSha256 } : {}),
         ...(env.llmModelSha256 ? { llm: env.llmModelSha256 } : {}),

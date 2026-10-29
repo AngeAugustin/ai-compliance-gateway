@@ -24,6 +24,8 @@ export function LoginPage() {
   const [now, setNow] = useState(() => Date.now());
   const [busy, setBusy] = useState(false);
   const [clock, setClock] = useState(() => formatClock(new Date()));
+  const [stage, setStage] = useState<Stage>({ kind: "password" });
+  const [code, setCode] = useState("");
 
   useEffect(() => {
     const id = window.setInterval(() => {
@@ -38,47 +40,79 @@ export function LoginPage() {
     if (lockedUntil != null && now >= lockedUntil) setLockedUntil(null);
   }, [lockedUntil, now]);
 
+  /** POST d'authentification ; null en cas d'échec (message ou verrouillage déjà affiché). */
+  async function post(path: string, body: unknown): Promise<AuthResponse | null> {
+    const res = await fetch(`${API}${path}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (res.ok) return (await res.json()) as AuthResponse;
+    const err = parseLoginError(await res.text(), res.status);
+    if (err.code === "ACCOUNT_LOCKED" || res.status === 423) {
+      setLockedUntil(Date.now() + (err.retryAfterSeconds ?? 900) * 1000);
+      return null;
+    }
+    const msg = typeof err.message === "string" ? err.message : Array.isArray(err.message) ? err.message.join(" · ") : "";
+    setError(msg || "Identifiants refusés. Vérifiez le courriel et le mot de passe.");
+    return null;
+  }
+
+  function openSession(data: AuthResponse) {
+    const access = data.accessToken ?? data.token;
+    if (!access || !data.refreshToken) {
+      setError("Réponse d'authentification incomplète.");
+      return;
+    }
+    setSession(access, data.refreshToken);
+    navigate("/");
+  }
+
+  function restart() {
+    setStage({ kind: "password" });
+    setCode("");
+    setError(null);
+  }
+
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
     setLockedUntil(null);
     setBusy(true);
     try {
-      const res = await fetch(`${API}/v1/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      if (!res.ok) {
-        const raw = await res.text();
-        const err = parseLoginError(raw, res.status);
-        const msg =
-          typeof err.message === "string"
-            ? err.message
-            : Array.isArray(err.message)
-              ? err.message.join(" · ")
-              : "Identifiants refusés.";
-
-        if (err.code === "ACCOUNT_LOCKED" || res.status === 423) {
-          const retry = err.retryAfterSeconds ?? 900;
-          setLockedUntil(Date.now() + retry * 1000);
+      if (stage.kind === "password") {
+        const data = await post("/v1/auth/login", { email, password });
+        if (!data) return;
+        if (data.mfaRequired && data.mfaToken) {
+          setCode("");
+          setStage({ kind: "mfa", token: data.mfaToken });
           return;
         }
-        setError(msg || "Identifiants refusés. Vérifiez le courriel et le mot de passe.");
+        if (data.mfaSetupRequired && data.mfaToken) {
+          const setup = await post("/v1/auth/mfa/setup", { mfaToken: data.mfaToken });
+          if (!setup) return;
+          setCode("");
+          setStage({
+            kind: "setup",
+            token: data.mfaToken,
+            secret: setup.secret ?? null,
+            uri: setup.otpauthUri ?? null,
+            qr: setup.qrDataUrl ?? null,
+          });
+          return;
+        }
+        openSession(data);
         return;
       }
-      const data = (await res.json()) as {
-        token?: string;
-        accessToken?: string;
-        refreshToken: string;
-      };
-      const access = data.accessToken ?? data.token;
-      if (!access || !data.refreshToken) {
-        setError("Réponse d'authentification incomplète.");
+      const data = await post(stage.kind === "mfa" ? "/v1/auth/mfa/verify" : "/v1/auth/mfa/activate", {
+        mfaToken: stage.token,
+        code: code.replace(/\s/g, ""),
+      });
+      if (!data) {
+        setCode("");
         return;
       }
-      setSession(access, data.refreshToken);
-      navigate("/");
+      openSession(data);
     } finally {
       setBusy(false);
     }
@@ -160,6 +194,60 @@ export function LoginPage() {
             </div>
 
             <form onSubmit={onSubmit} className="login-form">
+              {stage.kind !== "password" ? (
+                <>
+                  {stage.kind === "setup" ? (
+                    <div className="login-field">
+                      <p className="field-label">Activation du second facteur (obligatoire pour votre rôle)</p>
+                      <p style={{ fontSize: 13, lineHeight: 1.5 }}>
+                        Ajoutez ce compte dans une application d&apos;authentification (Google Authenticator, Microsoft
+                        Authenticator, FreeOTP…), puis saisissez le code à 6 chiffres affiché.
+                      </p>
+                      {stage.qr ? (
+                        <img src={stage.qr} alt="QR code d'enrôlement TOTP" width={180} height={180} style={{ background: "#fff", padding: 8, borderRadius: 8 }} />
+                      ) : null}
+                      {stage.secret ? (
+                        <p style={{ fontSize: 13 }}>
+                          Clé à saisir manuellement :{" "}
+                          <code className="font-mono" style={{ userSelect: "all", wordBreak: "break-all" }}>
+                            {stage.secret.replace(/(.{4})/g, "$1 ").trim()}
+                          </code>
+                        </p>
+                      ) : null}
+                      {stage.uri ? (
+                        <a className="login-hw-link" href={stage.uri}>
+                          Ouvrir dans l&apos;application d&apos;authentification
+                        </a>
+                      ) : null}
+                    </div>
+                  ) : null}
+                  <div className="login-field">
+                    <label className="field-label" htmlFor="login-code">
+                      {stage.kind === "mfa" ? "Code de l'application d'authentification" : "Premier code affiché"}
+                    </label>
+                    <div className="login-input-shell">
+                      <span className="login-input-icon" aria-hidden>
+                        <LockIcon />
+                      </span>
+                      <input
+                        id="login-code"
+                        className="login-input font-mono"
+                        inputMode="numeric"
+                        autoComplete="one-time-code"
+                        pattern="[0-9 ]{6,7}"
+                        maxLength={7}
+                        value={code}
+                        onChange={(e) => setCode(e.target.value)}
+                        placeholder="123 456"
+                        autoFocus
+                        required
+                        disabled={formBlocked}
+                      />
+                    </div>
+                  </div>
+                </>
+              ) : (
+              <>
               <div className="login-field">
                 <label className="field-label" htmlFor="login-email">
                   Courriel institutionnel
@@ -214,6 +302,8 @@ export function LoginPage() {
                   </button>
                 </div>
               </div>
+              </>
+              )}
 
               {formBlocked ? (
                 <div className="login-lockout" role="alert">
@@ -227,9 +317,24 @@ export function LoginPage() {
               {error && !formBlocked ? <p className="notice-err">{error}</p> : null}
 
               <button type="submit" className="login-submit" disabled={busy || formBlocked}>
-                <span>{busy ? "Connexion…" : formBlocked ? "Verrouillé" : "Entrer"}</span>
+                <span>
+                  {busy
+                    ? "Vérification…"
+                    : formBlocked
+                      ? "Verrouillé"
+                      : stage.kind === "mfa"
+                        ? "Valider le code"
+                        : stage.kind === "setup"
+                          ? "Activer et entrer"
+                          : "Entrer"}
+                </span>
                 <span aria-hidden>→</span>
               </button>
+              {stage.kind !== "password" ? (
+                <button type="button" className="login-hw-link" onClick={restart} style={{ background: "none", border: 0, cursor: "pointer" }}>
+                  ← Revenir à l&apos;identifiant
+                </button>
+              ) : null}
             </form>
 
             <div className="login-card-foot">
@@ -245,6 +350,23 @@ export function LoginPage() {
     </div>
   );
 }
+
+type AuthResponse = {
+  token?: string;
+  accessToken?: string;
+  refreshToken?: string;
+  mfaRequired?: boolean;
+  mfaSetupRequired?: boolean;
+  mfaToken?: string;
+  secret?: string;
+  otpauthUri?: string;
+  qrDataUrl?: string | null;
+};
+
+type Stage =
+  | { kind: "password" }
+  | { kind: "mfa"; token: string }
+  | { kind: "setup"; token: string; secret: string | null; uri: string | null; qr: string | null };
 
 function formatLockDuration(totalSeconds: number): string {
   const m = Math.floor(totalSeconds / 60);

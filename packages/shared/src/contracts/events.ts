@@ -25,22 +25,37 @@ export const SecurityEventSchema = z.object({
   riskBand: z.enum(RISK_BANDS),
   factorBreakdown: z.array(RiskFactorBreakdownSchema),
   policyId: z.string().min(1).nullable(),
+  /** Action réellement appliquée sur le poste (décision serveur si l'agent n'en a pas transmis). */
   action: z.enum(POLICY_ACTIONS),
+  /**
+   * Décision recalculée par le serveur quand elle n'est pas celle appliquée. Incluse dans
+   * l'empreinte si présente ; absente des événements antérieurs, dont l'empreinte reste valide.
+   */
+  serverDecision: z
+    .object({
+      action: z.enum(POLICY_ACTIONS),
+      policyId: z.string().min(1).nullable(),
+      riskScore: z.number().int().min(0).max(100),
+      riskBand: z.enum(RISK_BANDS),
+    })
+    .optional(),
   referenceFrameworks: z.array(z.string()),
   degradedMode: z.boolean(),
   processingTimeMs: z.number().int().nullable(),
   detectionLayers: z.array(z.string()),
   prevEventHash: z.string().length(64).nullable(),
   eventHash: z.string().length(64),
+  /** Des valeurs masquées sont séquestrées pour cet événement (hors empreinte : calculé à la lecture). */
+  hasEscrow: z.boolean().optional(),
 });
 export type SecurityEvent = z.infer<typeof SecurityEventSchema>;
 
-/** Champs entrant dans le calcul de event_hash (hors séquence, hash et métadonnées réseau). */
-export type SecurityEventHashInput = Omit<SecurityEvent, "eventHash" | "sequence" | "clientIp">;
+/** Champs entrant dans le calcul de event_hash (hors séquence, hash et métadonnées réseau ou dérivées). */
+export type SecurityEventHashInput = Omit<SecurityEvent, "eventHash" | "sequence" | "clientIp" | "hasEscrow">;
 
 export const SecurityAlertSchema = z.object({
   id: z.string().min(1),
-  alertType: z.enum(["AGENT_MISSING", "AGENT_TAMPERED", "AGENT_RECOVERED", "CRITICAL_INTERACTION", "INFRA_DEGRADED"]),
+  alertType: z.enum(["AGENT_MISSING", "AGENT_TAMPERED", "AGENT_RECOVERED", "CRITICAL_INTERACTION", "INFRA_DEGRADED", "DECISION_DIVERGENCE"]),
   severity: z.enum(["info", "warning", "critical"]),
   agentId: z.string().min(1).nullable(),
   eventId: z.string().min(1).nullable(),

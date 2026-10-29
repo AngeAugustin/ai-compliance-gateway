@@ -1,6 +1,31 @@
 import { canonicalJson } from "./canonical.js";
 import { base64UrlToBytes, bytesToBase64Url, utf8Encode } from "./encoding.js";
+import { sha256Hex } from "./hash.js";
 import type { PublicKeyJwk } from "../contracts/agent.js";
+
+/** Fenêtre d'acceptation de l'horodatage d'une requête agent (rejeu borné). */
+export const AGENT_REQUEST_MAX_SKEW_MS = 5 * 60_000;
+
+/**
+ * Ce que signe l'agent pour chaque requête : identité, méthode, chemin, horodatage
+ * et empreinte du corps. Sans l'empreinte, un intermédiaire pourrait réutiliser
+ * des en-têtes valides avec un autre événement (autre action, autres entités).
+ */
+export async function agentRequestSigningPayload(input: {
+  agentId: string;
+  method: string;
+  path: string;
+  ts: string;
+  body?: unknown;
+}): Promise<{ agentId: string; method: string; path: string; ts: string; bodySha256: string | null }> {
+  return {
+    agentId: input.agentId,
+    method: input.method.toUpperCase(),
+    path: input.path,
+    ts: input.ts,
+    bodySha256: input.body === undefined ? null : await sha256Hex(canonicalJson(input.body)),
+  };
+}
 
 /**
  * Signature ECDSA P-256 / SHA-256 via WebCrypto, disponible à l'identique dans

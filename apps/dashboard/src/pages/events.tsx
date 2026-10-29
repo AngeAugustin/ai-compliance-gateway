@@ -61,13 +61,103 @@ function DetailRow({ label, children }: { label: string; children: React.ReactNo
   );
 }
 
+function diverges(e: SecurityEvent): boolean {
+  return e.serverDecision != null && e.serverDecision.action !== e.action;
+}
+
+const MIN_PURPOSE_LENGTH = 15;
+
+/**
+ * Levée d'anonymat : réservée au DPO connecté avec second facteur, sur motif écrit.
+ * Chaque tentative est journalisée côté serveur ; les valeurs ne sont jamais conservées ici.
+ */
+function RevealSection({ eventId, role }: { eventId: string; role: string | null }) {
+  const [open, setOpen] = useState(false);
+  const [purpose, setPurpose] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [entries, setEntries] = useState<{ token: string; entityType: string; value: string }[] | null>(null);
+
+  async function reveal() {
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await api<{ entries: { token: string; entityType: string; value: string }[] }>("/v1/vault/reveal", {
+        method: "POST",
+        body: JSON.stringify({ eventId, purpose: purpose.trim() }),
+      });
+      setEntries(res.entries);
+      setOpen(false);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <section className="drawer-section">
+      <h3>Valeurs séquestrées</h3>
+      {entries ? (
+        <ul className="drawer-list">
+          {entries.map((x) => (
+            <li key={x.token}>
+              <span className="font-mono" style={{ fontSize: 12 }}>
+                {x.token} · {x.entityType}
+              </span>
+              <span className="font-mono">{x.value}</span>
+            </li>
+          ))}
+        </ul>
+      ) : role !== "DPO" ? (
+        <p className="drawer-empty">Valeurs masquées chiffrées sous séquestre. Seul le DPO peut lever l'anonymat, sur motif.</p>
+      ) : open ? (
+        <div style={{ display: "grid", gap: 8 }}>
+          <label className="field-label" htmlFor="reveal-purpose">
+            Motif de la levée d'anonymat (journalisé)
+          </label>
+          <textarea
+            id="reveal-purpose"
+            className="input"
+            rows={3}
+            value={purpose}
+            onChange={(e) => setPurpose(e.target.value)}
+            placeholder="Ex. : réquisition judiciaire n° …, demande d'exercice de droits de la personne concernée…"
+          />
+          <div className="row-actions">
+            <button
+              type="button"
+              className="btn btn-danger"
+              disabled={busy || purpose.trim().length < MIN_PURPOSE_LENGTH}
+              onClick={() => void reveal()}
+            >
+              Lever l'anonymat
+            </button>
+            <button type="button" className="btn btn-ghost" disabled={busy} onClick={() => setOpen(false)}>
+              Annuler
+            </button>
+          </div>
+        </div>
+      ) : (
+        <button type="button" className="btn btn-secondary" onClick={() => setOpen(true)}>
+          Lever l'anonymat…
+        </button>
+      )}
+      {error ? <p className="notice-err">{error}</p> : null}
+    </section>
+  );
+}
+
 export function EventsPage() {
   const [items, setItems] = useState<SecurityEvent[]>([]);
   const [filter, setFilter] = useState<(typeof ACTIONS)[number]>("ALL");
   const [selected, setSelected] = useState<SecurityEvent | null>(null);
 
+  const [role, setRole] = useState<string | null>(null);
+
   useEffect(() => {
     void api<{ items: SecurityEvent[] }>("/v1/events?limit=100").then((r) => setItems(r.items));
+    void api<{ role: string }>("/v1/auth/me").then((u) => setRole(u.role)).catch(() => undefined);
   }, []);
 
   useEffect(() => {
@@ -125,6 +215,15 @@ export function EventsPage() {
                     <td className="font-mono">{new Date(e.occurredAt).toLocaleString("fr-FR")}</td>
                     <td>
                       <RiskBadge value={e.action} />
+                      {diverges(e) ? (
+                        <span
+                          className="font-mono"
+                          title={`Le serveur aurait décidé ${e.serverDecision!.action}`}
+                          style={{ marginLeft: 6, fontSize: 11, color: "var(--warn, #d97706)" }}
+                        >
+                          ≠ {e.serverDecision!.action}
+                        </span>
+                      ) : null}
                     </td>
                     <td className="font-mono">
                       {e.riskScore}
@@ -179,9 +278,19 @@ export function EventsPage() {
                 <section className="drawer-section">
                   <h3>Décision</h3>
                   <dl>
-                    <DetailRow label="Action">
+                    <DetailRow label="Action appliquée">
                       <RiskBadge value={selected.action} />
                     </DetailRow>
+                    {selected.serverDecision ? (
+                      <DetailRow label="Décision serveur">
+                        <RiskBadge value={selected.serverDecision.action} />
+                        {diverges(selected) ? (
+                          <span style={{ marginLeft: 8, fontSize: 12, color: "var(--warn, #d97706)" }}>
+                            Divergence : l'agent n'a pas appliqué la décision recalculée.
+                          </span>
+                        ) : null}
+                      </DetailRow>
+                    ) : null}
                     <DetailRow label="Score de risque">
                       <span className="font-mono">
                         {selected.riskScore}/100 · {BAND_LABEL[selected.riskBand] ?? selected.riskBand}
@@ -271,6 +380,8 @@ export function EventsPage() {
                     </ul>
                   )}
                 </section>
+
+                {selected.hasEscrow ? <RevealSection key={selected.eventId} eventId={selected.eventId} role={role} /> : null}
 
                 <section className="drawer-section">
                   <h3>Traçabilité</h3>

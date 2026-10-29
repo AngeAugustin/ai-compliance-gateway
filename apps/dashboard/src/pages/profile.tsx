@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { api, logoutSession, type AuthUser } from "../api";
+import { api, logoutSession, setSession, type AuthUser } from "../api";
 import { ConfirmModal } from "../confirm-modal";
 import { PageHeader, RiskBadge } from "../ui";
 
@@ -149,6 +149,8 @@ export function ProfilePage() {
         </aside>
       </div>
 
+      <MfaPanel />
+
       <ConfirmModal
         open={confirmQuit}
         title="Se déconnecter ?"
@@ -161,5 +163,115 @@ export function ProfilePage() {
         onCancel={() => !quitting && setConfirmQuit(false)}
       />
     </div>
+  );
+}
+
+type MfaStatus = { enabled: boolean; enabledAt: string | null; required: boolean; sessionMfa: boolean };
+type MfaSetup = { secret: string; otpauthUri: string; qrDataUrl: string | null };
+
+/** Second facteur TOTP : état et activation volontaire depuis le profil. */
+function MfaPanel() {
+  const [status, setStatus] = useState<MfaStatus | null>(null);
+  const [setup, setSetup] = useState<MfaSetup | null>(null);
+  const [code, setCode] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = () =>
+    api<MfaStatus>("/v1/auth/mfa/status")
+      .then(setStatus)
+      .catch((e) => setError(e instanceof Error ? e.message : String(e)));
+
+  useEffect(() => {
+    void load();
+  }, []);
+
+  async function begin() {
+    setBusy(true);
+    setError(null);
+    try {
+      setSetup(await api<MfaSetup>("/v1/auth/mfa/setup-self", { method: "POST" }));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function activate() {
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await api<{ accessToken: string; refreshToken: string }>("/v1/auth/mfa/activate-self", {
+        method: "POST",
+        body: JSON.stringify({ code: code.replace(/\s/g, "") }),
+      });
+      // Nouvelle session : le jeton d'accès porte désormais la preuve du second facteur.
+      setSession(res.accessToken, res.refreshToken);
+      setSetup(null);
+      setCode("");
+      await load();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <section className="panel" style={{ marginTop: 16 }}>
+      <p className="panel-kicker font-mono">Sécurité</p>
+      <h2>Second facteur (TOTP)</h2>
+      {!status ? (
+        <p style={{ color: "var(--fog)" }}>{error ?? "Chargement…"}</p>
+      ) : status.enabled ? (
+        <p>
+          Actif depuis le {status.enabledAt ? new Date(status.enabledAt).toLocaleDateString("fr-FR") : "—"}.
+          {status.sessionMfa ? " Cette session a été ouverte avec le second facteur." : " Reconnectez-vous pour que cette session en porte la preuve."}
+          {" "}En cas de perte du téléphone, un administrateur peut le réinitialiser.
+        </p>
+      ) : setup ? (
+        <div style={{ display: "grid", gap: 10, maxWidth: 420 }}>
+          <p>Ajoutez ce compte dans votre application d&apos;authentification, puis saisissez le code affiché.</p>
+          {setup.qrDataUrl ? (
+            <img src={setup.qrDataUrl} alt="QR code d'enrôlement TOTP" width={180} height={180} style={{ background: "#fff", padding: 8, borderRadius: 8 }} />
+          ) : null}
+          <p>
+            Clé : <code className="font-mono" style={{ userSelect: "all" }}>{setup.secret.replace(/(.{4})/g, "$1 ").trim()}</code>
+          </p>
+          <input
+            className="input font-mono"
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            maxLength={7}
+            placeholder="123 456"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+          />
+          <div style={{ display: "flex", gap: 8 }}>
+            <button type="button" className="btn btn-primary" disabled={busy || code.replace(/\s/g, "").length !== 6} onClick={() => void activate()}>
+              Activer
+            </button>
+            <button type="button" className="btn btn-ghost" disabled={busy} onClick={() => setSetup(null)}>
+              Annuler
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div style={{ display: "grid", gap: 10 }}>
+          <p>
+            {status.required
+              ? "Obligatoire pour votre rôle : il vous sera demandé à la prochaine connexion."
+              : "Recommandé : protège le compte même si le mot de passe fuit."}
+          </p>
+          <div>
+            <button type="button" className="btn btn-primary" disabled={busy} onClick={() => void begin()}>
+              Activer le second facteur
+            </button>
+          </div>
+        </div>
+      )}
+      {error && status ? <p className="notice-err">{error}</p> : null}
+    </section>
   );
 }

@@ -13,6 +13,8 @@ import { AiServicesController } from "./ai-services/ai-services.controller.js";
 import { UsersController } from "./users/users.controller.js";
 import { HeartbeatMonitor } from "./heartbeat.monitor.js";
 import { ModelsController } from "./models/models.controller.js";
+import { VaultController } from "./vault/vault.controller.js";
+import { EscrowService } from "./vault/escrow.service.js";
 
 @Module({
   controllers: [
@@ -26,7 +28,8 @@ import { ModelsController } from "./models/models.controller.js";
     AiServicesController,
     UsersController,
     ModelsController,
+    VaultController,
   ],
-  providers: [EvaluateService, HeartbeatMonitor, { provide: APP_GUARD, useClass: JwtAuthGuard }],
+  providers: [EscrowService, EvaluateService, HeartbeatMonitor, { provide: APP_GUARD, useClass: JwtAuthGuard }],
 })
 export class AppModule {}

@@ -46,6 +46,12 @@ describe("hash", () => {
     expect(h1).not.toBe(h2);
     expect(h1).not.toBe(h3);
     expect(await computeEventHash(base)).toBe(h1);
+
+    // Ajout de serverDecision : les événements antérieurs (champ absent) gardent leur empreinte,
+    // et la décision serveur, quand elle est présente, est couverte par l'empreinte.
+    expect(await computeEventHash({ ...base, serverDecision: undefined })).toBe(h1);
+    const withServer = { ...base, serverDecision: { action: "BLOCK" as const, policyId: "p1", riskScore: 80, riskBand: "high" as const } };
+    expect(await computeEventHash(withServer)).not.toBe(h1);
   });
 });
 

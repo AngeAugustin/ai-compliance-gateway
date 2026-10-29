@@ -12,6 +12,8 @@ export interface AuthUser {
   departmentRiskLevel: "low" | "moderate" | "high";
   role: UserRole;
   jurisdiction: string;
+  /** Session ouverte avec second facteur (TOTP) — exigé pour la levée d'anonymat. */
+  mfa?: boolean;
 }
 
 export type TokenPair = {
@@ -41,6 +43,7 @@ export async function signAccessToken(user: AuthUser): Promise<{ token: string; 
     departmentRiskLevel: user.departmentRiskLevel,
     role: user.role,
     jurisdiction: user.jurisdiction,
+    mfa: user.mfa === true,
     typ: "access",
   })
     .setProtectedHeader({ alg: "HS256" })
@@ -71,8 +74,30 @@ export async function verifyAccessToken(token: string): Promise<AuthUser & { jti
     departmentRiskLevel: payload.departmentRiskLevel as AuthUser["departmentRiskLevel"],
     role: payload.role as UserRole,
     jurisdiction: String(payload.jurisdiction),
+    mfa: payload.mfa === true,
     jti,
   };
+}
+
+export type MfaChallengePurpose = "mfa" | "mfa-setup";
+
+/**
+ * Jeton intermédiaire après un mot de passe correct : ne donne accès qu'à la saisie
+ * (ou à l'activation) du second facteur, pendant 5 minutes. Refusé comme jeton d'accès.
+ */
+export async function signMfaChallenge(userId: string, purpose: MfaChallengePurpose): Promise<string> {
+  return new SignJWT({ typ: purpose })
+    .setProtectedHeader({ alg: "HS256" })
+    .setSubject(userId)
+    .setIssuedAt()
+    .setExpirationTime("5m")
+    .sign(secret);
+}
+
+export async function verifyMfaChallenge(token: string, purpose: MfaChallengePurpose): Promise<string> {
+  const { payload } = await jwtVerify(token, secret);
+  if (payload.typ !== purpose || !payload.sub) throw new Error("Jeton de second facteur invalide");
+  return payload.sub;
 }
 
 export async function issueTokenPair(
@@ -130,9 +155,10 @@ export async function rotateRefreshToken(
     jurisdiction: string;
     is_active: boolean;
     risk_history_level: AuthUser["departmentRiskLevel"];
+    totp_enabled_at: Date | null;
   }>(
     `SELECT u.id, u.email, u.display_name, u.department, u.role, u.jurisdiction, u.is_active,
-            d.risk_history_level
+            u.totp_enabled_at, d.risk_history_level
        FROM app_user u
        JOIN reference.department d ON d.name = u.department
       WHERE u.id = $1`,
@@ -140,6 +166,8 @@ export async function rotateRefreshToken(
   );
   const u = userRes.rows[0];
   if (!u || !u.is_active) return null;
+  // Une session ouverte avant l'obligation du second facteur ne peut pas la contourner.
+  if (!u.totp_enabled_at && env.mfaRequiredRoles.includes(u.role)) return null;
 
   const user: AuthUser = {
     id: u.id,
@@ -149,6 +177,8 @@ export async function rotateRefreshToken(
     departmentRiskLevel: u.risk_history_level,
     role: u.role,
     jurisdiction: u.jurisdiction,
+    // Un compte à TOTP actif n'obtient de session qu'après le second facteur.
+    mfa: Boolean(u.totp_enabled_at),
   };
 
   const pair = await issueTokenPair(user, meta);

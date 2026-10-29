@@ -1,4 +1,4 @@
-import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
+import { Inject, Injectable, Logger, OnModuleInit } from "@nestjs/common";
 import {
   EvaluateInteractionRequestSchema,
   computeEventHash,
@@ -16,21 +16,20 @@ import { computeRiskScore, DEFAULT_SCORE_CONFIG, type ScoreConfig } from "@acg/r
 import { buildPolicyContext, decidePolicy } from "@acg/policy-engine";
 import { DetectionEngine } from "@acg/detection-engine";
 import { applyMasking } from "@acg/detection-engine";
-import { AnonymizationVault, importMasterKey } from "@acg/vault";
 import { query, withTransaction } from "../db.js";
 import { env } from "../env.js";
 import type { AuthUser } from "../auth/jwt.js";
-import { PgVaultStore } from "../vault/pg-store.js";
+import { EscrowService } from "../vault/escrow.service.js";
+import { divergenceAlert, resolveAppliedDecision } from "./applied-decision.js";
 
 @Injectable()
 export class EvaluateService implements OnModuleInit {
   private readonly logger = new Logger(EvaluateService.name);
-  private vault: AnonymizationVault | null = null;
   private localEngine: DetectionEngine | null = null;
 
+  constructor(@Inject(EscrowService) private readonly escrow: EscrowService) {}
+
   async onModuleInit(): Promise<void> {
-    const key = await importMasterKey(env.vaultMasterKey);
-    this.vault = new AnonymizationVault(key, new PgVaultStore(), 24);
     this.localEngine = new DetectionEngine();
     await this.localEngine.initialize();
     void this.attachOptionalLayers();
@@ -100,25 +99,15 @@ export class EvaluateService implements OnModuleInit {
       user: { jurisdiction: contextUser.jurisdiction, department: contextUser.department, role: contextUser.role },
     });
     const decision = decidePolicy({ policies, risk, context: policyCtx, entities });
-
-    let maskedTokens = req.localDecision?.maskedTokens ?? [];
-    const tokenMap: { value: string; token: string }[] = [];
-    if (decision.action === "MASK" && req.maskCandidates.length > 0 && this.vault) {
-      const asEntities: SensitiveEntity[] = req.maskCandidates.map((c, i) => ({
-        entityType: c.entityType as SensitiveEntity["entityType"],
-        confidence: 1,
-        span: [i, i + 1],
-        layer: "rules",
-        value: c.value,
-      }));
-      const plan = applyMasking(req.maskCandidates.map((c) => c.value).join("\n"), asEntities);
-      maskedTokens = plan.tokens;
-      for (const r of plan.replacements) {
-        tokenMap.push({ value: r.value, token: r.token });
-        await this.vault.storeMapping(req.interactionId, r.token, r.entityType, r.value);
-      }
+    const { applied, serverDecision, diverges } = resolveAppliedDecision(
+      { action: decision.action, policyId: decision.policyId, riskScore: risk.value, riskBand: risk.band, factorBreakdown: risk.factorBreakdown },
+      req.localDecision,
+    );
+    if (diverges) {
+      this.logger.warn(`Décision divergente : appliquée ${applied.action}, serveur ${decision.action} (interaction ${req.interactionId})`);
     }
 
+    const maskedTokens = req.localDecision?.maskedTokens ?? [];
     const eventId = randomUuid();
     const userIdHash = await hashUserId(contextUser.id, env.auditUserSalt);
     const frameworks =
@@ -128,6 +117,8 @@ export class EvaluateService implements OnModuleInit {
       `SELECT event_hash FROM analytics.security_event ORDER BY sequence DESC LIMIT 1`,
     );
     const prevEventHash = prev.rows[0]?.event_hash ?? null;
+    // Une seule mesure, haché et stocké : deux Date.now() distincts casseraient la vérification de chaîne.
+    const processingTimeMs = Date.now() - started;
     const eventHash = await computeEventHash({
       eventId,
       occurredAt,
@@ -140,14 +131,15 @@ export class EvaluateService implements OnModuleInit {
       entitiesDetected: [...new Set(entities.map((e) => e.entityType))],
       entityCounts: countEntities(entities),
       contextCategory: context?.contextCategory ?? null,
-      riskScore: risk.value,
-      riskBand: risk.band,
-      factorBreakdown: risk.factorBreakdown,
-      policyId: decision.policyId,
-      action: decision.action,
+      riskScore: applied.riskScore,
+      riskBand: applied.riskBand,
+      factorBreakdown: applied.factorBreakdown,
+      policyId: applied.policyId,
+      action: applied.action,
+      serverDecision,
       referenceFrameworks: frameworks,
       degradedMode: Boolean(req.localDecision?.degradedMode) || req.detectionResults.some((r) => r.degraded),
-      processingTimeMs: Date.now() - started,
+      processingTimeMs,
       detectionLayers: req.detectionResults.map((r) => r.layer),
       prevEventHash,
     });
@@ -157,9 +149,9 @@ export class EvaluateService implements OnModuleInit {
          event_id, occurred_at, user_id_hash, department, agent_id, channel, ai_service_id, hosting_region,
          entities_detected, entity_counts, context_category, risk_score, risk_band, factor_breakdown,
          policy_id, action, reference_frameworks, degraded_mode, processing_time_ms, detection_layers,
-         prev_event_hash, event_hash, client_ip
+         prev_event_hash, event_hash, client_ip, server_decision
        ) VALUES (
-         $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23
+         $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24
        )`,
       [
         eventId,
@@ -173,47 +165,67 @@ export class EvaluateService implements OnModuleInit {
         [...new Set(entities.map((e) => e.entityType))],
         JSON.stringify(countEntities(entities)),
         context?.contextCategory ?? null,
-        risk.value,
-        risk.band,
-        JSON.stringify(risk.factorBreakdown),
-        decision.policyId,
-        decision.action,
+        applied.riskScore,
+        applied.riskBand,
+        JSON.stringify(applied.factorBreakdown),
+        applied.policyId,
+        applied.action,
         frameworks,
         Boolean(req.localDecision?.degradedMode) || req.detectionResults.some((r) => r.degraded),
-        Date.now() - started,
+        processingTimeMs,
         req.detectionResults.map((r) => r.layer),
         prevEventHash,
         eventHash,
         meta.clientIp ?? null,
+        serverDecision ? JSON.stringify(serverDecision) : null,
       ],
     );
 
-    if (decision.action === "BLOCK" && risk.band === "critical") {
+    // Enveloppe rangée telle quelle, sans déchiffrement : seule une levée d'anonymat la rouvre.
+    if (req.maskEscrow && applied.action === "MASK") {
+      await this.escrow.store(eventId, req.interactionId, req.maskEscrow);
+    }
+
+    if (applied.action === "BLOCK" && applied.riskBand === "critical") {
       await query(
         `INSERT INTO security_alert(alert_type, severity, agent_id, event_id, message, details)
          VALUES ('CRITICAL_INTERACTION','critical',$1,$2,$3,$4)`,
-        [actor.agentId ?? null, eventId, `Interaction bloquée (score ${risk.value})`, JSON.stringify({ aiServiceId: service.id })],
+        [actor.agentId ?? null, eventId, `Interaction bloquée (score ${applied.riskScore})`, JSON.stringify({ aiServiceId: service.id })],
+      );
+    }
+
+    if (diverges && serverDecision) {
+      const alert = divergenceAlert(applied.action, serverDecision.action);
+      await query(
+        `INSERT INTO security_alert(alert_type, severity, agent_id, event_id, message, details)
+         VALUES ('DECISION_DIVERGENCE',$1,$2,$3,$4,$5)`,
+        [
+          alert.severity,
+          actor.agentId ?? null,
+          eventId,
+          alert.message,
+          JSON.stringify({ applied: applied.action, server: serverDecision.action, aiServiceId: service.id }),
+        ],
       );
     }
 
     const response: EvaluateInteractionResponse = {
       interactionId: req.interactionId,
       eventId,
-      decision: decision.action,
-      riskScore: risk.value,
-      riskBand: risk.band,
-      factorBreakdown: risk.factorBreakdown,
-      policyId: decision.policyId,
-      policyName: decision.policyName,
+      decision: applied.action,
+      riskScore: applied.riskScore,
+      riskBand: applied.riskBand,
+      factorBreakdown: applied.factorBreakdown,
+      policyId: applied.policyId,
+      policyName: applied.policyId === decision.policyId ? decision.policyName : null,
       referenceFrameworks: frameworks,
       maskedTokens,
-      tokenMap: tokenMap.length ? tokenMap : undefined,
       escalated: decision.escalated,
       escalationReason: decision.escalationReason ?? null,
       userMessage: decision.userMessage ?? null,
       processingTimeMs: Date.now() - started,
     };
-    this.logger.log(`${decision.action} score=${risk.value} service=${service.id}`);
+    this.logger.log(`${applied.action} score=${applied.riskScore} service=${service.id}`);
     return response;
   }
 
@@ -243,19 +255,28 @@ export class EvaluateService implements OnModuleInit {
       extractionMethod: f.extractionMethod,
       extractionDegraded: f.extractionDegraded,
     }));
-    return this.evaluate(
+    // Le texte est déjà sur le serveur : on scelle ici, avec la même clé que les agents,
+    // pour que l'inspection suive le même chemin de séquestre (stocké seulement si MASK).
+    const interactionId = randomUuid();
+    const plan = applyMasking(analysisText, detection.entities);
+    const maskEscrow = await this.escrow.seal(
+      plan.replacements.map((r) => ({ token: r.token, entityType: r.entityType, value: r.value })),
+      interactionId,
+    );
+    const response = await this.evaluate(
       {
-        interactionId: randomUuid(),
+        interactionId,
         aiServiceId,
         channel,
         detectionResults: wire.length ? wire : [{ layer: "rules", entities: [], processingTimeMs: 0, modelVersion: "empty", degraded: false }],
         textLength: analysisText.length,
         attachments,
-        maskCandidates: detection.entities.filter((e) => e.value).map((e) => ({ entityType: e.entityType, value: e.value! })),
+        maskEscrow,
         occurredAt: new Date().toISOString(),
       } satisfies EvaluateInteractionRequest,
       { user },
     );
+    return response.decision === "MASK" ? { ...response, maskedTokens: plan.tokens } : response;
   }
 
   /** Extraction texte (+ OCR images) pour agents / inspect. */

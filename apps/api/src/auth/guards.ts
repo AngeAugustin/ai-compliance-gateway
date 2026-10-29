@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, ForbiddenException, Injectable, SetMetad
 import type { UserRole } from "@acg/shared";
 import { verifyAccessToken, type AuthUser } from "./jwt.js";
 import { query } from "../db.js";
-import { importPublicKey, verifyPayload } from "@acg/shared";
+import { AGENT_REQUEST_MAX_SKEW_MS, agentRequestSigningPayload, importPublicKey, verifyPayload } from "@acg/shared";
 
 export const ROLES_KEY = "roles";
 export const Roles = (...roles: UserRole[]) => SetMetadata(ROLES_KEY, roles);
@@ -45,16 +45,24 @@ async function authenticateUser(req: { headers: Record<string, string | undefine
   }
 }
 
-async function authenticateAgent(req: {
+export interface AgentRequest {
   headers: Record<string, string | undefined>;
+  body?: unknown;
   agent?: { agentId: string; userId: string | null; module: string };
-}): Promise<boolean> {
+}
+
+/**
+ * Authentifie une requête agent : en-têtes signés (ECDSA P-256, clé d'enrôlement)
+ * couvrant méthode, chemin, horodatage et empreinte du corps. Rejette toute requête
+ * non signée, falsifiée, d'un agent révoqué ou hors fenêtre d'horodatage.
+ */
+export async function authenticateAgent(req: AgentRequest): Promise<boolean> {
   const agentId = req.headers["x-agent-id"];
   const ts = req.headers["x-agent-timestamp"];
   const sig = req.headers["x-agent-signature"];
   if (!agentId || !ts || !sig) throw new UnauthorizedException("Signature agent manquante");
   const sent = Date.parse(ts);
-  if (!Number.isFinite(sent) || Math.abs(Date.now() - sent) > 5 * 60_000) {
+  if (!Number.isFinite(sent) || Math.abs(Date.now() - sent) > AGENT_REQUEST_MAX_SKEW_MS) {
     throw new UnauthorizedException("Horodatage agent expiré");
   }
   const row = await query<{
@@ -69,8 +77,11 @@ async function authenticateAgent(req: {
   const jwk = JSON.parse(agent.public_key) as { kty: "EC"; crv: "P-256"; x: string; y: string };
   const key = await importPublicKey(jwk);
   const method = (req as { method?: string }).method ?? "GET";
-  const path = ((req as { originalUrl?: string; url?: string }).originalUrl ?? (req as { url?: string }).url ?? "").split("?")[0];
-  const ok = await verifyPayload(key, { agentId, method, path, ts }, sig);
+  const path = ((req as { originalUrl?: string; url?: string }).originalUrl ?? (req as { url?: string }).url ?? "").split("?")[0] ?? "";
+  // Corps présent seulement si la requête en porte un (le parseur met {} sur un GET).
+  const hasBody = Number(req.headers["content-length"] ?? 0) > 0;
+  const signed = await agentRequestSigningPayload({ agentId, method, path, ts, body: hasBody ? req.body : undefined });
+  const ok = await verifyPayload(key, signed, sig);
   if (!ok) throw new UnauthorizedException("Signature agent invalide");
   req.agent = { agentId: agent.agent_id, userId: agent.user_id, module: agent.module };
   return true;
