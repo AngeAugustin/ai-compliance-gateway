@@ -127,6 +127,10 @@ Objectif : vérifier que le facteur « combinaison de quasi-identifiants » (poi
 
 **Mesures**, par classe d'exposition : score moyen, valeur moyenne du facteur, répartition des bandes et des actions, **taux laissé en clair** (ALLOW ou WARN) et **taux encore ré-identifié après la passerelle**. Le résultat attendu : score et bande croissants avec l'exposition, et aucun scénario ré-identifiable laissé en clair.
 
+### 5 ter. Délai d'alerte « agent manquant » (NFR-03)
+
+Mesure de bout en bout, à part de la détection (`pnpm eval:heartbeat`, [tools/eval/heartbeat-latency.ts](../../tools/eval/heartbeat-latency.ts)), contre l'API et la base réelles, avec leurs réglages réels. 20 agents simulés sont inscrits comme à l'enrôlement et envoient de vrais signaux signés toutes les 60 s, chacun avec sa propre phase. Chacun est désactivé à un instant tiré au hasard ; on mesure le temps jusqu'à l'alerte `AGENT_MISSING`, toutes les dates venant de l'horloge de la base. Résultats : [heartbeat-latence.md](resultats/heartbeat-latence.md). L'API doit tourner pendant la mesure (environ 8 minutes).
+
 ## 6. Reproductibilité
 
 - Générateur pseudo-aléatoire à graine (mulberry32, [tools/eval/rng.ts](../../tools/eval/rng.ts)) ; flux séparés pour la population, le corpus généré, les documents longs et les scénarios.

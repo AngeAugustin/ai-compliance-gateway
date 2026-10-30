@@ -1,0 +1,184 @@
+{
+  "intervalS": 60,
+  "timeoutS": 300,
+  "checkS": 30,
+  "failedHeartbeats": 0,
+  "fromStop": {
+    "n": 20,
+    "min": 258.264,
+    "p50": 279.506,
+    "p95": 313.669,
+    "max": 323.934,
+    "mean": 283.8312
+  },
+  "fromLast": {
+    "n": 20,
+    "min": 302.254,
+    "p50": 309.739,
+    "p95": 327.879,
+    "max": 329.176,
+    "mean": 313.8349
+  },
+  "measures": [
+    {
+      "agentId": "f4a2ad68-e5ff-4d90-86cb-8069d929876a",
+      "stopAfterS": 78,
+      "heartbeatsSent": 1,
+      "delayFromStopS": 275.121,
+      "delayFromLastHeartbeatS": 315.517,
+      "stopOffsetS": 40.396
+    },
+    {
+      "agentId": "fad845f5-cb80-4d49-99ac-1db6d0d8a68b",
+      "stopAfterS": 79.6,
+      "heartbeatsSent": 2,
+      "delayFromStopS": 303.014,
+      "delayFromLastHeartbeatS": 320.607,
+      "stopOffsetS": 17.593
+    },
+    {
+      "agentId": "d4f7a338-331a-449b-b47a-debe42104328",
+      "stopAfterS": 88.3,
+      "heartbeatsSent": 2,
+      "delayFromStopS": 294.762,
+      "delayFromLastHeartbeatS": 309.739,
+      "stopOffsetS": 14.977
+    },
+    {
+      "agentId": "11f4fd70-2a6c-4de0-b40e-757d916816f2",
+      "stopAfterS": 91.5,
+      "heartbeatsSent": 2,
+      "delayFromStopS": 291.149,
+      "delayFromLastHeartbeatS": 303,
+      "stopOffsetS": 11.851
+    },
+    {
+      "agentId": "d8ffb313-57b6-4e62-8271-743d9c3dcd97",
+      "stopAfterS": 94.5,
+      "heartbeatsSent": 2,
+      "delayFromStopS": 288.581,
+      "delayFromLastHeartbeatS": 306.137,
+      "stopOffsetS": 17.556
+    },
+    {
+      "agentId": "e5f30af1-ce94-4b16-957e-836ea0d4d5bb",
+      "stopAfterS": 103.4,
+      "heartbeatsSent": 2,
+      "delayFromStopS": 279.506,
+      "delayFromLastHeartbeatS": 306.664,
+      "stopOffsetS": 27.158
+    },
+    {
+      "agentId": "9935099e-b46a-479a-8aa4-ff2c2f504086",
+      "stopAfterS": 105.2,
+      "heartbeatsSent": 2,
+      "delayFromStopS": 277.452,
+      "delayFromLastHeartbeatS": 320.075,
+      "stopOffsetS": 42.623
+    },
+    {
+      "agentId": "e40b65c9-98c8-481f-81f8-a8fe78cbef76",
+      "stopAfterS": 106.1,
+      "heartbeatsSent": 1,
+      "delayFromStopS": 276.934,
+      "delayFromLastHeartbeatS": 327.879,
+      "stopOffsetS": 50.945
+    },
+    {
+      "agentId": "85c12f58-ea99-4c78-a951-6e769b793368",
+      "stopAfterS": 110.2,
+      "heartbeatsSent": 2,
+      "delayFromStopS": 302.779,
+      "delayFromLastHeartbeatS": 306.399,
+      "stopOffsetS": 3.62
+    },
+    {
+      "agentId": "bc039132-3088-4b7e-8030-433938c11015",
+      "stopAfterS": 116.7,
+      "heartbeatsSent": 2,
+      "delayFromStopS": 266.015,
+      "delayFromLastHeartbeatS": 315.919,
+      "stopOffsetS": 49.904
+    },
+    {
+      "agentId": "a411780b-9688-4eb3-b53c-91a6b2192f9a",
+      "stopAfterS": 118.8,
+      "heartbeatsSent": 2,
+      "delayFromStopS": 323.934,
+      "delayFromLastHeartbeatS": 327.577,
+      "stopOffsetS": 3.643
+    },
+    {
+      "agentId": "0bc19749-f948-40b4-a83c-a726e2c16bb1",
+      "stopAfterS": 119.7,
+      "heartbeatsSent": 2,
+      "delayFromStopS": 263.437,
+      "delayFromLastHeartbeatS": 305.613,
+      "stopOffsetS": 42.176
+    },
+    {
+      "agentId": "2a9d4cf8-576c-4e47-80f5-8571596b3341",
+      "stopAfterS": 124.6,
+      "heartbeatsSent": 2,
+      "delayFromStopS": 258.264,
+      "delayFromLastHeartbeatS": 304.562,
+      "stopOffsetS": 46.298
+    },
+    {
+      "agentId": "99bb4b8a-562b-452d-9e22-b354f96911b4",
+      "stopAfterS": 137.8,
+      "heartbeatsSent": 3,
+      "delayFromStopS": 304.869,
+      "delayFromLastHeartbeatS": 322.899,
+      "stopOffsetS": 18.03
+    },
+    {
+      "agentId": "70c2c6d3-4d9e-463c-ae13-7babe7a78375",
+      "stopAfterS": 149.3,
+      "heartbeatsSent": 2,
+      "delayFromStopS": 263.489,
+      "delayFromLastHeartbeatS": 315.691,
+      "stopOffsetS": 52.202
+    },
+    {
+      "agentId": "246ec462-c4cb-443b-943f-4bf0fc201002",
+      "stopAfterS": 149.7,
+      "heartbeatsSent": 2,
+      "delayFromStopS": 263.491,
+      "delayFromLastHeartbeatS": 302.254,
+      "stopOffsetS": 38.763
+    },
+    {
+      "agentId": "67b712ef-9a8d-412f-87c9-98b069d82fcd",
+      "stopAfterS": 151.9,
+      "heartbeatsSent": 2,
+      "delayFromStopS": 260.907,
+      "delayFromLastHeartbeatS": 304.831,
+      "stopOffsetS": 43.924
+    },
+    {
+      "agentId": "9c14eb37-d8a8-4da0-921d-329ecd869650",
+      "stopAfterS": 159,
+      "heartbeatsSent": 3,
+      "delayFromStopS": 313.669,
+      "delayFromLastHeartbeatS": 329.176,
+      "stopOffsetS": 15.507
+    },
+    {
+      "agentId": "598753e0-c772-4453-9035-0a3ed7f03f86",
+      "stopAfterS": 163.4,
+      "heartbeatsSent": 2,
+      "delayFromStopS": 279.565,
+      "delayFromLastHeartbeatS": 325.492,
+      "stopOffsetS": 45.927
+    },
+    {
+      "agentId": "52a774fd-9070-40e8-99d1-d0fb02987e57",
+      "stopAfterS": 183.1,
+      "heartbeatsSent": 3,
+      "delayFromStopS": 289.686,
+      "delayFromLastHeartbeatS": 306.667,
+      "stopOffsetS": 16.981
+    }
+  ]
+}

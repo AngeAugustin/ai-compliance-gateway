@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module.js";
 import { env } from "./env.js";
+import { ValidationFilter } from "./validation.filter.js";
 
 async function bootstrap() {
   const httpsOptions =
@@ -11,6 +12,7 @@ async function bootstrap() {
       : undefined;
   const app = await NestFactory.create(AppModule, { cors: false, httpsOptions });
   app.getHttpAdapter().getInstance().set("trust proxy", 1);
+  app.useGlobalFilters(new ValidationFilter(app.getHttpAdapter()));
   app.enableCors({
     origin: (origin: string | undefined, cb: (err: Error | null, allow?: boolean) => void) => {
       if (!origin) return cb(null, true);

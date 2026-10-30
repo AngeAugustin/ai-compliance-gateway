@@ -28,7 +28,8 @@
     "test:e2e:fichiers": "vitest run packages/agent-runtime/src/e2e-fichiers.test.ts packages/file-extract/src/file-extract.test.ts",
     "fixtures:fichiers": "tsx data/fixtures-fichiers/generate.ts",
     "models:ner": "tsx tools/prepare-ner-model.ts",
-    "eval:detection:rapide": "tsx tools/eval/run.ts --sans-ner --repetitions 1"
+    "eval:detection:rapide": "tsx tools/eval/run.ts --sans-ner --repetitions 1",
+    "eval:heartbeat": "tsx tools/eval/heartbeat-latency.ts"
   },
   "dependencies": {
     "pg": "^8.16.3"

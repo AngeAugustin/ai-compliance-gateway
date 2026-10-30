@@ -1,4 +1,12 @@
-import { ForbiddenException, GoneException, Injectable, Logger, NotFoundException, OnModuleInit } from "@nestjs/common";
+import {
+  ForbiddenException,
+  GoneException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+  OnModuleInit,
+} from "@nestjs/common";
 import {
   EscrowEnvelopeSchema,
   generateEscrowKeyPair,
@@ -120,8 +128,18 @@ export class EscrowService implements OnModuleInit {
       await refuse("séquestre expiré", record.interaction_id);
       throw new GoneException("Durée de conservation dépassée : valeurs non restituables");
     }
-    const privateJwk = JSON.parse(await decryptValue(this.masterKey!, new Uint8Array(record.private_jwk_encrypted))) as JsonWebKey;
-    const entries = await openEscrow(privateJwk, EscrowEnvelopeSchema.parse(record.envelope), record.interaction_id);
+    // Enveloppe ou clé illisible (ligne altérée, mauvaise clé maîtresse) : la requête du DPO
+    // est correcte, c'est la donnée du serveur qui ne l'est pas. La tentative est journalisée
+    // comme les autres — une altération du séquestre peut signaler une manipulation.
+    let entries: EscrowEntry[];
+    try {
+      const privateJwk = JSON.parse(await decryptValue(this.masterKey!, new Uint8Array(record.private_jwk_encrypted))) as JsonWebKey;
+      entries = await openEscrow(privateJwk, EscrowEnvelopeSchema.parse(record.envelope), record.interaction_id);
+    } catch (err) {
+      await refuse("séquestre illisible ou altéré", record.interaction_id);
+      this.logger.error(`Séquestre illisible pour l'événement ${eventId} : ${err instanceof Error ? err.message : String(err)}`);
+      throw new InternalServerErrorException("Séquestre illisible ou altéré : contactez l'administrateur");
+    }
     await this.log(actor.id, eventId, record.interaction_id, motive, true, null, ip);
     return { eventId, entries };
   }
