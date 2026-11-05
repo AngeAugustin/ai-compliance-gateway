@@ -20,7 +20,7 @@ import { generateLongDocuments, generateSamples } from "./corpus-genere.js";
 import { evaluateContext, evaluateReidentification, evaluateSystem, type SystemReport } from "./evaluate.js";
 import { generatePopulation } from "./population.js";
 import { CONTROL_VARIANTS, generateReidScenarios } from "./reidentification.js";
-import { evaluateRiskResponse } from "./risk-response.js";
+import { evaluateProfiles, evaluateRiskResponse, PROFILES } from "./risk-response.js";
 import { describeCorpus, renderMarkdown, type FullReport } from "./report.js";
 import { createRng } from "./rng.js";
 import { buildSystems } from "./systems.js";
@@ -91,6 +91,14 @@ for (const l of riskResponse.filter((x) => x.variant === "facteur-actif")) {
   log(`  ${l.label} : k=1 en clair ${g.n}, score moyen ${g.meanScore}, laissés en clair ${g.passedInClear}, ré-identifiés après passerelle ${g.reidentifiedAfter}`);
 }
 
+log(`effet du facteur sur ${PROFILES.length} profils…`);
+const riskResponseProfiles = await evaluateProfiles(setup.systems, [...scenarios, ...controls], people);
+for (const sys of setup.systems) {
+  const rows = riskResponseProfiles.filter((p) => p.system === sys.id);
+  const changed = rows.reduce((s, p) => s + p.actionChanged, 0);
+  log(`  ${sys.label} : ${changed} décisions modifiées sur ${rows.reduce((s, p) => s + p.n, 0)} (tous profils)`);
+}
+
 const full: FullReport = {
   meta: {
     date: new Date().toISOString().slice(0, 10),
@@ -108,6 +116,7 @@ const full: FullReport = {
   context,
   reidentification,
   riskResponse,
+  riskResponseProfiles,
 };
 
 const outDir = resolve(args.sortie);

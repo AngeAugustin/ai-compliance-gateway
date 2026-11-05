@@ -21,6 +21,11 @@ import type { EvalSystem } from "./systems.js";
  *
  * Ablation : même pipeline avec le facteur neutralisé (poids 0, les trois autres
  * renormalisés pour garder une échelle sur 100) — la différence isole sa contribution.
+ *
+ * Profils : l'effet d'un facteur dépend de la distance aux seuils de bande, donc du reste du
+ * score. L'ablation est rejouée sur 12 profils (niveau de risque de la direction × lieu
+ * d'hébergement du service) et comparée scénario par scénario. La détection, qui ne dépend
+ * pas du profil, n'est exécutée qu'une fois par prompt et par configuration.
  */
 
 /** Exposition du prompt en clair, d'après l'attaque sur le texte original. */
@@ -36,9 +41,49 @@ export const EXPOSURE_LABEL: Record<Exposure, string> = {
 const BANDS: RiskBand[] = ["low", "moderate", "high", "critical"];
 const ACTIONS: PolicyAction[] = ["ALLOW", "WARN", "MASK", "BLOCK"];
 
-/** Utilisateur et service de référence : direction à risque modéré, ChatGPT (hébergé aux États-Unis). */
-const USER = { department: "Prestations", departmentRiskLevel: "moderate" as const, jurisdiction: "BJ", role: "USER" };
-const SERVICE = DEFAULT_AI_SERVICES.find((s) => s.id === "chatgpt.com") ?? DEFAULT_AI_SERVICES[0]!;
+type DepartmentRisk = "low" | "moderate" | "high";
+interface ServiceProfile {
+  id: string;
+  label: string;
+  hostingRegion: string;
+  riskBaseline: number;
+  freeAccess: boolean;
+}
+
+export interface DecisionProfile {
+  id: string;
+  label: string;
+  departmentRiskLevel: DepartmentRisk;
+  service: ServiceProfile;
+}
+
+const USER = { department: "Prestations", jurisdiction: "BJ", role: "USER" };
+
+function catalogService(id: string, label: string): ServiceProfile {
+  const s = DEFAULT_AI_SERVICES.find((x) => x.id === id) ?? DEFAULT_AI_SERVICES[0]!;
+  return { id: s.id, label, hostingRegion: s.hostingRegion, riskBaseline: s.riskBaseline, freeAccess: s.freeAccess };
+}
+
+/** Du moins au plus exposé : hébergement au Bénin (LLM interne hypothétique), UE, États-Unis, Chine. */
+const SERVICES: ServiceProfile[] = [
+  { id: "llm-interne", label: "LLM interne (BJ)", hostingRegion: "BJ", riskBaseline: 10, freeAccess: false },
+  catalogService("chat.mistral.ai", "Mistral (UE)"),
+  catalogService("chatgpt.com", "ChatGPT (US)"),
+  catalogService("chat.deepseek.com", "DeepSeek (CN)"),
+];
+const DEPARTMENT_RISKS: DepartmentRisk[] = ["low", "moderate", "high"];
+const DEPARTMENT_LABEL: Record<DepartmentRisk, string> = {
+  low: "direction à risque faible",
+  moderate: "direction à risque modéré",
+  high: "direction à risque élevé",
+};
+
+export const PROFILES: DecisionProfile[] = DEPARTMENT_RISKS.flatMap((d) =>
+  SERVICES.map((service) => ({ id: `${d}-${service.id}`, label: `${service.label}, ${DEPARTMENT_LABEL[d]}`, departmentRiskLevel: d, service })),
+);
+
+/** Profil de référence des tableaux détaillés : direction à risque modéré, ChatGPT (hébergé aux États-Unis). */
+export const REFERENCE_PROFILE: DecisionProfile = PROFILES.find((p) => p.id === "moderate-chatgpt.com")!;
 
 export interface ExposureGroup {
   n: number;
@@ -80,15 +125,21 @@ export function exposureOf(candidates: number, reidentified: boolean): Exposure 
   return candidates <= 5 ? "k2-5" : "anonyme";
 }
 
+type Detection = Awaited<ReturnType<EvalSystem["detect"]>>;
+
 /** Pipeline de décision de l'agent (texte seul, sans fichier). */
-export async function decide(system: EvalSystem, text: string, config: ScoreConfig) {
-  const { entities, context } = await system.detect(text);
+export async function decide(system: EvalSystem, text: string, config: ScoreConfig, profile: DecisionProfile = REFERENCE_PROFILE) {
+  return decideFrom(await system.detect(text), text, config, profile);
+}
+
+export function decideFrom({ entities, context }: Detection, text: string, config: ScoreConfig, profile: DecisionProfile) {
+  const SERVICE = profile.service;
   const risk = computeRiskScore(
     {
       entities,
       contextCategory: context?.contextCategory ?? null,
       contextConfidence: context?.confidence,
-      departmentRiskLevel: USER.departmentRiskLevel,
+      departmentRiskLevel: profile.departmentRiskLevel,
       userJurisdiction: USER.jurisdiction,
       aiHostingRegion: SERVICE.hostingRegion,
       aiRiskBaseline: SERVICE.riskBaseline,
@@ -184,4 +235,109 @@ export async function evaluateRiskResponse(
     }
   }
   return lines;
+}
+
+export interface ProfileEffect {
+  system: string;
+  label: string;
+  profile: string;
+  profileLabel: string;
+  n: number;
+  /** Scénarios dont la bande change quand on neutralise le facteur. */
+  bandChanged: number;
+  /** Scénarios dont l'action change ; « plus stricte » = le facteur durcit la décision. */
+  actionChanged: number;
+  stricterWithFactor: number;
+  laxerWithFactor: number;
+  /** Écart de score moyen entre prompts ré-identifiables et témoins peu exposés. */
+  gapActive: number;
+  gapNeutral: number;
+  actionsActive: Record<PolicyAction, number>;
+  actionsNeutral: Record<PolicyAction, number>;
+  /** Ré-identifiables encore exploitables après la passerelle. */
+  reidAfterActive: number;
+  reidAfterNeutral: number;
+  examples: string[];
+}
+
+const SEVERITY: Record<PolicyAction, number> = { ALLOW: 0, WARN: 1, MASK: 2, BLOCK: 3 };
+
+export async function evaluateProfiles(
+  systems: EvalSystem[],
+  scenarios: (ReidScenario & { text: string })[],
+  people: Person[],
+  profiles: DecisionProfile[] = PROFILES,
+): Promise<ProfileEffect[]> {
+  const index = buildAttackIndex(people);
+  const exposure = scenarios.map((sc) => {
+    const r = attack(sc.text, sc.targetId, index);
+    return exposureOf(r.candidates, r.reidentified);
+  });
+  const neutral = neutralizedConfig();
+  const out: ProfileEffect[] = [];
+  for (const system of systems) {
+    const detections: Detection[] = [];
+    for (const sc of scenarios) detections.push(await system.detect(sc.text));
+    // L'attaque après passerelle ne dépend que de l'action : mise en cache par (scénario, action).
+    const reidCache = new Map<string, boolean>();
+    const reidAfter = (i: number, action: PolicyAction, masked: string) => {
+      const key = `${i}|${action}`;
+      if (!reidCache.has(key)) {
+        const sent = outgoingText(action, scenarios[i]!.text, masked);
+        reidCache.set(key, sent !== null && attack(sent, scenarios[i]!.targetId, index).reidentified);
+      }
+      return reidCache.get(key)!;
+    };
+    for (const profile of profiles) {
+      const effect: ProfileEffect = {
+        system: system.id,
+        label: system.label,
+        profile: profile.id,
+        profileLabel: profile.label,
+        n: scenarios.length,
+        bandChanged: 0,
+        actionChanged: 0,
+        stricterWithFactor: 0,
+        laxerWithFactor: 0,
+        gapActive: 0,
+        gapNeutral: 0,
+        actionsActive: zeros(ACTIONS),
+        actionsNeutral: zeros(ACTIONS),
+        reidAfterActive: 0,
+        reidAfterNeutral: 0,
+        examples: [],
+      };
+      const scores = {
+        active: { exposed: [] as number[], control: [] as number[] },
+        neutral: { exposed: [] as number[], control: [] as number[] },
+      };
+      for (const [i, sc] of scenarios.entries()) {
+        const a = decideFrom(detections[i]!, sc.text, ACTIVE_CONFIG, profile);
+        const n = decideFrom(detections[i]!, sc.text, neutral, profile);
+        effect.actionsActive[a.action]++;
+        effect.actionsNeutral[n.action]++;
+        if (a.band !== n.band) effect.bandChanged++;
+        if (a.action !== n.action) {
+          effect.actionChanged++;
+          if (SEVERITY[a.action] > SEVERITY[n.action]) effect.stricterWithFactor++;
+          else effect.laxerWithFactor++;
+          if (effect.examples.length < 3) effect.examples.push(`${sc.id} : ${n.action} → ${a.action}`);
+        }
+        const bucket = exposure[i] === "reidentifiable" ? "exposed" : exposure[i] === "anonyme" ? "control" : null;
+        if (bucket) {
+          scores.active[bucket].push(a.score);
+          scores.neutral[bucket].push(n.score);
+        }
+        if (exposure[i] === "reidentifiable") {
+          if (reidAfter(i, a.action, a.maskedText)) effect.reidAfterActive++;
+          if (reidAfter(i, n.action, n.maskedText)) effect.reidAfterNeutral++;
+        }
+      }
+      const mean = (xs: number[]) => (xs.length ? xs.reduce((x, y) => x + y, 0) / xs.length : 0);
+      effect.gapActive = Math.round((mean(scores.active.exposed) - mean(scores.active.control)) * 10) / 10;
+      effect.gapNeutral = Math.round((mean(scores.neutral.exposed) - mean(scores.neutral.control)) * 10) / 10;
+      out.push(effect);
+    }
+  }
+  return out;
 }

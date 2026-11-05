@@ -1,17 +1,17 @@
 # Résultats de l'évaluation de la détection
 
-> Rapport généré par `pnpm eval:detection` le 2026-10-29 — graine 2026, 3 répétitions de latence, Node 24.12.0 (win32-x64, Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz), durée 361 s. Protocole : [protocole-detection.md](../protocole-detection.md). Ne pas modifier à la main.
+> Rapport généré par `pnpm eval:detection` le 2026-10-30 — graine 2026, 3 répétitions de latence, Node 24.12.0 (win32-x64, Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz), durée 574 s. Protocole : [protocole-detection.md](../protocole-detection.md). Ne pas modifier à la main.
 
-NER : chargé en 2538 ms. LLM de contexte : non évalué (LLM_MODEL_PATH non renseigné).
+NER : chargé en 4947 ms. LLM de contexte : non évalué (LLM_MODEL_PATH non renseigné).
 
 ## 1. Synthèse
 
 | Configuration | Précision | Rappel | F1 (IC 95 %) | F1 strict | Rappel protection | Latence p50 / p95 |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: |
-| **Règles seules** | 96,5 % | 50,9 % | 66,6 % (63,8 % – 69,0 %) | 65,0 % | 52,3 % | 0,14 / 0,69 ms |
-| **NER seul** | 78,7 % | 40,6 % | 53,6 % (50,9 % – 56,3 %) | 51,2 % | 42,8 % | 68,8 / 227 ms |
-| **Moteur sans NER** | 96,5 % | 50,9 % | 66,6 % (63,8 % – 69,0 %) | 65,0 % | 52,3 % | 0,27 / 0,92 ms |
-| **Moteur complet** | 90,2 % | 91,4 % | 90,8 % (89,3 % – 92,2 %) | 87,8 % | 93,6 % | 68,6 / 238 ms |
+| **Règles seules** | 96,5 % | 50,9 % | 66,6 % (63,8 % – 69,0 %) | 65,0 % | 52,3 % | 0,24 / 1,43 ms |
+| **NER seul** | 78,7 % | 40,6 % | 53,6 % (50,9 % – 56,3 %) | 51,2 % | 42,8 % | 82,6 / 337 ms |
+| **Moteur sans NER** | 96,5 % | 50,9 % | 66,6 % (63,8 % – 69,0 %) | 65,0 % | 52,3 % | 0,76 / 2,53 ms |
+| **Moteur complet** | 90,2 % | 91,4 % | 90,8 % (89,3 % – 92,2 %) | 87,8 % | 93,6 % | 114 / 350 ms |
 
 Appariement **partiel** (même type, chevauchement) sauf mention contraire, micro-moyenne sur tout le corpus. **Rappel protection** : part des données sensibles recouvertes par une détection, quel que soit le type — c'est ce qui conditionne le masquage.
 
@@ -163,19 +163,19 @@ Faux positifs les plus fréquents :
 
 | Configuration | Mesures | p50 | p95 | p99 | Moyenne | Max | Débit |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Règles seules | 1155 | 0,14 ms | 0,69 ms | 2,37 ms | 0,28 ms | 16,4 ms | 739 009 car./s |
-| NER seul | 1155 | 68,8 ms | 227 ms | 1061 ms | 102 ms | 2139 ms | 1 993 car./s |
-| Moteur sans NER | 1155 | 0,27 ms | 0,92 ms | 2,96 ms | 0,40 ms | 4,92 ms | 510 049 car./s |
-| Moteur complet | 1155 | 68,6 ms | 238 ms | 1050 ms | 102 ms | 2035 ms | 2 000 car./s |
+| Règles seules | 1155 | 0,24 ms | 1,43 ms | 4,93 ms | 0,51 ms | 21,0 ms | 398 304 car./s |
+| NER seul | 1155 | 82,6 ms | 337 ms | 1692 ms | 138 ms | 3132 ms | 1 475 car./s |
+| Moteur sans NER | 1155 | 0,76 ms | 2,53 ms | 8,28 ms | 1,10 ms | 11,3 ms | 184 879 car./s |
+| Moteur complet | 1155 | 114 ms | 350 ms | 1689 ms | 163 ms | 2676 ms | 1 250 car./s |
 
 | Configuration | Court (< 200 car.) p50 / p95 | Moyen (200–1 000) p50 / p95 | Long (> 1 000) p50 / p95 |
 | :--- | ---: | ---: | ---: |
-| Règles seules | 0,13 / 0,49 ms (n=1092) | 0,64 / 1,14 ms (n=33) | 1,77 / 4,06 ms (n=30) |
-| NER seul | 67,1 / 117 ms (n=1092) | 286 / 394 ms (n=33) | 948 / 1862 ms (n=30) |
-| Moteur sans NER | 0,26 / 0,61 ms (n=1092) | 0,90 / 1,78 ms (n=33) | 2,61 / 4,28 ms (n=30) |
-| Moteur complet | 67,2 / 110 ms (n=1092) | 279 / 384 ms (n=33) | 957 / 1891 ms (n=30) |
+| Règles seules | 0,22 / 1,03 ms (n=1092) | 1,41 / 2,21 ms (n=33) | 3,77 / 6,48 ms (n=30) |
+| NER seul | 81,0 / 141 ms (n=1092) | 503 / 669 ms (n=33) | 1540 / 3095 ms (n=30) |
+| Moteur sans NER | 0,71 / 1,95 ms (n=1092) | 2,47 / 5,47 ms (n=33) | 7,57 / 9,91 ms (n=30) |
+| Moteur complet | 111 / 198 ms (n=1092) | 421 / 539 ms (n=33) | 1493 / 2487 ms (n=30) |
 
-Temps mesuré autour de `detect()` en processus, après échauffement, hors réseau et hors politique côté serveur. Le chargement initial du modèle NER (2538 ms) n'est payé qu'une fois par processus.
+Temps mesuré autour de `detect()` en processus, après échauffement, hors réseau et hors politique côté serveur. Le chargement initial du modèle NER (4947 ms) n'est payé qu'une fois par processus.
 
 ## 7. Masquage : données encore lisibles après la passerelle
 
@@ -257,6 +257,61 @@ L'expérience précédente mesure le masquage seul. Ici, chaque scénario passe 
 | Moteur complet | neutralisé | Ré-identifiable en clair (k = 1) | 199 | 60.3 | 50.7 | 0/0/199/0 | 0/3/196/0 | 2 % | 4 % |
 | Moteur complet | neutralisé | Quasi ré-identifiable (2 ≤ k ≤ 5) | 6 | 49.5 | 10 | 0/5/1/0 | 5/0/1/0 | 83 % | 0 % |
 | Moteur complet | neutralisé | Peu exposé (k > 5) | 95 | 48 | 0 | 0/95/0/0 | 95/0/0/0 | 100 % | 0 % |
+
+### Effet du facteur selon le profil
+
+Les tableaux ci-dessus portent sur un profil (direction à risque modéré, ChatGPT). L'effet d'un facteur dépend de la distance aux seuils de bande, donc du reste du score : l'ablation est rejouée ici sur 12 profils (niveau de risque de la direction × lieu d'hébergement du service) et comparée scénario par scénario, sur les 300 scénarios (ré-identification et témoins). « Plus stricte » : l'action est plus sévère avec le facteur qu'avec le facteur neutralisé.
+
+| Configuration | Profil | Bandes changées | Actions changées (plus strictes / plus laxistes) | Écart exposés − témoins : actif / neutralisé | Ré-identifiables exploitables : actif / neutralisé | Exemples |
+| :--- | :--- | ---: | ---: | ---: | ---: | :--- |
+| Règles seules | LLM interne (BJ), direction à risque faible | 100 | 0 (0 / 0) | 24.5 / 32.3 | 145 / 145 | — |
+| Règles seules | Mistral (UE), direction à risque faible | 100 | 0 (0 / 0) | 24.5 / 32.3 | 145 / 145 | — |
+| Règles seules | ChatGPT (US), direction à risque faible | 100 | 0 (0 / 0) | 24.3 / 32.3 | 145 / 145 | — |
+| Règles seules | DeepSeek (CN), direction à risque faible | 250 | 100 (0 / 100) | 24.5 / 32.3 | 145 / 145 | reid-direct-001 : WARN → ALLOW ; reid-direct-002 : WARN → ALLOW ; reid-direct-003 : WARN → ALLOW |
+| Règles seules | LLM interne (BJ), direction à risque modéré | 150 | 0 (0 / 0) | 24.3 / 32.8 | 145 / 145 | — |
+| Règles seules | Mistral (UE), direction à risque modéré | 50 | 0 (0 / 0) | 24.3 / 32.8 | 145 / 145 | — |
+| Règles seules | ChatGPT (US), direction à risque modéré | 50 | 0 (0 / 0) | 23.8 / 32.8 | 145 / 145 | — |
+| Règles seules | DeepSeek (CN), direction à risque modéré | 300 | 150 (0 / 150) | 24.3 / 32.8 | 145 / 145 | reid-direct-001 : WARN → ALLOW ; reid-direct-002 : WARN → ALLOW ; reid-direct-003 : WARN → ALLOW |
+| Règles seules | LLM interne (BJ), direction à risque élevé | 50 | 0 (0 / 0) | 24.8 / 32 | 145 / 145 | — |
+| Règles seules | Mistral (UE), direction à risque élevé | 250 | 100 (0 / 100) | 24.8 / 32 | 145 / 145 | reid-direct-001 : WARN → ALLOW ; reid-direct-002 : WARN → ALLOW ; reid-direct-003 : WARN → ALLOW |
+| Règles seules | ChatGPT (US), direction à risque élevé | 250 | 100 (0 / 100) | 24.5 / 32.3 | 145 / 145 | reid-direct-001 : WARN → ALLOW ; reid-direct-002 : WARN → ALLOW ; reid-direct-003 : WARN → ALLOW |
+| Règles seules | DeepSeek (CN), direction à risque élevé | 300 | 150 (0 / 150) | 24.8 / 32 | 145 / 145 | reid-direct-001 : WARN → ALLOW ; reid-direct-002 : WARN → ALLOW ; reid-direct-003 : WARN → ALLOW |
+| NER seul | LLM interne (BJ), direction à risque faible | 110 | 0 (0 / 0) | 5.2 / -3.6 | 198 / 198 | — |
+| NER seul | Mistral (UE), direction à risque faible | 2 | 2 (0 / 2) | 5.2 / -3.6 | 198 / 198 | reid-quasi-identifiants-004 : WARN → ALLOW ; reid-quasi-identifiants-005 : WARN → ALLOW |
+| NER seul | ChatGPT (US), direction à risque faible | 47 | 47 (0 / 47) | 4.9 / -3.4 | 198 / 198 | reid-quasi-identifiants-004 : WARN → ALLOW ; reid-quasi-identifiants-005 : WARN → ALLOW ; reid-quasi-identifiants-010 : WARN → ALLOW |
+| NER seul | DeepSeek (CN), direction à risque faible | 193 | 143 (0 / 143) | 5.2 / -3.6 | 198 / 198 | reid-quasi-identifiants-001 : WARN → ALLOW ; reid-quasi-identifiants-002 : WARN → ALLOW ; reid-quasi-identifiants-003 : WARN → ALLOW |
+| NER seul | LLM interne (BJ), direction à risque modéré | 109 | 0 (0 / 0) | 5.2 / -3.8 | 198 / 198 | — |
+| NER seul | Mistral (UE), direction à risque modéré | 50 | 50 (0 / 50) | 5.2 / -3.8 | 198 / 198 | reid-quasi-identifiants-004 : WARN → ALLOW ; reid-quasi-identifiants-005 : WARN → ALLOW ; reid-quasi-identifiants-010 : WARN → ALLOW |
+| NER seul | ChatGPT (US), direction à risque modéré | 50 | 50 (0 / 50) | 5.9 / -3.8 | 198 / 198 | reid-quasi-identifiants-004 : WARN → ALLOW ; reid-quasi-identifiants-005 : WARN → ALLOW ; reid-quasi-identifiants-010 : WARN → ALLOW |
+| NER seul | DeepSeek (CN), direction à risque modéré | 160 | 110 (0 / 110) | 5.2 / -3.8 | 198 / 198 | reid-quasi-identifiants-020 : WARN → ALLOW ; reid-quasi-identifiants-045 : WARN → ALLOW ; reid-contact-009 : WARN → ALLOW |
+| NER seul | LLM interne (BJ), direction à risque élevé | 0 | 0 (0 / 0) | 5.4 / -3.6 | 198 / 198 | — |
+| NER seul | Mistral (UE), direction à risque élevé | 195 | 145 (0 / 145) | 5.4 / -3.6 | 198 / 198 | reid-quasi-identifiants-001 : WARN → ALLOW ; reid-quasi-identifiants-002 : WARN → ALLOW ; reid-quasi-identifiants-003 : WARN → ALLOW |
+| NER seul | ChatGPT (US), direction à risque élevé | 193 | 143 (0 / 143) | 5.2 / -3.6 | 198 / 198 | reid-quasi-identifiants-001 : WARN → ALLOW ; reid-quasi-identifiants-002 : WARN → ALLOW ; reid-quasi-identifiants-003 : WARN → ALLOW |
+| NER seul | DeepSeek (CN), direction à risque élevé | 160 | 110 (0 / 110) | 5.4 / -3.6 | 198 / 198 | reid-quasi-identifiants-020 : WARN → ALLOW ; reid-quasi-identifiants-045 : WARN → ALLOW ; reid-contact-009 : WARN → ALLOW |
+| Moteur sans NER | LLM interne (BJ), direction à risque faible | 50 | 0 (0 / 0) | 25.2 / 33.5 | 145 / 145 | — |
+| Moteur sans NER | Mistral (UE), direction à risque faible | 150 | 50 (0 / 50) | 25.2 / 33.5 | 145 / 145 | reid-quasi-identifiants-001 : WARN → ALLOW ; reid-quasi-identifiants-002 : WARN → ALLOW ; reid-quasi-identifiants-003 : WARN → ALLOW |
+| Moteur sans NER | ChatGPT (US), direction à risque faible | 150 | 50 (0 / 50) | 25 / 33.7 | 145 / 145 | reid-quasi-identifiants-001 : WARN → ALLOW ; reid-quasi-identifiants-002 : WARN → ALLOW ; reid-quasi-identifiants-003 : WARN → ALLOW |
+| Moteur sans NER | DeepSeek (CN), direction à risque faible | 250 | 100 (0 / 100) | 25.2 / 33.5 | 145 / 145 | reid-direct-001 : WARN → ALLOW ; reid-direct-002 : WARN → ALLOW ; reid-direct-003 : WARN → ALLOW |
+| Moteur sans NER | LLM interne (BJ), direction à risque modéré | 100 | 0 (0 / 0) | 25.3 / 33.8 | 145 / 145 | — |
+| Moteur sans NER | Mistral (UE), direction à risque modéré | 100 | 50 (0 / 50) | 25.3 / 33.8 | 145 / 145 | reid-quasi-identifiants-001 : WARN → ALLOW ; reid-quasi-identifiants-002 : WARN → ALLOW ; reid-quasi-identifiants-003 : WARN → ALLOW |
+| Moteur sans NER | ChatGPT (US), direction à risque modéré | 100 | 50 (0 / 50) | 25 / 33.8 | 145 / 145 | reid-quasi-identifiants-001 : WARN → ALLOW ; reid-quasi-identifiants-002 : WARN → ALLOW ; reid-quasi-identifiants-003 : WARN → ALLOW |
+| Moteur sans NER | DeepSeek (CN), direction à risque modéré | 300 | 150 (0 / 150) | 25.3 / 33.8 | 145 / 145 | reid-direct-001 : WARN → ALLOW ; reid-direct-002 : WARN → ALLOW ; reid-direct-003 : WARN → ALLOW |
+| Moteur sans NER | LLM interne (BJ), direction à risque élevé | 50 | 0 (0 / 0) | 25.8 / 34 | 145 / 145 | — |
+| Moteur sans NER | Mistral (UE), direction à risque élevé | 150 | 100 (0 / 100) | 25.8 / 34 | 145 / 145 | reid-direct-001 : WARN → ALLOW ; reid-direct-002 : WARN → ALLOW ; reid-direct-003 : WARN → ALLOW |
+| Moteur sans NER | ChatGPT (US), direction à risque élevé | 250 | 100 (0 / 100) | 25.5 / 34 | 145 / 145 | reid-direct-001 : WARN → ALLOW ; reid-direct-002 : WARN → ALLOW ; reid-direct-003 : WARN → ALLOW |
+| Moteur sans NER | DeepSeek (CN), direction à risque élevé | 300 | 150 (0 / 150) | 25.8 / 34 | 145 / 145 | reid-direct-001 : WARN → ALLOW ; reid-direct-002 : WARN → ALLOW ; reid-direct-003 : WARN → ALLOW |
+| Moteur complet | LLM interne (BJ), direction à risque faible | 158 | 0 (0 / 0) | 21.1 / 11.4 | 7 / 7 | — |
+| Moteur complet | Mistral (UE), direction à risque faible | 60 | 1 (0 / 1) | 21.1 / 11.4 | 7 / 7 | reid-quasi-identifiants-045 : WARN → ALLOW |
+| Moteur complet | ChatGPT (US), direction à risque faible | 60 | 1 (0 / 1) | 22.1 / 11.7 | 7 / 7 | reid-quasi-identifiants-045 : WARN → ALLOW |
+| Moteur complet | DeepSeek (CN), direction à risque faible | 100 | 100 (0 / 100) | 21.1 / 11.4 | 7 / 7 | reid-temoin-commune-001 : WARN → ALLOW ; reid-temoin-commune-002 : WARN → ALLOW ; reid-temoin-commune-003 : WARN → ALLOW |
+| Moteur complet | LLM interne (BJ), direction à risque modéré | 208 | 0 (0 / 0) | 21.1 / 12.3 | 7 / 7 | — |
+| Moteur complet | Mistral (UE), direction à risque modéré | 9 | 0 (0 / 0) | 21.1 / 12.3 | 7 / 7 | — |
+| Moteur complet | ChatGPT (US), direction à risque modéré | 0 | 0 (0 / 0) | 22.1 / 12.3 | 7 / 7 | — |
+| Moteur complet | DeepSeek (CN), direction à risque modéré | 151 | 151 (1 / 150) | 21.1 / 12.3 | 7 / 7 | reid-quasi-identifiants-034 : MASK → BLOCK ; reid-identifiants-001 : BLOCK → MASK ; reid-identifiants-002 : BLOCK → MASK |
+| Moteur complet | LLM interne (BJ), direction à risque élevé | 110 | 0 (0 / 0) | 21.4 / 11.4 | 7 / 7 | — |
+| Moteur complet | Mistral (UE), direction à risque élevé | 100 | 100 (0 / 100) | 21.4 / 11.4 | 7 / 7 | reid-temoin-commune-001 : WARN → ALLOW ; reid-temoin-commune-002 : WARN → ALLOW ; reid-temoin-commune-003 : WARN → ALLOW |
+| Moteur complet | ChatGPT (US), direction à risque élevé | 100 | 100 (0 / 100) | 21.3 / 11.4 | 7 / 7 | reid-temoin-commune-001 : WARN → ALLOW ; reid-temoin-commune-002 : WARN → ALLOW ; reid-temoin-commune-003 : WARN → ALLOW |
+| Moteur complet | DeepSeek (CN), direction à risque élevé | 157 | 157 (7 / 150) | 21.4 / 11.4 | 7 / 7 | reid-quasi-identifiants-013 : MASK → BLOCK ; reid-quasi-identifiants-031 : MASK → BLOCK ; reid-quasi-identifiants-032 : MASK → BLOCK |
 
 ### Par variante de scénario (facteur actif)
 

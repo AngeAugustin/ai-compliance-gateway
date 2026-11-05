@@ -123,6 +123,8 @@ Objectif : vérifier que le facteur « combinaison de quasi-identifiants » (poi
 2. **Décision** : pipeline de l'agent (score de risque → politiques équivalentes au seed, dont la règle « identifiant direct → MASK » ajoutée après la première mesure → masquage → escalade MASK → BLOCK si au moins 2 quasi-identifiants restent après masquage), pour un utilisateur d'une direction à risque modéré écrivant à ChatGPT (hébergé hors juridiction).
 3. **Sortie réelle** : l'attaquant voit rien si BLOCK, le texte masqué si MASK, le texte en clair si ALLOW ou WARN.
 
+**Profils.** L'effet d'un facteur dépend de la distance aux seuils de bande, donc du reste du score. Les tableaux détaillés portent sur le profil de référence ; l'ablation est en plus rejouée sur 12 profils (direction à risque faible, modéré ou élevé × service hébergé au Bénin, dans l'UE, aux États-Unis ou en Chine) et comparée scénario par scénario : bandes et actions modifiées, sens du changement, écart de score exposés − témoins, ré-identifiables encore exploitables.
+
 **Ablation.** Même pipeline avec le poids du facteur à 0 et les trois autres renormalisés (somme = 1). La différence de bandes et d'actions isole la contribution du facteur ; la politique `quasi_identifier_count ≥ 3` reste active dans les deux cas.
 
 **Mesures**, par classe d'exposition : score moyen, valeur moyenne du facteur, répartition des bandes et des actions, **taux laissé en clair** (ALLOW ou WARN) et **taux encore ré-identifié après la passerelle**. Le résultat attendu : score et bande croissants avec l'exposition, et aucun scénario ré-identifiable laissé en clair.

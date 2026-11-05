@@ -3,7 +3,7 @@ import type { EvalSample, Split } from "./annotation.js";
 import type { ContextReport, ReidLine, SystemReport } from "./evaluate.js";
 import type { MatchMode } from "./metrics.js";
 import { ALL_VARIANTS, REID_VARIANTS } from "./reidentification.js";
-import { EXPOSURE_LABEL, EXPOSURES, type RiskResponseLine } from "./risk-response.js";
+import { EXPOSURE_LABEL, EXPOSURES, type ProfileEffect, type RiskResponseLine } from "./risk-response.js";
 import type { SystemsSetup } from "./systems.js";
 
 export interface RunMeta {
@@ -33,6 +33,7 @@ export interface FullReport {
   context: ContextReport[];
   reidentification: ReidLine[];
   riskResponse: RiskResponseLine[];
+  riskResponseProfiles?: ProfileEffect[];
 }
 
 const pct = (x: number, digits = 1) => `${(x * 100).toFixed(digits).replace(".", ",")} %`;
@@ -306,6 +307,7 @@ function renderRiskResponse(out: string[], r: FullReport): void {
       ["l", "l", "l", "r", "r", "r", "r", "r", "r", "r"],
     ),
   );
+  renderProfiles(out, r.riskResponseProfiles ?? []);
   const variants = ALL_VARIANTS.filter((v) => lines.some((l) => l.byVariant[v]));
   out.push(`### Par variante de scénario (facteur actif)`);
   out.push(
@@ -321,6 +323,31 @@ function renderRiskResponse(out: string[], r: FullReport): void {
             return `${g.meanScore} · ${g.actions.ALLOW}/${g.actions.WARN}/${g.actions.MASK}/${g.actions.BLOCK} · ${pct(g.reidentifiedAfter / Math.max(1, g.n), 0)}`;
           }),
         ]),
+    ),
+  );
+}
+
+function renderProfiles(out: string[], effects: ProfileEffect[]): void {
+  if (!effects.length) return;
+  out.push(`### Effet du facteur selon le profil`);
+  out.push(
+    `Les tableaux ci-dessus portent sur un profil (direction à risque modéré, ChatGPT). L'effet d'un facteur dépend de la distance aux seuils de bande, donc du reste du score : ` +
+      `l'ablation est rejouée ici sur ${new Set(effects.map((e) => e.profile)).size} profils (niveau de risque de la direction × lieu d'hébergement du service) et comparée scénario par scénario, ` +
+      `sur les ${effects[0]!.n} scénarios (ré-identification et témoins). « Plus stricte » : l'action est plus sévère avec le facteur qu'avec le facteur neutralisé.`,
+  );
+  out.push(
+    table(
+      ["Configuration", "Profil", "Bandes changées", "Actions changées (plus strictes / plus laxistes)", "Écart exposés − témoins : actif / neutralisé", "Ré-identifiables exploitables : actif / neutralisé", "Exemples"],
+      effects.map((e) => [
+        e.label,
+        e.profileLabel,
+        e.bandChanged,
+        `${e.actionChanged} (${e.stricterWithFactor} / ${e.laxerWithFactor})`,
+        `${e.gapActive} / ${e.gapNeutral}`,
+        `${e.reidAfterActive} / ${e.reidAfterNeutral}`,
+        e.examples.join(" ; ") || "—",
+      ]),
+      ["l", "l", "r", "r", "r", "r", "l"],
     ),
   );
 }

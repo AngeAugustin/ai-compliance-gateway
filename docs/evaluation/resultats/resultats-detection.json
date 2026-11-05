@@ -1,18 +1,18 @@
 {
   "meta": {
-    "date": "2026-10-29",
+    "date": "2026-10-30",
     "seed": 2026,
     "repetitions": 3,
     "node": "24.12.0",
     "platform": "win32-x64",
     "cpu": "Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz",
-    "durationMs": 360861.11340000003,
+    "durationMs": 573573.4724,
     "populationSize": 2000
   },
   "setup": {
     "ner": {
       "available": true,
-      "initMs": 2538
+      "initMs": 4947
     },
     "llm": {
       "available": false,
@@ -634,27 +634,27 @@
       },
       "latency": {
         "runs": 1155,
-        "p50": 0.1390000000001237,
-        "p95": 0.6858999999994921,
-        "p99": 2.3653000000003885,
-        "mean": 0.2758870995671017,
-        "max": 16.38050000000021,
-        "charsPerMs": 739.0092440097153,
+        "p50": 0.23610000000007858,
+        "p95": 1.42870000000039,
+        "p99": 4.932999999999083,
+        "mean": 0.511878268398292,
+        "max": 20.95219999999972,
+        "charsPerMs": 398.30391221937094,
         "byLength": {
           "court": {
             "n": 1092,
-            "p50": 0.131600000000617,
-            "p95": 0.49399999999968713
+            "p50": 0.22360000000116997,
+            "p95": 1.0311000000001513
           },
           "moyen": {
             "n": 33,
-            "p50": 0.6428999999998268,
-            "p95": 1.1446999999998297
+            "p50": 1.413300000000163,
+            "p95": 2.20679999999993
           },
           "long": {
             "n": 30,
-            "p50": 1.767399999999725,
-            "p95": 4.060699999999997
+            "p50": 3.773300000000745,
+            "p95": 6.483599999999569
           }
         }
       },
@@ -1742,27 +1742,27 @@
       },
       "latency": {
         "runs": 1155,
-        "p50": 68.78740000000107,
-        "p95": 226.5783000000083,
-        "p99": 1060.5962,
-        "mean": 102.32408242424258,
-        "max": 2139.177100000001,
-        "charsPerMs": 1.9925232853572405,
+        "p50": 82.59850000000733,
+        "p95": 337.2044999999998,
+        "p99": 1691.7994999999937,
+        "mean": 138.19958571428597,
+        "max": 3131.7534999999916,
+        "charsPerMs": 1.4752802320596325,
         "byLength": {
           "court": {
             "n": 1092,
-            "p50": 67.09300000000076,
-            "p95": 116.91820000000007
+            "p50": 81.04219999999623,
+            "p95": 140.66210000000137
           },
           "moyen": {
             "n": 33,
-            "p50": 285.837400000004,
-            "p95": 393.8747999999905
+            "p50": 503.07360000000335,
+            "p95": 669.37950000001
           },
           "long": {
             "n": 30,
-            "p50": 947.9254999999976,
-            "p95": 1862.2945000000036
+            "p50": 1539.516300000003,
+            "p95": 3095.411300000007
           }
         }
       },
@@ -2916,27 +2916,27 @@
       },
       "latency": {
         "runs": 1155,
-        "p50": 0.2709000000031665,
-        "p95": 0.9247000000032131,
-        "p99": 2.9578999999939697,
-        "mean": 0.3997324675322587,
-        "max": 4.920199999993201,
-        "charsPerMs": 510.0489288292885,
+        "p50": 0.7603999999992084,
+        "p95": 2.5348999999987427,
+        "p99": 8.280399999988731,
+        "mean": 1.1027919480519155,
+        "max": 11.32070000001113,
+        "charsPerMs": 184.8790401882031,
         "byLength": {
           "court": {
             "n": 1092,
-            "p50": 0.26260000000183936,
-            "p95": 0.6113000000041211
+            "p50": 0.7146000000066124,
+            "p95": 1.951600000000326
           },
           "moyen": {
             "n": 33,
-            "p50": 0.9020999999920605,
-            "p95": 1.7796999999991385
+            "p50": 2.473200000007637,
+            "p95": 5.469599999982165
           },
           "long": {
             "n": 30,
-            "p50": 2.6133000000118045,
-            "p95": 4.2796999999991385
+            "p50": 7.574700000026496,
+            "p95": 9.908699999999953
           }
         }
       },
@@ -4044,27 +4044,27 @@
       },
       "latency": {
         "runs": 1155,
-        "p50": 68.5685999999987,
-        "p95": 238.06239999999525,
-        "p99": 1050.0664999999863,
-        "mean": 101.943192813853,
-        "max": 2034.9524000000092,
-        "charsPerMs": 1.9999679356267066,
+        "p50": 113.84250000002794,
+        "p95": 349.91659999999683,
+        "p99": 1689.446100000001,
+        "mean": 163.07110978354945,
+        "max": 2675.626199999999,
+        "charsPerMs": 1.2502712292431122,
         "byLength": {
           "court": {
             "n": 1092,
-            "p50": 67.17550000001211,
-            "p95": 110.07420000000275
+            "p50": 111.35610000000452,
+            "p95": 197.80940000002738
           },
           "moyen": {
             "n": 33,
-            "p50": 278.6229999999923,
-            "p95": 384.4335999999894
+            "p50": 421.0779999999795,
+            "p95": 539.4285999999847
           },
           "long": {
             "n": 30,
-            "p50": 957.4455000000016,
-            "p95": 1891.0219999999972
+            "p50": 1492.7319000000134,
+            "p95": 2486.698700000008
           }
         }
       },
@@ -5957,6 +5957,1467 @@
           }
         }
       }
+    }
+  ],
+  "riskResponseProfiles": [
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "profile": "low-llm-interne",
+      "profileLabel": "LLM interne (BJ), direction à risque faible",
+      "n": 300,
+      "bandChanged": 100,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 24.5,
+      "gapNeutral": 32.3,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": []
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "profile": "low-chat.mistral.ai",
+      "profileLabel": "Mistral (UE), direction à risque faible",
+      "n": 300,
+      "bandChanged": 100,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 24.5,
+      "gapNeutral": 32.3,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": []
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "profile": "low-chatgpt.com",
+      "profileLabel": "ChatGPT (US), direction à risque faible",
+      "n": 300,
+      "bandChanged": 100,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 24.3,
+      "gapNeutral": 32.3,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": []
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "profile": "low-chat.deepseek.com",
+      "profileLabel": "DeepSeek (CN), direction à risque faible",
+      "n": 300,
+      "bandChanged": 250,
+      "actionChanged": 100,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 100,
+      "gapActive": 24.5,
+      "gapNeutral": 32.3,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 100,
+        "WARN": 100,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-direct-001 : WARN → ALLOW",
+        "reid-direct-002 : WARN → ALLOW",
+        "reid-direct-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "profile": "moderate-llm-interne",
+      "profileLabel": "LLM interne (BJ), direction à risque modéré",
+      "n": 300,
+      "bandChanged": 150,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 24.3,
+      "gapNeutral": 32.8,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": []
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "profile": "moderate-chat.mistral.ai",
+      "profileLabel": "Mistral (UE), direction à risque modéré",
+      "n": 300,
+      "bandChanged": 50,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 24.3,
+      "gapNeutral": 32.8,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": []
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "profile": "moderate-chatgpt.com",
+      "profileLabel": "ChatGPT (US), direction à risque modéré",
+      "n": 300,
+      "bandChanged": 50,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 23.8,
+      "gapNeutral": 32.8,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": []
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "profile": "moderate-chat.deepseek.com",
+      "profileLabel": "DeepSeek (CN), direction à risque modéré",
+      "n": 300,
+      "bandChanged": 300,
+      "actionChanged": 150,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 150,
+      "gapActive": 24.3,
+      "gapNeutral": 32.8,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 100,
+        "WARN": 100,
+        "MASK": 50,
+        "BLOCK": 50
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-direct-001 : WARN → ALLOW",
+        "reid-direct-002 : WARN → ALLOW",
+        "reid-direct-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "profile": "high-llm-interne",
+      "profileLabel": "LLM interne (BJ), direction à risque élevé",
+      "n": 300,
+      "bandChanged": 50,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 24.8,
+      "gapNeutral": 32,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": []
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "profile": "high-chat.mistral.ai",
+      "profileLabel": "Mistral (UE), direction à risque élevé",
+      "n": 300,
+      "bandChanged": 250,
+      "actionChanged": 100,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 100,
+      "gapActive": 24.8,
+      "gapNeutral": 32,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 100,
+        "WARN": 100,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-direct-001 : WARN → ALLOW",
+        "reid-direct-002 : WARN → ALLOW",
+        "reid-direct-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "profile": "high-chatgpt.com",
+      "profileLabel": "ChatGPT (US), direction à risque élevé",
+      "n": 300,
+      "bandChanged": 250,
+      "actionChanged": 100,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 100,
+      "gapActive": 24.5,
+      "gapNeutral": 32.3,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 100,
+        "WARN": 100,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-direct-001 : WARN → ALLOW",
+        "reid-direct-002 : WARN → ALLOW",
+        "reid-direct-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "profile": "high-chat.deepseek.com",
+      "profileLabel": "DeepSeek (CN), direction à risque élevé",
+      "n": 300,
+      "bandChanged": 300,
+      "actionChanged": 150,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 150,
+      "gapActive": 24.8,
+      "gapNeutral": 32,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 100,
+        "WARN": 100,
+        "MASK": 50,
+        "BLOCK": 50
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-direct-001 : WARN → ALLOW",
+        "reid-direct-002 : WARN → ALLOW",
+        "reid-direct-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "ner",
+      "label": "NER seul",
+      "profile": "low-llm-interne",
+      "profileLabel": "LLM interne (BJ), direction à risque faible",
+      "n": 300,
+      "bandChanged": 110,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 5.2,
+      "gapNeutral": -3.6,
+      "actionsActive": {
+        "ALLOW": 242,
+        "WARN": 0,
+        "MASK": 58,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 242,
+        "WARN": 0,
+        "MASK": 58,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 198,
+      "reidAfterNeutral": 198,
+      "examples": []
+    },
+    {
+      "system": "ner",
+      "label": "NER seul",
+      "profile": "low-chat.mistral.ai",
+      "profileLabel": "Mistral (UE), direction à risque faible",
+      "n": 300,
+      "bandChanged": 2,
+      "actionChanged": 2,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 2,
+      "gapActive": 5.2,
+      "gapNeutral": -3.6,
+      "actionsActive": {
+        "ALLOW": 242,
+        "WARN": 0,
+        "MASK": 58,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 240,
+        "WARN": 2,
+        "MASK": 58,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 198,
+      "reidAfterNeutral": 198,
+      "examples": [
+        "reid-quasi-identifiants-004 : WARN → ALLOW",
+        "reid-quasi-identifiants-005 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "ner",
+      "label": "NER seul",
+      "profile": "low-chatgpt.com",
+      "profileLabel": "ChatGPT (US), direction à risque faible",
+      "n": 300,
+      "bandChanged": 47,
+      "actionChanged": 47,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 47,
+      "gapActive": 4.9,
+      "gapNeutral": -3.4,
+      "actionsActive": {
+        "ALLOW": 242,
+        "WARN": 0,
+        "MASK": 58,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 195,
+        "WARN": 47,
+        "MASK": 58,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 198,
+      "reidAfterNeutral": 198,
+      "examples": [
+        "reid-quasi-identifiants-004 : WARN → ALLOW",
+        "reid-quasi-identifiants-005 : WARN → ALLOW",
+        "reid-quasi-identifiants-010 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "ner",
+      "label": "NER seul",
+      "profile": "low-chat.deepseek.com",
+      "profileLabel": "DeepSeek (CN), direction à risque faible",
+      "n": 300,
+      "bandChanged": 193,
+      "actionChanged": 143,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 143,
+      "gapActive": 5.2,
+      "gapNeutral": -3.6,
+      "actionsActive": {
+        "ALLOW": 193,
+        "WARN": 49,
+        "MASK": 58,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 50,
+        "WARN": 192,
+        "MASK": 58,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 198,
+      "reidAfterNeutral": 198,
+      "examples": [
+        "reid-quasi-identifiants-001 : WARN → ALLOW",
+        "reid-quasi-identifiants-002 : WARN → ALLOW",
+        "reid-quasi-identifiants-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "ner",
+      "label": "NER seul",
+      "profile": "moderate-llm-interne",
+      "profileLabel": "LLM interne (BJ), direction à risque modéré",
+      "n": 300,
+      "bandChanged": 109,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 5.2,
+      "gapNeutral": -3.8,
+      "actionsActive": {
+        "ALLOW": 242,
+        "WARN": 0,
+        "MASK": 58,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 242,
+        "WARN": 0,
+        "MASK": 58,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 198,
+      "reidAfterNeutral": 198,
+      "examples": []
+    },
+    {
+      "system": "ner",
+      "label": "NER seul",
+      "profile": "moderate-chat.mistral.ai",
+      "profileLabel": "Mistral (UE), direction à risque modéré",
+      "n": 300,
+      "bandChanged": 50,
+      "actionChanged": 50,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 50,
+      "gapActive": 5.2,
+      "gapNeutral": -3.8,
+      "actionsActive": {
+        "ALLOW": 242,
+        "WARN": 0,
+        "MASK": 58,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 192,
+        "WARN": 50,
+        "MASK": 58,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 198,
+      "reidAfterNeutral": 198,
+      "examples": [
+        "reid-quasi-identifiants-004 : WARN → ALLOW",
+        "reid-quasi-identifiants-005 : WARN → ALLOW",
+        "reid-quasi-identifiants-010 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "ner",
+      "label": "NER seul",
+      "profile": "moderate-chatgpt.com",
+      "profileLabel": "ChatGPT (US), direction à risque modéré",
+      "n": 300,
+      "bandChanged": 50,
+      "actionChanged": 50,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 50,
+      "gapActive": 5.9,
+      "gapNeutral": -3.8,
+      "actionsActive": {
+        "ALLOW": 242,
+        "WARN": 0,
+        "MASK": 58,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 192,
+        "WARN": 50,
+        "MASK": 58,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 198,
+      "reidAfterNeutral": 198,
+      "examples": [
+        "reid-quasi-identifiants-004 : WARN → ALLOW",
+        "reid-quasi-identifiants-005 : WARN → ALLOW",
+        "reid-quasi-identifiants-010 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "ner",
+      "label": "NER seul",
+      "profile": "moderate-chat.deepseek.com",
+      "profileLabel": "DeepSeek (CN), direction à risque modéré",
+      "n": 300,
+      "bandChanged": 160,
+      "actionChanged": 110,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 110,
+      "gapActive": 5.2,
+      "gapNeutral": -3.8,
+      "actionsActive": {
+        "ALLOW": 160,
+        "WARN": 82,
+        "MASK": 58,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 50,
+        "WARN": 192,
+        "MASK": 58,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 198,
+      "reidAfterNeutral": 198,
+      "examples": [
+        "reid-quasi-identifiants-020 : WARN → ALLOW",
+        "reid-quasi-identifiants-045 : WARN → ALLOW",
+        "reid-contact-009 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "ner",
+      "label": "NER seul",
+      "profile": "high-llm-interne",
+      "profileLabel": "LLM interne (BJ), direction à risque élevé",
+      "n": 300,
+      "bandChanged": 0,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 5.4,
+      "gapNeutral": -3.6,
+      "actionsActive": {
+        "ALLOW": 242,
+        "WARN": 0,
+        "MASK": 58,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 242,
+        "WARN": 0,
+        "MASK": 58,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 198,
+      "reidAfterNeutral": 198,
+      "examples": []
+    },
+    {
+      "system": "ner",
+      "label": "NER seul",
+      "profile": "high-chat.mistral.ai",
+      "profileLabel": "Mistral (UE), direction à risque élevé",
+      "n": 300,
+      "bandChanged": 195,
+      "actionChanged": 145,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 145,
+      "gapActive": 5.4,
+      "gapNeutral": -3.6,
+      "actionsActive": {
+        "ALLOW": 195,
+        "WARN": 47,
+        "MASK": 58,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 50,
+        "WARN": 192,
+        "MASK": 58,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 198,
+      "reidAfterNeutral": 198,
+      "examples": [
+        "reid-quasi-identifiants-001 : WARN → ALLOW",
+        "reid-quasi-identifiants-002 : WARN → ALLOW",
+        "reid-quasi-identifiants-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "ner",
+      "label": "NER seul",
+      "profile": "high-chatgpt.com",
+      "profileLabel": "ChatGPT (US), direction à risque élevé",
+      "n": 300,
+      "bandChanged": 193,
+      "actionChanged": 143,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 143,
+      "gapActive": 5.2,
+      "gapNeutral": -3.6,
+      "actionsActive": {
+        "ALLOW": 193,
+        "WARN": 49,
+        "MASK": 58,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 50,
+        "WARN": 192,
+        "MASK": 58,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 198,
+      "reidAfterNeutral": 198,
+      "examples": [
+        "reid-quasi-identifiants-001 : WARN → ALLOW",
+        "reid-quasi-identifiants-002 : WARN → ALLOW",
+        "reid-quasi-identifiants-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "ner",
+      "label": "NER seul",
+      "profile": "high-chat.deepseek.com",
+      "profileLabel": "DeepSeek (CN), direction à risque élevé",
+      "n": 300,
+      "bandChanged": 160,
+      "actionChanged": 110,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 110,
+      "gapActive": 5.4,
+      "gapNeutral": -3.6,
+      "actionsActive": {
+        "ALLOW": 160,
+        "WARN": 82,
+        "MASK": 58,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 50,
+        "WARN": 192,
+        "MASK": 58,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 198,
+      "reidAfterNeutral": 198,
+      "examples": [
+        "reid-quasi-identifiants-020 : WARN → ALLOW",
+        "reid-quasi-identifiants-045 : WARN → ALLOW",
+        "reid-contact-009 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "profile": "low-llm-interne",
+      "profileLabel": "LLM interne (BJ), direction à risque faible",
+      "n": 300,
+      "bandChanged": 50,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 25.2,
+      "gapNeutral": 33.5,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": []
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "profile": "low-chat.mistral.ai",
+      "profileLabel": "Mistral (UE), direction à risque faible",
+      "n": 300,
+      "bandChanged": 150,
+      "actionChanged": 50,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 50,
+      "gapActive": 25.2,
+      "gapNeutral": 33.5,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 150,
+        "WARN": 50,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-quasi-identifiants-001 : WARN → ALLOW",
+        "reid-quasi-identifiants-002 : WARN → ALLOW",
+        "reid-quasi-identifiants-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "profile": "low-chatgpt.com",
+      "profileLabel": "ChatGPT (US), direction à risque faible",
+      "n": 300,
+      "bandChanged": 150,
+      "actionChanged": 50,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 50,
+      "gapActive": 25,
+      "gapNeutral": 33.7,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 150,
+        "WARN": 50,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-quasi-identifiants-001 : WARN → ALLOW",
+        "reid-quasi-identifiants-002 : WARN → ALLOW",
+        "reid-quasi-identifiants-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "profile": "low-chat.deepseek.com",
+      "profileLabel": "DeepSeek (CN), direction à risque faible",
+      "n": 300,
+      "bandChanged": 250,
+      "actionChanged": 100,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 100,
+      "gapActive": 25.2,
+      "gapNeutral": 33.5,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 100,
+        "WARN": 100,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-direct-001 : WARN → ALLOW",
+        "reid-direct-002 : WARN → ALLOW",
+        "reid-direct-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "profile": "moderate-llm-interne",
+      "profileLabel": "LLM interne (BJ), direction à risque modéré",
+      "n": 300,
+      "bandChanged": 100,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 25.3,
+      "gapNeutral": 33.8,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": []
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "profile": "moderate-chat.mistral.ai",
+      "profileLabel": "Mistral (UE), direction à risque modéré",
+      "n": 300,
+      "bandChanged": 100,
+      "actionChanged": 50,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 50,
+      "gapActive": 25.3,
+      "gapNeutral": 33.8,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 150,
+        "WARN": 50,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-quasi-identifiants-001 : WARN → ALLOW",
+        "reid-quasi-identifiants-002 : WARN → ALLOW",
+        "reid-quasi-identifiants-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "profile": "moderate-chatgpt.com",
+      "profileLabel": "ChatGPT (US), direction à risque modéré",
+      "n": 300,
+      "bandChanged": 100,
+      "actionChanged": 50,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 50,
+      "gapActive": 25,
+      "gapNeutral": 33.8,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 150,
+        "WARN": 50,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-quasi-identifiants-001 : WARN → ALLOW",
+        "reid-quasi-identifiants-002 : WARN → ALLOW",
+        "reid-quasi-identifiants-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "profile": "moderate-chat.deepseek.com",
+      "profileLabel": "DeepSeek (CN), direction à risque modéré",
+      "n": 300,
+      "bandChanged": 300,
+      "actionChanged": 150,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 150,
+      "gapActive": 25.3,
+      "gapNeutral": 33.8,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 100,
+        "WARN": 100,
+        "MASK": 50,
+        "BLOCK": 50
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-direct-001 : WARN → ALLOW",
+        "reid-direct-002 : WARN → ALLOW",
+        "reid-direct-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "profile": "high-llm-interne",
+      "profileLabel": "LLM interne (BJ), direction à risque élevé",
+      "n": 300,
+      "bandChanged": 50,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 25.8,
+      "gapNeutral": 34,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": []
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "profile": "high-chat.mistral.ai",
+      "profileLabel": "Mistral (UE), direction à risque élevé",
+      "n": 300,
+      "bandChanged": 150,
+      "actionChanged": 100,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 100,
+      "gapActive": 25.8,
+      "gapNeutral": 34,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 100,
+        "WARN": 100,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-direct-001 : WARN → ALLOW",
+        "reid-direct-002 : WARN → ALLOW",
+        "reid-direct-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "profile": "high-chatgpt.com",
+      "profileLabel": "ChatGPT (US), direction à risque élevé",
+      "n": 300,
+      "bandChanged": 250,
+      "actionChanged": 100,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 100,
+      "gapActive": 25.5,
+      "gapNeutral": 34,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 100,
+        "WARN": 100,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-direct-001 : WARN → ALLOW",
+        "reid-direct-002 : WARN → ALLOW",
+        "reid-direct-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "profile": "high-chat.deepseek.com",
+      "profileLabel": "DeepSeek (CN), direction à risque élevé",
+      "n": 300,
+      "bandChanged": 300,
+      "actionChanged": 150,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 150,
+      "gapActive": 25.8,
+      "gapNeutral": 34,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 100,
+        "WARN": 100,
+        "MASK": 50,
+        "BLOCK": 50
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-direct-001 : WARN → ALLOW",
+        "reid-direct-002 : WARN → ALLOW",
+        "reid-direct-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "moteur-complet",
+      "label": "Moteur complet",
+      "profile": "low-llm-interne",
+      "profileLabel": "LLM interne (BJ), direction à risque faible",
+      "n": 300,
+      "bandChanged": 158,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 21.1,
+      "gapNeutral": 11.4,
+      "actionsActive": {
+        "ALLOW": 103,
+        "WARN": 0,
+        "MASK": 197,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 103,
+        "WARN": 0,
+        "MASK": 197,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 7,
+      "reidAfterNeutral": 7,
+      "examples": []
+    },
+    {
+      "system": "moteur-complet",
+      "label": "Moteur complet",
+      "profile": "low-chat.mistral.ai",
+      "profileLabel": "Mistral (UE), direction à risque faible",
+      "n": 300,
+      "bandChanged": 60,
+      "actionChanged": 1,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 1,
+      "gapActive": 21.1,
+      "gapNeutral": 11.4,
+      "actionsActive": {
+        "ALLOW": 101,
+        "WARN": 2,
+        "MASK": 197,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 100,
+        "WARN": 3,
+        "MASK": 197,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 7,
+      "reidAfterNeutral": 7,
+      "examples": [
+        "reid-quasi-identifiants-045 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "moteur-complet",
+      "label": "Moteur complet",
+      "profile": "low-chatgpt.com",
+      "profileLabel": "ChatGPT (US), direction à risque faible",
+      "n": 300,
+      "bandChanged": 60,
+      "actionChanged": 1,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 1,
+      "gapActive": 22.1,
+      "gapNeutral": 11.7,
+      "actionsActive": {
+        "ALLOW": 101,
+        "WARN": 2,
+        "MASK": 197,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 100,
+        "WARN": 3,
+        "MASK": 197,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 7,
+      "reidAfterNeutral": 7,
+      "examples": [
+        "reid-quasi-identifiants-045 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "moteur-complet",
+      "label": "Moteur complet",
+      "profile": "low-chat.deepseek.com",
+      "profileLabel": "DeepSeek (CN), direction à risque faible",
+      "n": 300,
+      "bandChanged": 100,
+      "actionChanged": 100,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 100,
+      "gapActive": 21.1,
+      "gapNeutral": 11.4,
+      "actionsActive": {
+        "ALLOW": 100,
+        "WARN": 3,
+        "MASK": 197,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 0,
+        "WARN": 103,
+        "MASK": 197,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 7,
+      "reidAfterNeutral": 7,
+      "examples": [
+        "reid-temoin-commune-001 : WARN → ALLOW",
+        "reid-temoin-commune-002 : WARN → ALLOW",
+        "reid-temoin-commune-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "moteur-complet",
+      "label": "Moteur complet",
+      "profile": "moderate-llm-interne",
+      "profileLabel": "LLM interne (BJ), direction à risque modéré",
+      "n": 300,
+      "bandChanged": 208,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 21.1,
+      "gapNeutral": 12.3,
+      "actionsActive": {
+        "ALLOW": 103,
+        "WARN": 0,
+        "MASK": 197,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 103,
+        "WARN": 0,
+        "MASK": 197,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 7,
+      "reidAfterNeutral": 7,
+      "examples": []
+    },
+    {
+      "system": "moteur-complet",
+      "label": "Moteur complet",
+      "profile": "moderate-chat.mistral.ai",
+      "profileLabel": "Mistral (UE), direction à risque modéré",
+      "n": 300,
+      "bandChanged": 9,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 21.1,
+      "gapNeutral": 12.3,
+      "actionsActive": {
+        "ALLOW": 100,
+        "WARN": 3,
+        "MASK": 197,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 100,
+        "WARN": 3,
+        "MASK": 197,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 7,
+      "reidAfterNeutral": 7,
+      "examples": []
+    },
+    {
+      "system": "moteur-complet",
+      "label": "Moteur complet",
+      "profile": "moderate-chatgpt.com",
+      "profileLabel": "ChatGPT (US), direction à risque modéré",
+      "n": 300,
+      "bandChanged": 0,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 22.1,
+      "gapNeutral": 12.3,
+      "actionsActive": {
+        "ALLOW": 100,
+        "WARN": 3,
+        "MASK": 197,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 100,
+        "WARN": 3,
+        "MASK": 197,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 7,
+      "reidAfterNeutral": 7,
+      "examples": []
+    },
+    {
+      "system": "moteur-complet",
+      "label": "Moteur complet",
+      "profile": "moderate-chat.deepseek.com",
+      "profileLabel": "DeepSeek (CN), direction à risque modéré",
+      "n": 300,
+      "bandChanged": 151,
+      "actionChanged": 151,
+      "stricterWithFactor": 1,
+      "laxerWithFactor": 150,
+      "gapActive": 21.1,
+      "gapNeutral": 12.3,
+      "actionsActive": {
+        "ALLOW": 100,
+        "WARN": 3,
+        "MASK": 196,
+        "BLOCK": 1
+      },
+      "actionsNeutral": {
+        "ALLOW": 0,
+        "WARN": 103,
+        "MASK": 147,
+        "BLOCK": 50
+      },
+      "reidAfterActive": 7,
+      "reidAfterNeutral": 7,
+      "examples": [
+        "reid-quasi-identifiants-034 : MASK → BLOCK",
+        "reid-identifiants-001 : BLOCK → MASK",
+        "reid-identifiants-002 : BLOCK → MASK"
+      ]
+    },
+    {
+      "system": "moteur-complet",
+      "label": "Moteur complet",
+      "profile": "high-llm-interne",
+      "profileLabel": "LLM interne (BJ), direction à risque élevé",
+      "n": 300,
+      "bandChanged": 110,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 21.4,
+      "gapNeutral": 11.4,
+      "actionsActive": {
+        "ALLOW": 103,
+        "WARN": 0,
+        "MASK": 197,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 103,
+        "WARN": 0,
+        "MASK": 197,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 7,
+      "reidAfterNeutral": 7,
+      "examples": []
+    },
+    {
+      "system": "moteur-complet",
+      "label": "Moteur complet",
+      "profile": "high-chat.mistral.ai",
+      "profileLabel": "Mistral (UE), direction à risque élevé",
+      "n": 300,
+      "bandChanged": 100,
+      "actionChanged": 100,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 100,
+      "gapActive": 21.4,
+      "gapNeutral": 11.4,
+      "actionsActive": {
+        "ALLOW": 100,
+        "WARN": 3,
+        "MASK": 197,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 0,
+        "WARN": 103,
+        "MASK": 197,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 7,
+      "reidAfterNeutral": 7,
+      "examples": [
+        "reid-temoin-commune-001 : WARN → ALLOW",
+        "reid-temoin-commune-002 : WARN → ALLOW",
+        "reid-temoin-commune-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "moteur-complet",
+      "label": "Moteur complet",
+      "profile": "high-chatgpt.com",
+      "profileLabel": "ChatGPT (US), direction à risque élevé",
+      "n": 300,
+      "bandChanged": 100,
+      "actionChanged": 100,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 100,
+      "gapActive": 21.3,
+      "gapNeutral": 11.4,
+      "actionsActive": {
+        "ALLOW": 100,
+        "WARN": 3,
+        "MASK": 197,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 0,
+        "WARN": 103,
+        "MASK": 197,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 7,
+      "reidAfterNeutral": 7,
+      "examples": [
+        "reid-temoin-commune-001 : WARN → ALLOW",
+        "reid-temoin-commune-002 : WARN → ALLOW",
+        "reid-temoin-commune-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "moteur-complet",
+      "label": "Moteur complet",
+      "profile": "high-chat.deepseek.com",
+      "profileLabel": "DeepSeek (CN), direction à risque élevé",
+      "n": 300,
+      "bandChanged": 157,
+      "actionChanged": 157,
+      "stricterWithFactor": 7,
+      "laxerWithFactor": 150,
+      "gapActive": 21.4,
+      "gapNeutral": 11.4,
+      "actionsActive": {
+        "ALLOW": 100,
+        "WARN": 3,
+        "MASK": 189,
+        "BLOCK": 8
+      },
+      "actionsNeutral": {
+        "ALLOW": 0,
+        "WARN": 103,
+        "MASK": 146,
+        "BLOCK": 51
+      },
+      "reidAfterActive": 7,
+      "reidAfterNeutral": 7,
+      "examples": [
+        "reid-quasi-identifiants-013 : MASK → BLOCK",
+        "reid-quasi-identifiants-031 : MASK → BLOCK",
+        "reid-quasi-identifiants-032 : MASK → BLOCK"
+      ]
     }
   ]
 }

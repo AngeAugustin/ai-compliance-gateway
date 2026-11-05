@@ -7,7 +7,7 @@ import { bootstrapInterval, macroF1, matchEntities, prf, type PredEntity } from 
 import { beninIban, generatePopulation, visaCard } from "../../tools/eval/population.js";
 import { attack, buildAttackIndex, generateReidScenarios } from "../../tools/eval/reidentification.js";
 import { createRng } from "../../tools/eval/rng.js";
-import { decide, exposureOf, outgoingText } from "../../tools/eval/risk-response.js";
+import { decide, decideFrom, exposureOf, outgoingText, PROFILES, REFERENCE_PROFILE } from "../../tools/eval/risk-response.js";
 import { DEFAULT_RISK_BAND_THRESHOLDS, DEFAULT_RISK_WEIGHTS } from "../../packages/shared/src/index.js";
 
 describe("annotation", () => {
@@ -169,5 +169,21 @@ describe("témoins peu exposés", () => {
       const r = attack(parseAnnotated(sc.markup).text, sc.targetId, index);
       expect(r.candidates, sc.id).toBeGreaterThan(5);
     }
+  });
+});
+
+describe("profils de l'ablation", () => {
+  it("12 profils distincts, dont le profil de référence", () => {
+    expect(PROFILES).toHaveLength(12);
+    expect(new Set(PROFILES.map((p) => p.id)).size).toBe(12);
+    expect(REFERENCE_PROFILE.id).toBe("moderate-chatgpt.com");
+  });
+
+  it("le profil change le score d'un même prompt", async () => {
+    const detection = { entities: [], context: null };
+    const config = { weights: { ...DEFAULT_RISK_WEIGHTS }, thresholds: { ...DEFAULT_RISK_BAND_THRESHOLDS } };
+    const low = decideFrom(detection, "Bonjour", config, PROFILES.find((p) => p.id === "low-llm-interne")!);
+    const high = decideFrom(detection, "Bonjour", config, PROFILES.find((p) => p.id === "high-chat.deepseek.com")!);
+    expect(high.score).toBeGreaterThan(low.score);
   });
 });
