@@ -39,7 +39,7 @@ export interface FullReport {
 const pct = (x: number, digits = 1) => `${(x * 100).toFixed(digits).replace(".", ",")} %`;
 const ms = (x: number) => (x < 10 ? x.toFixed(2) : x < 100 ? x.toFixed(1) : Math.round(x).toString()).replace(".", ",");
 const label = (t: EntityType) => ENTITY_DEFINITIONS[t]?.label ?? t;
-const SPLIT_LABEL: Record<Split, string> = { manuel: "Manuel", genere: "Généré", long: "Documents multi-demandes" };
+const SPLIT_LABEL: Record<Split, string> = { manuel: "Manuel", genere: "Généré", long: "Documents multi-demandes", reel: "Prompts réels anonymisés" };
 const MODE_LABEL: Record<MatchMode, string> = { strict: "Strict", partiel: "Partiel", protection: "Protection" };
 
 function table(headers: string[], rows: (string | number)[][], align?: ("l" | "r")[]): string {

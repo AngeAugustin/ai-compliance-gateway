@@ -37,7 +37,12 @@
     "eval:extraction": "tsx tools/eval/extraction-fichiers.ts",
     "eval:extraction:fichiers": "tsx tools/eval/fichiers-bibliotheques.ts",
     "eval:utilisabilite": "tsx tools/eval/utilisabilite.ts",
-    "eval:accord": "tsx tools/eval/accord-annotateurs.ts"
+    "eval:accord": "tsx tools/eval/accord-annotateurs.ts",
+    "test:llm": "vitest run --config tests/llm/vitest.config.ts",
+    "eval:llm:pipeline": "tsx tools/eval/llm-pipeline.ts",
+    "eval:agents-reels": "tsx tools/eval/agents-reels.ts",
+    "eval:heartbeat:reel": "tsx tools/eval/heartbeat-reel.ts",
+    "eval:prompts-reels": "tsx tools/eval/prompts-reels.ts"
   },
   "dependencies": {
     "pg": "^8.16.3"

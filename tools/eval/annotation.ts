@@ -10,7 +10,7 @@ export interface GoldEntity {
   value: string;
 }
 
-export type Split = "manuel" | "genere" | "long";
+export type Split = "manuel" | "genere" | "long" | "reel";
 
 export interface AnnotatedSource {
   id: string;

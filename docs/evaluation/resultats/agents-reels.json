@@ -1,0 +1,138 @@
+{
+  "rtt": [
+    {
+      "rtt": 0,
+      "total": {
+        "n": 58,
+        "p50": 7.2,
+        "p95": 22.6,
+        "max": 106.8
+      },
+      "actions": "ALLOW 10, BLOCK 26, MASK 22"
+    },
+    {
+      "rtt": 50,
+      "total": {
+        "n": 58,
+        "p50": 79.8,
+        "p95": 110.7,
+        "max": 112.3
+      },
+      "actions": "ALLOW 10, BLOCK 26, MASK 22"
+    },
+    {
+      "rtt": 150,
+      "total": {
+        "n": 58,
+        "p50": 187.8,
+        "p95": 206.1,
+        "max": 208.2
+      },
+      "actions": "ALLOW 10, BLOCK 26, MASK 22"
+    },
+    {
+      "rtt": 300,
+      "total": {
+        "n": 58,
+        "p50": 332.6,
+        "p95": 359.9,
+        "max": 360.8
+      },
+      "actions": "ALLOW 10, BLOCK 26, MASK 22"
+    }
+  ],
+  "levels": [
+    {
+      "agents": 1,
+      "ready": 1,
+      "interactions": 4299,
+      "errors": 0,
+      "perSecond": 143.3,
+      "total": {
+        "n": 4299,
+        "p50": 6.6,
+        "p95": 9.5,
+        "max": 253.9
+      },
+      "logged": 4299,
+      "sameActions": true,
+      "divergences": 0,
+      "masks": 1629,
+      "escrows": 1629,
+      "queued": 0,
+      "chain": {
+        "events": 4299,
+        "breaks": 0
+      }
+    },
+    {
+      "agents": 5,
+      "ready": 5,
+      "interactions": 6638,
+      "errors": 0,
+      "perSecond": 221.3,
+      "total": {
+        "n": 6638,
+        "p50": 21,
+        "p95": 31.2,
+        "max": 497.5
+      },
+      "logged": 6638,
+      "sameActions": true,
+      "divergences": 0,
+      "masks": 2519,
+      "escrows": 2519,
+      "queued": 0,
+      "chain": {
+        "events": 6638,
+        "breaks": 0
+      }
+    },
+    {
+      "agents": 10,
+      "ready": 10,
+      "interactions": 3698,
+      "errors": 0,
+      "perSecond": 123.3,
+      "total": {
+        "n": 3698,
+        "p50": 70.6,
+        "p95": 103.1,
+        "max": 2175
+      },
+      "logged": 3698,
+      "sameActions": true,
+      "divergences": 0,
+      "masks": 1403,
+      "escrows": 1403,
+      "queued": 0,
+      "chain": {
+        "events": 3698,
+        "breaks": 0
+      }
+    },
+    {
+      "agents": 20,
+      "ready": 20,
+      "interactions": 3292,
+      "errors": 0,
+      "perSecond": 109.7,
+      "total": {
+        "n": 3292,
+        "p50": 155.6,
+        "p95": 216.8,
+        "max": 4587.9
+      },
+      "logged": 3292,
+      "sameActions": true,
+      "divergences": 0,
+      "masks": 1265,
+      "escrows": 1265,
+      "queued": 0,
+      "chain": {
+        "events": 3292,
+        "breaks": 0
+      }
+    }
+  ]
+}
