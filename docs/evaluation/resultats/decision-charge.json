@@ -1,0 +1,134 @@
+{
+  "e2e": {
+    "engine": "moteur complet (règles + NER + mots-clés)",
+    "enrollMs": 1957.7,
+    "interactions": 145,
+    "actions": {
+      "ALLOW": 25,
+      "BLOCK": 65,
+      "MASK": 55
+    },
+    "local": {
+      "n": 145,
+      "p50": 53,
+      "p95": 101,
+      "p99": 273,
+      "max": 376,
+      "mean": 61.2
+    },
+    "evaluate": {
+      "n": 145,
+      "p50": 20.9,
+      "p95": 35.9,
+      "p99": 111.2,
+      "max": 2809.9,
+      "mean": 42.2
+    },
+    "total": {
+      "n": 145,
+      "p50": 75.4,
+      "p95": 151.2,
+      "p99": 403.2,
+      "max": 2893.9,
+      "mean": 107.2
+    },
+    "queued": 0,
+    "eventsLogged": 145,
+    "sameActionsInOrder": true,
+    "divergences": 0,
+    "masks": 55,
+    "escrows": 55,
+    "chain": {
+      "events": 145,
+      "breaks": 0,
+      "forks": 0
+    }
+  },
+  "levels": [
+    {
+      "concurrency": 1,
+      "requests": 845,
+      "errors": 0,
+      "errorKinds": {},
+      "throughput": 42.2,
+      "latency": {
+        "n": 845,
+        "p50": 20.6,
+        "p95": 39.6,
+        "p99": 43.1,
+        "max": 72.6,
+        "mean": 23.7
+      }
+    },
+    {
+      "concurrency": 5,
+      "requests": 2595,
+      "errors": 0,
+      "errorKinds": {},
+      "throughput": 129.6,
+      "latency": {
+        "n": 2595,
+        "p50": 37.7,
+        "p95": 46.5,
+        "p99": 53.4,
+        "max": 457.1,
+        "mean": 38.6
+      }
+    },
+    {
+      "concurrency": 10,
+      "requests": 2630,
+      "errors": 0,
+      "errorKinds": {},
+      "throughput": 131.2,
+      "latency": {
+        "n": 2630,
+        "p50": 73.8,
+        "p95": 94.2,
+        "p99": 123.8,
+        "max": 494.2,
+        "mean": 76.1
+      }
+    },
+    {
+      "concurrency": 25,
+      "requests": 2590,
+      "errors": 0,
+      "errorKinds": {},
+      "throughput": 128.7,
+      "latency": {
+        "n": 2590,
+        "p50": 191.7,
+        "p95": 233.1,
+        "p99": 255.5,
+        "max": 349.4,
+        "mean": 193.7
+      }
+    },
+    {
+      "concurrency": 50,
+      "requests": 2598,
+      "errors": 0,
+      "errorKinds": {},
+      "throughput": 128.2,
+      "latency": {
+        "n": 2598,
+        "p50": 383.6,
+        "p95": 474.7,
+        "p99": 530.3,
+        "max": 577.8,
+        "mean": 387.8
+      }
+    }
+  ],
+  "loadEvents": {
+    "sent": 11258,
+    "logged": 11258
+  },
+  "chainAfterLoad": {
+    "events": 11258,
+    "breaks": 0,
+    "forks": 0
+  },
+  "durationS": 20
+}

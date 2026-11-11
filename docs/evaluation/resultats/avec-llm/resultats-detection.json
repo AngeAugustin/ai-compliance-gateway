@@ -1,0 +1,3825 @@
+{
+  "meta": {
+    "date": "2026-11-11",
+    "seed": 2026,
+    "repetitions": 1,
+    "node": "24.12.0",
+    "platform": "win32-x64",
+    "cpu": "Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz",
+    "durationMs": 1288708.9221,
+    "populationSize": 2000
+  },
+  "setup": {
+    "ner": {
+      "available": false,
+      "detail": "désactivé (--sans-ner)",
+      "initMs": 0
+    },
+    "llm": {
+      "available": true
+    }
+  },
+  "corpus": {
+    "samples": 385,
+    "bySplit": {
+      "manuel": 65,
+      "genere": 300,
+      "long": 20
+    },
+    "entities": 975,
+    "entitiesByType": {
+      "FINANCIAL_AMOUNT": 54,
+      "IBAN": 38,
+      "MOBILE_MONEY": 13,
+      "PERSON": 267,
+      "EMAIL": 27,
+      "API_KEY": 39,
+      "CNSS_INSURED_NUMBER": 38,
+      "PHONE": 27,
+      "JOB_TITLE": 44,
+      "SALARY": 36,
+      "DATE_OF_BIRTH": 43,
+      "ADDRESS": 55,
+      "NATIONAL_ID": 17,
+      "ORGANIZATION": 90,
+      "CREDIT_CARD": 18,
+      "CNSS_EMPLOYER_NUMBER": 16,
+      "TAX_ID": 14,
+      "INTERNAL_ID": 27,
+      "CONNECTION_STRING": 17,
+      "IP_ADDRESS": 15,
+      "INTERNAL_URL": 15,
+      "PASSWORD": 11,
+      "PRIVATE_KEY": 1,
+      "MEDICAL": 53
+    },
+    "negatives": 103,
+    "contexts": {
+      "Finance": 81,
+      "RH": 71,
+      "Technique": 63,
+      "Juridique": 43,
+      "Medical": 45,
+      "Generique": 62
+    },
+    "reidScenarios": 200
+  },
+  "systems": [
+    {
+      "id": "regles",
+      "label": "Règles seules",
+      "description": "Couche 1 (regex + validateurs), sortie brute",
+      "coverage": [
+        "API_KEY",
+        "CNSS_EMPLOYER_NUMBER",
+        "CNSS_INSURED_NUMBER",
+        "CONNECTION_STRING",
+        "CREDIT_CARD",
+        "DATE_OF_BIRTH",
+        "EMAIL",
+        "FINANCIAL_AMOUNT",
+        "IBAN",
+        "INTERNAL_ID",
+        "INTERNAL_URL",
+        "IP_ADDRESS",
+        "MEDICAL",
+        "MOBILE_MONEY",
+        "NATIONAL_ID",
+        "PASSWORD",
+        "PHONE",
+        "PRIVATE_KEY",
+        "SALARY",
+        "TAX_ID"
+      ],
+      "global": {
+        "strict": {
+          "counts": {
+            "tp": 484,
+            "fp": 30,
+            "fn": 491
+          },
+          "prf": {
+            "precision": 0.9416342412451362,
+            "recall": 0.49641025641025643,
+            "f1": 0.6501007387508395
+          },
+          "ci95": {
+            "low": 0.6232114467408585,
+            "high": 0.6737967914438503
+          }
+        },
+        "partiel": {
+          "counts": {
+            "tp": 496,
+            "fp": 18,
+            "fn": 479
+          },
+          "prf": {
+            "precision": 0.9649805447470817,
+            "recall": 0.5087179487179487,
+            "f1": 0.6662189388851579
+          },
+          "ci95": {
+            "low": 0.6377383300460224,
+            "high": 0.6897767332549941
+          }
+        },
+        "protection": {
+          "counts": {
+            "tp": 510,
+            "fp": 4,
+            "fn": 465
+          },
+          "prf": {
+            "precision": 0.9922178988326849,
+            "recall": 0.5230769230769231,
+            "f1": 0.6850235057085293
+          },
+          "ci95": {
+            "low": 0.6578366445916115,
+            "high": 0.7071380920613742
+          }
+        }
+      },
+      "bySplit": {
+        "manuel": {
+          "strict": {
+            "counts": {
+              "tp": 44,
+              "fp": 5,
+              "fn": 53
+            },
+            "prf": {
+              "precision": 0.8979591836734694,
+              "recall": 0.4536082474226804,
+              "f1": 0.6027397260273972
+            }
+          },
+          "partiel": {
+            "counts": {
+              "tp": 44,
+              "fp": 5,
+              "fn": 53
+            },
+            "prf": {
+              "precision": 0.8979591836734694,
+              "recall": 0.4536082474226804,
+              "f1": 0.6027397260273972
+            }
+          },
+          "protection": {
+            "counts": {
+              "tp": 45,
+              "fp": 4,
+              "fn": 52
+            },
+            "prf": {
+              "precision": 0.9183673469387755,
+              "recall": 0.4639175257731959,
+              "f1": 0.6164383561643836
+            }
+          }
+        },
+        "genere": {
+          "strict": {
+            "counts": {
+              "tp": 257,
+              "fp": 17,
+              "fn": 281
+            },
+            "prf": {
+              "precision": 0.9379562043795621,
+              "recall": 0.47769516728624534,
+              "f1": 0.6330049261083743
+            }
+          },
+          "partiel": {
+            "counts": {
+              "tp": 263,
+              "fp": 11,
+              "fn": 275
+            },
+            "prf": {
+              "precision": 0.9598540145985401,
+              "recall": 0.4888475836431227,
+              "f1": 0.6477832512315271
+            }
+          },
+          "protection": {
+            "counts": {
+              "tp": 274,
+              "fp": 0,
+              "fn": 264
+            },
+            "prf": {
+              "precision": 1,
+              "recall": 0.5092936802973977,
+              "f1": 0.6748768472906403
+            }
+          }
+        },
+        "long": {
+          "strict": {
+            "counts": {
+              "tp": 183,
+              "fp": 8,
+              "fn": 157
+            },
+            "prf": {
+              "precision": 0.9581151832460733,
+              "recall": 0.538235294117647,
+              "f1": 0.6892655367231639
+            }
+          },
+          "partiel": {
+            "counts": {
+              "tp": 189,
+              "fp": 2,
+              "fn": 151
+            },
+            "prf": {
+              "precision": 0.9895287958115183,
+              "recall": 0.5558823529411765,
+              "f1": 0.711864406779661
+            }
+          },
+          "protection": {
+            "counts": {
+              "tp": 191,
+              "fp": 0,
+              "fn": 149
+            },
+            "prf": {
+              "precision": 1,
+              "recall": 0.5617647058823529,
+              "f1": 0.71939736346516
+            }
+          }
+        }
+      },
+      "byType": [
+        {
+          "entityType": "PERSON",
+          "support": 267,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 267
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "ORGANIZATION",
+          "support": 90,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 90
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "ADDRESS",
+          "support": 55,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 55
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "FINANCIAL_AMOUNT",
+          "support": 54,
+          "counts": {
+            "tp": 52,
+            "fp": 2,
+            "fn": 2
+          },
+          "prf": {
+            "precision": 0.9629629629629629,
+            "recall": 0.9629629629629629,
+            "f1": 0.9629629629629629
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "MEDICAL",
+          "support": 53,
+          "counts": {
+            "tp": 49,
+            "fp": 0,
+            "fn": 4
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0.9245283018867925,
+            "f1": 0.9607843137254902
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "JOB_TITLE",
+          "support": 44,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 44
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "DATE_OF_BIRTH",
+          "support": 43,
+          "counts": {
+            "tp": 41,
+            "fp": 0,
+            "fn": 2
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0.9534883720930233,
+            "f1": 0.9761904761904763
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "API_KEY",
+          "support": 39,
+          "counts": {
+            "tp": 39,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "CNSS_INSURED_NUMBER",
+          "support": 38,
+          "counts": {
+            "tp": 38,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "IBAN",
+          "support": 38,
+          "counts": {
+            "tp": 38,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "SALARY",
+          "support": 36,
+          "counts": {
+            "tp": 36,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "EMAIL",
+          "support": 27,
+          "counts": {
+            "tp": 27,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "INTERNAL_ID",
+          "support": 27,
+          "counts": {
+            "tp": 27,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "PHONE",
+          "support": 27,
+          "counts": {
+            "tp": 27,
+            "fp": 1,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 0.9642857142857143,
+            "recall": 1,
+            "f1": 0.9818181818181818
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "CREDIT_CARD",
+          "support": 18,
+          "counts": {
+            "tp": 18,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "CONNECTION_STRING",
+          "support": 17,
+          "counts": {
+            "tp": 17,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "NATIONAL_ID",
+          "support": 17,
+          "counts": {
+            "tp": 16,
+            "fp": 14,
+            "fn": 1
+          },
+          "prf": {
+            "precision": 0.5333333333333333,
+            "recall": 0.9411764705882353,
+            "f1": 0.6808510638297872
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "CNSS_EMPLOYER_NUMBER",
+          "support": 16,
+          "counts": {
+            "tp": 16,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "INTERNAL_URL",
+          "support": 15,
+          "counts": {
+            "tp": 15,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "IP_ADDRESS",
+          "support": 15,
+          "counts": {
+            "tp": 15,
+            "fp": 1,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 0.9375,
+            "recall": 1,
+            "f1": 0.967741935483871
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "TAX_ID",
+          "support": 14,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 14
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "MOBILE_MONEY",
+          "support": 13,
+          "counts": {
+            "tp": 13,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "PASSWORD",
+          "support": 11,
+          "counts": {
+            "tp": 11,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "PRIVATE_KEY",
+          "support": 1,
+          "counts": {
+            "tp": 1,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        }
+      ],
+      "macroF1": 0.7720978722504487,
+      "perimetre": {
+        "counts": {
+          "tp": 496,
+          "fp": 18,
+          "fn": 23
+        },
+        "prf": {
+          "precision": 0.9649805447470817,
+          "recall": 0.9556840077071291,
+          "f1": 0.9603097773475315
+        }
+      },
+      "latency": {
+        "runs": 385,
+        "p50": 0.21489999999903375,
+        "p95": 1.099900000001071,
+        "p99": 2.5191000000013446,
+        "mean": 0.3720922077921493,
+        "max": 6.224599999997736,
+        "charsPerMs": 547.9370774595903,
+        "byLength": {
+          "court": {
+            "n": 364,
+            "p50": 0.2026000000005297,
+            "p95": 0.7453999999997905
+          },
+          "moyen": {
+            "n": 11,
+            "p50": 0.7392999999974563,
+            "p95": 2.118899999997666
+          },
+          "long": {
+            "n": 10,
+            "p50": 1.909799999997631,
+            "p95": 3.7954999999965366
+          }
+        }
+      },
+      "masking": {
+        "global": {
+          "total": 975,
+          "complet": 508,
+          "partiel": 2,
+          "aucun": 465
+        },
+        "byType": [
+          {
+            "entityType": "PERSON",
+            "line": {
+              "total": 267,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 267
+            }
+          },
+          {
+            "entityType": "ORGANIZATION",
+            "line": {
+              "total": 90,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 90
+            }
+          },
+          {
+            "entityType": "ADDRESS",
+            "line": {
+              "total": 55,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 55
+            }
+          },
+          {
+            "entityType": "FINANCIAL_AMOUNT",
+            "line": {
+              "total": 54,
+              "complet": 52,
+              "partiel": 0,
+              "aucun": 2
+            }
+          },
+          {
+            "entityType": "MEDICAL",
+            "line": {
+              "total": 53,
+              "complet": 47,
+              "partiel": 2,
+              "aucun": 4
+            }
+          },
+          {
+            "entityType": "JOB_TITLE",
+            "line": {
+              "total": 44,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 44
+            }
+          },
+          {
+            "entityType": "DATE_OF_BIRTH",
+            "line": {
+              "total": 43,
+              "complet": 41,
+              "partiel": 0,
+              "aucun": 2
+            }
+          },
+          {
+            "entityType": "API_KEY",
+            "line": {
+              "total": 39,
+              "complet": 39,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "IBAN",
+            "line": {
+              "total": 38,
+              "complet": 38,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "CNSS_INSURED_NUMBER",
+            "line": {
+              "total": 38,
+              "complet": 38,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "SALARY",
+            "line": {
+              "total": 36,
+              "complet": 36,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "EMAIL",
+            "line": {
+              "total": 27,
+              "complet": 27,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "PHONE",
+            "line": {
+              "total": 27,
+              "complet": 27,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "INTERNAL_ID",
+            "line": {
+              "total": 27,
+              "complet": 27,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "CREDIT_CARD",
+            "line": {
+              "total": 18,
+              "complet": 18,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "NATIONAL_ID",
+            "line": {
+              "total": 17,
+              "complet": 16,
+              "partiel": 0,
+              "aucun": 1
+            }
+          },
+          {
+            "entityType": "CONNECTION_STRING",
+            "line": {
+              "total": 17,
+              "complet": 17,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "CNSS_EMPLOYER_NUMBER",
+            "line": {
+              "total": 16,
+              "complet": 16,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "IP_ADDRESS",
+            "line": {
+              "total": 15,
+              "complet": 15,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "INTERNAL_URL",
+            "line": {
+              "total": 15,
+              "complet": 15,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "TAX_ID",
+            "line": {
+              "total": 14,
+              "complet": 14,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "MOBILE_MONEY",
+            "line": {
+              "total": 13,
+              "complet": 13,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "PASSWORD",
+            "line": {
+              "total": 11,
+              "complet": 11,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "PRIVATE_KEY",
+            "line": {
+              "total": 1,
+              "complet": 1,
+              "partiel": 0,
+              "aucun": 0
+            }
+          }
+        ]
+      },
+      "missed": [
+        {
+          "sample": "man-003",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Jean Dupont",
+          "excerpt": "Voici le CV de Jean Dupont, jean.dupont@cnss.bj, candida…"
+        },
+        {
+          "sample": "man-006",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Rosine Akakpo",
+          "excerpt": "…crire un mail pour annoncer à Rosine Akakpo qu'elle n'a pas été retenue ?…"
+        },
+        {
+          "sample": "man-007",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "KOSSI HOUNKANRIN",
+          "excerpt": "Fiche de paie de KOSSI HOUNKANRIN — magasinier — salaire de bas…"
+        },
+        {
+          "sample": "man-007",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "magasinier",
+          "excerpt": "…de paie de KOSSI HOUNKANRIN — magasinier — salaire de base 185 000 F, …"
+        },
+        {
+          "sample": "man-008",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "mathias zinsou",
+          "excerpt": "…ards répétés à l'attention de mathias zinsou (chauffeur), sans être trop d…"
+        },
+        {
+          "sample": "man-008",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "chauffeur",
+          "excerpt": "…'attention de mathias zinsou (chauffeur), sans être trop dur stp"
+        },
+        {
+          "sample": "man-009",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Aïcha Yessoufou",
+          "excerpt": "Liste des agents à former : Aïcha Yessoufou, Romuald Gbaguidi et Sidonie …"
+        },
+        {
+          "sample": "man-009",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Romuald Gbaguidi",
+          "excerpt": "…s à former : Aïcha Yessoufou, Romuald Gbaguidi et Sidonie Tossou. Prévoir le…"
+        },
+        {
+          "sample": "man-009",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Sidonie Tossou",
+          "excerpt": "…essoufou, Romuald Gbaguidi et Sidonie Tossou. Prévoir le déjeuner pour 3 p…"
+        },
+        {
+          "sample": "man-011",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Grâce Dossou",
+          "excerpt": "… confirmons l'embauche de Mme Grâce Dossou, née le 7 juillet 1994, domic…"
+        },
+        {
+          "sample": "man-011",
+          "split": "manuel",
+          "entityType": "ADDRESS",
+          "value": "Fidjrossè",
+          "excerpt": "… 7 juillet 1994, domiciliée à Fidjrossè, en qualité de secrétaire de …"
+        },
+        {
+          "sample": "man-011",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "secrétaire de direction",
+          "excerpt": "…ée à Fidjrossè, en qualité de secrétaire de direction. »"
+        },
+        {
+          "sample": "man-013",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Codjo Sossa",
+          "excerpt": "…our le dossier retraite de M. Codjo Sossa (NPI 1093456728), il manque l…"
+        },
+        {
+          "sample": "man-013",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "Imprimerie du Zou",
+          "excerpt": "…station de l'ancien employeur Imprimerie du Zou. Rédige la relance."
+        },
+        {
+          "sample": "man-014",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Hermann Lokossou",
+          "excerpt": "…you translate into English: « Hermann Lokossou a été promu contrôleur de ges…"
+        },
+        {
+          "sample": "man-014",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "contrôleur de gestion",
+          "excerpt": "… Hermann Lokossou a été promu contrôleur de gestion à compter du 1er janvier. »"
+        },
+        {
+          "sample": "man-017",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Félicité Agbo",
+          "excerpt": "…r le Moov Money 0195873412 de Félicité Agbo et prépare le SMS de confirma…"
+        },
+        {
+          "sample": "man-019",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "Boulangerie La Lagune",
+          "excerpt": "…n échéancier pour l'employeur Boulangerie La Lagune, dette de 1.250.000 FCFA, en …"
+        },
+        {
+          "sample": "man-022",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "Transports Alafia",
+          "excerpt": "Société Transports Alafia, IFU 3201912345678 : rédige l…"
+        },
+        {
+          "sample": "man-022",
+          "split": "manuel",
+          "entityType": "TAX_ID",
+          "value": "3201912345678",
+          "excerpt": "…ociété Transports Alafia, IFU 3201912345678 : rédige l'attestation de rég…"
+        },
+        {
+          "sample": "man-023",
+          "split": "manuel",
+          "entityType": "FINANCIAL_AMOUNT",
+          "value": "15000",
+          "excerpt": "envoie 15000F a +229 01 51 22 33 44 sur MT…"
+        },
+        {
+          "sample": "man-024",
+          "split": "manuel",
+          "entityType": "FINANCIAL_AMOUNT",
+          "value": "275 000",
+          "excerpt": "Le virement de 275 000 € a été reçu le 3 octobre, me…"
+        },
+        {
+          "sample": "man-026",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "Groupe Atlantique Services",
+          "excerpt": "… l'affaire opposant la CNSS à Groupe Atlantique Services devant le tribunal de commerc…"
+        },
+        {
+          "sample": "man-026",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Clarisse Tchibozo",
+          "excerpt": "… Cotonou. Notre avocat est Me Clarisse Tchibozo."
+        },
+        {
+          "sample": "man-028",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Hortense Assogba",
+          "excerpt": "Mme Hortense Assogba conteste le refus de sa pensi…"
+        }
+      ],
+      "spurious": [
+        {
+          "sample": "man-020",
+          "split": "manuel",
+          "entityType": "FINANCIAL_AMOUNT",
+          "value": "500 000",
+          "excerpt": "…ale, exemples pour 100 000 et 500 000 FCFA."
+        },
+        {
+          "sample": "man-022",
+          "split": "manuel",
+          "entityType": "NATIONAL_ID",
+          "value": "3201912345678",
+          "excerpt": "…ociété Transports Alafia, IFU 3201912345678 : rédige l'attestation de rég…"
+        },
+        {
+          "sample": "man-034",
+          "split": "manuel",
+          "entityType": "IP_ADDRESS",
+          "value": "8.8.8.8",
+          "excerpt": "… IPv6 avec des exemples comme 8.8.8.8."
+        },
+        {
+          "sample": "man-058",
+          "split": "manuel",
+          "entityType": "FINANCIAL_AMOUNT",
+          "value": "52 000",
+          "excerpt": "…septembre 2023 fixe le SMIG à 52 000 FCFA. Explique son impact."
+        },
+        {
+          "sample": "man-060",
+          "split": "manuel",
+          "entityType": "PHONE",
+          "value": "4111 2233",
+          "excerpt": "…usé, et le numéro de commande 4111 2233 n'apparaît pas. Que faire ?"
+        },
+        {
+          "sample": "gen-020",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "3744748326841",
+          "excerpt": "…ciété Société Ouémé Agro, IFU 3744748326841, virement vers BJ67 BE88 0450…"
+        },
+        {
+          "sample": "gen-129",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1355227568084",
+          "excerpt": "…été Collège Les Lauriers, IFU 1355227568084, virement vers BJ92BE71737077…"
+        },
+        {
+          "sample": "gen-140",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1056795755318",
+          "excerpt": "…té Savonnerie de l'Ouémé, IFU 1056795755318, virement vers BJ17BJ58649604…"
+        },
+        {
+          "sample": "gen-162",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1951546735664",
+          "excerpt": "…été Collège Les Lauriers, IFU 1951546735664, virement vers BJ53BE45057863…"
+        },
+        {
+          "sample": "gen-208",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1678399941790",
+          "excerpt": "…ociété Imprimerie du Zou, IFU 1678399941790, virement vers BJ64BE61054783…"
+        },
+        {
+          "sample": "gen-222",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "3859901067286",
+          "excerpt": "…été Collège Les Lauriers, IFU 3859901067286, virement vers BJ72 CB40 9965…"
+        },
+        {
+          "sample": "gen-265",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1988349248332",
+          "excerpt": "…ociété Transports Alafia, IFU 1988349248332, virement vers BJ52 OB05 1407…"
+        },
+        {
+          "sample": "gen-267",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1456870266338",
+          "excerpt": "…ciété Hôtel Le Belvédère, IFU 1456870266338, virement vers BJ45EC27346898…"
+        },
+        {
+          "sample": "gen-275",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "3586345617741",
+          "excerpt": "…té BTP Mono Construction, IFU 3586345617741, virement vers BJ59 EC43 5921…"
+        },
+        {
+          "sample": "gen-292",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "3980322183985",
+          "excerpt": "…ciété Société Ouémé Agro, IFU 3980322183985, virement vers BJ47OB23934048…"
+        },
+        {
+          "sample": "gen-298",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1459335215563",
+          "excerpt": "…té Clinique Les Palmiers, IFU 1459335215563, virement vers BJ06 EC27 4680…"
+        },
+        {
+          "sample": "long-04",
+          "split": "long",
+          "entityType": "NATIONAL_ID",
+          "value": "3761088055690",
+          "excerpt": "…té Savonnerie de l'Ouémé, IFU 3761088055690, virement vers BJ81CB94807803…"
+        },
+        {
+          "sample": "long-13",
+          "split": "long",
+          "entityType": "NATIONAL_ID",
+          "value": "1773237240861",
+          "excerpt": "…ciété Société Ouémé Agro, IFU 1773237240861, virement vers BJ40OB43841459…"
+        }
+      ]
+    },
+    {
+      "id": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "description": "Règles + mots-clés + réglages (seuils, contexte) — mode dégradé",
+      "coverage": [
+        "API_KEY",
+        "CNSS_EMPLOYER_NUMBER",
+        "CNSS_INSURED_NUMBER",
+        "CONNECTION_STRING",
+        "CREDIT_CARD",
+        "DATE_OF_BIRTH",
+        "EMAIL",
+        "FINANCIAL_AMOUNT",
+        "IBAN",
+        "INTERNAL_ID",
+        "INTERNAL_URL",
+        "IP_ADDRESS",
+        "MEDICAL",
+        "MOBILE_MONEY",
+        "NATIONAL_ID",
+        "PASSWORD",
+        "PHONE",
+        "PRIVATE_KEY",
+        "SALARY",
+        "TAX_ID"
+      ],
+      "global": {
+        "strict": {
+          "counts": {
+            "tp": 484,
+            "fp": 30,
+            "fn": 491
+          },
+          "prf": {
+            "precision": 0.9416342412451362,
+            "recall": 0.49641025641025643,
+            "f1": 0.6501007387508395
+          },
+          "ci95": {
+            "low": 0.6232114467408585,
+            "high": 0.6737967914438503
+          }
+        },
+        "partiel": {
+          "counts": {
+            "tp": 496,
+            "fp": 18,
+            "fn": 479
+          },
+          "prf": {
+            "precision": 0.9649805447470817,
+            "recall": 0.5087179487179487,
+            "f1": 0.6662189388851579
+          },
+          "ci95": {
+            "low": 0.6377383300460224,
+            "high": 0.6897767332549941
+          }
+        },
+        "protection": {
+          "counts": {
+            "tp": 510,
+            "fp": 4,
+            "fn": 465
+          },
+          "prf": {
+            "precision": 0.9922178988326849,
+            "recall": 0.5230769230769231,
+            "f1": 0.6850235057085293
+          },
+          "ci95": {
+            "low": 0.6578366445916115,
+            "high": 0.7071380920613742
+          }
+        }
+      },
+      "bySplit": {
+        "manuel": {
+          "strict": {
+            "counts": {
+              "tp": 44,
+              "fp": 5,
+              "fn": 53
+            },
+            "prf": {
+              "precision": 0.8979591836734694,
+              "recall": 0.4536082474226804,
+              "f1": 0.6027397260273972
+            }
+          },
+          "partiel": {
+            "counts": {
+              "tp": 44,
+              "fp": 5,
+              "fn": 53
+            },
+            "prf": {
+              "precision": 0.8979591836734694,
+              "recall": 0.4536082474226804,
+              "f1": 0.6027397260273972
+            }
+          },
+          "protection": {
+            "counts": {
+              "tp": 45,
+              "fp": 4,
+              "fn": 52
+            },
+            "prf": {
+              "precision": 0.9183673469387755,
+              "recall": 0.4639175257731959,
+              "f1": 0.6164383561643836
+            }
+          }
+        },
+        "genere": {
+          "strict": {
+            "counts": {
+              "tp": 257,
+              "fp": 17,
+              "fn": 281
+            },
+            "prf": {
+              "precision": 0.9379562043795621,
+              "recall": 0.47769516728624534,
+              "f1": 0.6330049261083743
+            }
+          },
+          "partiel": {
+            "counts": {
+              "tp": 263,
+              "fp": 11,
+              "fn": 275
+            },
+            "prf": {
+              "precision": 0.9598540145985401,
+              "recall": 0.4888475836431227,
+              "f1": 0.6477832512315271
+            }
+          },
+          "protection": {
+            "counts": {
+              "tp": 274,
+              "fp": 0,
+              "fn": 264
+            },
+            "prf": {
+              "precision": 1,
+              "recall": 0.5092936802973977,
+              "f1": 0.6748768472906403
+            }
+          }
+        },
+        "long": {
+          "strict": {
+            "counts": {
+              "tp": 183,
+              "fp": 8,
+              "fn": 157
+            },
+            "prf": {
+              "precision": 0.9581151832460733,
+              "recall": 0.538235294117647,
+              "f1": 0.6892655367231639
+            }
+          },
+          "partiel": {
+            "counts": {
+              "tp": 189,
+              "fp": 2,
+              "fn": 151
+            },
+            "prf": {
+              "precision": 0.9895287958115183,
+              "recall": 0.5558823529411765,
+              "f1": 0.711864406779661
+            }
+          },
+          "protection": {
+            "counts": {
+              "tp": 191,
+              "fp": 0,
+              "fn": 149
+            },
+            "prf": {
+              "precision": 1,
+              "recall": 0.5617647058823529,
+              "f1": 0.71939736346516
+            }
+          }
+        }
+      },
+      "byType": [
+        {
+          "entityType": "PERSON",
+          "support": 267,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 267
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "ORGANIZATION",
+          "support": 90,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 90
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "ADDRESS",
+          "support": 55,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 55
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "FINANCIAL_AMOUNT",
+          "support": 54,
+          "counts": {
+            "tp": 52,
+            "fp": 2,
+            "fn": 2
+          },
+          "prf": {
+            "precision": 0.9629629629629629,
+            "recall": 0.9629629629629629,
+            "f1": 0.9629629629629629
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "MEDICAL",
+          "support": 53,
+          "counts": {
+            "tp": 49,
+            "fp": 0,
+            "fn": 4
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0.9245283018867925,
+            "f1": 0.9607843137254902
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "JOB_TITLE",
+          "support": 44,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 44
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": false
+        },
+        {
+          "entityType": "DATE_OF_BIRTH",
+          "support": 43,
+          "counts": {
+            "tp": 41,
+            "fp": 0,
+            "fn": 2
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0.9534883720930233,
+            "f1": 0.9761904761904763
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "API_KEY",
+          "support": 39,
+          "counts": {
+            "tp": 39,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "CNSS_INSURED_NUMBER",
+          "support": 38,
+          "counts": {
+            "tp": 38,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "IBAN",
+          "support": 38,
+          "counts": {
+            "tp": 38,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "SALARY",
+          "support": 36,
+          "counts": {
+            "tp": 36,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "EMAIL",
+          "support": 27,
+          "counts": {
+            "tp": 27,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "INTERNAL_ID",
+          "support": 27,
+          "counts": {
+            "tp": 27,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "PHONE",
+          "support": 27,
+          "counts": {
+            "tp": 27,
+            "fp": 1,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 0.9642857142857143,
+            "recall": 1,
+            "f1": 0.9818181818181818
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "CREDIT_CARD",
+          "support": 18,
+          "counts": {
+            "tp": 18,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "CONNECTION_STRING",
+          "support": 17,
+          "counts": {
+            "tp": 17,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "NATIONAL_ID",
+          "support": 17,
+          "counts": {
+            "tp": 16,
+            "fp": 14,
+            "fn": 1
+          },
+          "prf": {
+            "precision": 0.5333333333333333,
+            "recall": 0.9411764705882353,
+            "f1": 0.6808510638297872
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "CNSS_EMPLOYER_NUMBER",
+          "support": 16,
+          "counts": {
+            "tp": 16,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "INTERNAL_URL",
+          "support": 15,
+          "counts": {
+            "tp": 15,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "IP_ADDRESS",
+          "support": 15,
+          "counts": {
+            "tp": 15,
+            "fp": 1,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 0.9375,
+            "recall": 1,
+            "f1": 0.967741935483871
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "TAX_ID",
+          "support": 14,
+          "counts": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 14
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 0,
+            "f1": 0
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "MOBILE_MONEY",
+          "support": 13,
+          "counts": {
+            "tp": 13,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "PASSWORD",
+          "support": 11,
+          "counts": {
+            "tp": 11,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        },
+        {
+          "entityType": "PRIVATE_KEY",
+          "support": 1,
+          "counts": {
+            "tp": 1,
+            "fp": 0,
+            "fn": 0
+          },
+          "prf": {
+            "precision": 1,
+            "recall": 1,
+            "f1": 1
+          },
+          "inCoverage": true
+        }
+      ],
+      "macroF1": 0.7720978722504487,
+      "perimetre": {
+        "counts": {
+          "tp": 496,
+          "fp": 18,
+          "fn": 23
+        },
+        "prf": {
+          "precision": 0.9649805447470817,
+          "recall": 0.9556840077071291,
+          "f1": 0.9603097773475315
+        }
+      },
+      "latency": {
+        "runs": 385,
+        "p50": 0.2798000000002503,
+        "p95": 1.2393000000010943,
+        "p99": 4.1380000000026484,
+        "mean": 0.44707194805197614,
+        "max": 5.515999999999622,
+        "charsPerMs": 456.040952181177,
+        "byLength": {
+          "court": {
+            "n": 364,
+            "p50": 0.2712000000028638,
+            "p95": 0.7700999999979103
+          },
+          "moyen": {
+            "n": 11,
+            "p50": 1.1542999999983294,
+            "p95": 1.6401000000005297
+          },
+          "long": {
+            "n": 10,
+            "p50": 2.879800000002433,
+            "p95": 5.515999999999622
+          }
+        }
+      },
+      "masking": {
+        "global": {
+          "total": 975,
+          "complet": 508,
+          "partiel": 2,
+          "aucun": 465
+        },
+        "byType": [
+          {
+            "entityType": "PERSON",
+            "line": {
+              "total": 267,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 267
+            }
+          },
+          {
+            "entityType": "ORGANIZATION",
+            "line": {
+              "total": 90,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 90
+            }
+          },
+          {
+            "entityType": "ADDRESS",
+            "line": {
+              "total": 55,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 55
+            }
+          },
+          {
+            "entityType": "FINANCIAL_AMOUNT",
+            "line": {
+              "total": 54,
+              "complet": 52,
+              "partiel": 0,
+              "aucun": 2
+            }
+          },
+          {
+            "entityType": "MEDICAL",
+            "line": {
+              "total": 53,
+              "complet": 47,
+              "partiel": 2,
+              "aucun": 4
+            }
+          },
+          {
+            "entityType": "JOB_TITLE",
+            "line": {
+              "total": 44,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 44
+            }
+          },
+          {
+            "entityType": "DATE_OF_BIRTH",
+            "line": {
+              "total": 43,
+              "complet": 41,
+              "partiel": 0,
+              "aucun": 2
+            }
+          },
+          {
+            "entityType": "API_KEY",
+            "line": {
+              "total": 39,
+              "complet": 39,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "IBAN",
+            "line": {
+              "total": 38,
+              "complet": 38,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "CNSS_INSURED_NUMBER",
+            "line": {
+              "total": 38,
+              "complet": 38,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "SALARY",
+            "line": {
+              "total": 36,
+              "complet": 36,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "EMAIL",
+            "line": {
+              "total": 27,
+              "complet": 27,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "PHONE",
+            "line": {
+              "total": 27,
+              "complet": 27,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "INTERNAL_ID",
+            "line": {
+              "total": 27,
+              "complet": 27,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "CREDIT_CARD",
+            "line": {
+              "total": 18,
+              "complet": 18,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "NATIONAL_ID",
+            "line": {
+              "total": 17,
+              "complet": 16,
+              "partiel": 0,
+              "aucun": 1
+            }
+          },
+          {
+            "entityType": "CONNECTION_STRING",
+            "line": {
+              "total": 17,
+              "complet": 17,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "CNSS_EMPLOYER_NUMBER",
+            "line": {
+              "total": 16,
+              "complet": 16,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "IP_ADDRESS",
+            "line": {
+              "total": 15,
+              "complet": 15,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "INTERNAL_URL",
+            "line": {
+              "total": 15,
+              "complet": 15,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "TAX_ID",
+            "line": {
+              "total": 14,
+              "complet": 14,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "MOBILE_MONEY",
+            "line": {
+              "total": 13,
+              "complet": 13,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "PASSWORD",
+            "line": {
+              "total": 11,
+              "complet": 11,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
+            "entityType": "PRIVATE_KEY",
+            "line": {
+              "total": 1,
+              "complet": 1,
+              "partiel": 0,
+              "aucun": 0
+            }
+          }
+        ]
+      },
+      "missed": [
+        {
+          "sample": "man-003",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Jean Dupont",
+          "excerpt": "Voici le CV de Jean Dupont, jean.dupont@cnss.bj, candida…"
+        },
+        {
+          "sample": "man-006",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Rosine Akakpo",
+          "excerpt": "…crire un mail pour annoncer à Rosine Akakpo qu'elle n'a pas été retenue ?…"
+        },
+        {
+          "sample": "man-007",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "KOSSI HOUNKANRIN",
+          "excerpt": "Fiche de paie de KOSSI HOUNKANRIN — magasinier — salaire de bas…"
+        },
+        {
+          "sample": "man-007",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "magasinier",
+          "excerpt": "…de paie de KOSSI HOUNKANRIN — magasinier — salaire de base 185 000 F, …"
+        },
+        {
+          "sample": "man-008",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "mathias zinsou",
+          "excerpt": "…ards répétés à l'attention de mathias zinsou (chauffeur), sans être trop d…"
+        },
+        {
+          "sample": "man-008",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "chauffeur",
+          "excerpt": "…'attention de mathias zinsou (chauffeur), sans être trop dur stp"
+        },
+        {
+          "sample": "man-009",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Aïcha Yessoufou",
+          "excerpt": "Liste des agents à former : Aïcha Yessoufou, Romuald Gbaguidi et Sidonie …"
+        },
+        {
+          "sample": "man-009",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Romuald Gbaguidi",
+          "excerpt": "…s à former : Aïcha Yessoufou, Romuald Gbaguidi et Sidonie Tossou. Prévoir le…"
+        },
+        {
+          "sample": "man-009",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Sidonie Tossou",
+          "excerpt": "…essoufou, Romuald Gbaguidi et Sidonie Tossou. Prévoir le déjeuner pour 3 p…"
+        },
+        {
+          "sample": "man-011",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Grâce Dossou",
+          "excerpt": "… confirmons l'embauche de Mme Grâce Dossou, née le 7 juillet 1994, domic…"
+        },
+        {
+          "sample": "man-011",
+          "split": "manuel",
+          "entityType": "ADDRESS",
+          "value": "Fidjrossè",
+          "excerpt": "… 7 juillet 1994, domiciliée à Fidjrossè, en qualité de secrétaire de …"
+        },
+        {
+          "sample": "man-011",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "secrétaire de direction",
+          "excerpt": "…ée à Fidjrossè, en qualité de secrétaire de direction. »"
+        },
+        {
+          "sample": "man-013",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Codjo Sossa",
+          "excerpt": "…our le dossier retraite de M. Codjo Sossa (NPI 1093456728), il manque l…"
+        },
+        {
+          "sample": "man-013",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "Imprimerie du Zou",
+          "excerpt": "…station de l'ancien employeur Imprimerie du Zou. Rédige la relance."
+        },
+        {
+          "sample": "man-014",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Hermann Lokossou",
+          "excerpt": "…you translate into English: « Hermann Lokossou a été promu contrôleur de ges…"
+        },
+        {
+          "sample": "man-014",
+          "split": "manuel",
+          "entityType": "JOB_TITLE",
+          "value": "contrôleur de gestion",
+          "excerpt": "… Hermann Lokossou a été promu contrôleur de gestion à compter du 1er janvier. »"
+        },
+        {
+          "sample": "man-017",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Félicité Agbo",
+          "excerpt": "…r le Moov Money 0195873412 de Félicité Agbo et prépare le SMS de confirma…"
+        },
+        {
+          "sample": "man-019",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "Boulangerie La Lagune",
+          "excerpt": "…n échéancier pour l'employeur Boulangerie La Lagune, dette de 1.250.000 FCFA, en …"
+        },
+        {
+          "sample": "man-022",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "Transports Alafia",
+          "excerpt": "Société Transports Alafia, IFU 3201912345678 : rédige l…"
+        },
+        {
+          "sample": "man-022",
+          "split": "manuel",
+          "entityType": "TAX_ID",
+          "value": "3201912345678",
+          "excerpt": "…ociété Transports Alafia, IFU 3201912345678 : rédige l'attestation de rég…"
+        },
+        {
+          "sample": "man-023",
+          "split": "manuel",
+          "entityType": "FINANCIAL_AMOUNT",
+          "value": "15000",
+          "excerpt": "envoie 15000F a +229 01 51 22 33 44 sur MT…"
+        },
+        {
+          "sample": "man-024",
+          "split": "manuel",
+          "entityType": "FINANCIAL_AMOUNT",
+          "value": "275 000",
+          "excerpt": "Le virement de 275 000 € a été reçu le 3 octobre, me…"
+        },
+        {
+          "sample": "man-026",
+          "split": "manuel",
+          "entityType": "ORGANIZATION",
+          "value": "Groupe Atlantique Services",
+          "excerpt": "… l'affaire opposant la CNSS à Groupe Atlantique Services devant le tribunal de commerc…"
+        },
+        {
+          "sample": "man-026",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Clarisse Tchibozo",
+          "excerpt": "… Cotonou. Notre avocat est Me Clarisse Tchibozo."
+        },
+        {
+          "sample": "man-028",
+          "split": "manuel",
+          "entityType": "PERSON",
+          "value": "Hortense Assogba",
+          "excerpt": "Mme Hortense Assogba conteste le refus de sa pensi…"
+        }
+      ],
+      "spurious": [
+        {
+          "sample": "man-020",
+          "split": "manuel",
+          "entityType": "FINANCIAL_AMOUNT",
+          "value": "500 000",
+          "excerpt": "…ale, exemples pour 100 000 et 500 000 FCFA."
+        },
+        {
+          "sample": "man-022",
+          "split": "manuel",
+          "entityType": "NATIONAL_ID",
+          "value": "3201912345678",
+          "excerpt": "…ociété Transports Alafia, IFU 3201912345678 : rédige l'attestation de rég…"
+        },
+        {
+          "sample": "man-034",
+          "split": "manuel",
+          "entityType": "IP_ADDRESS",
+          "value": "8.8.8.8",
+          "excerpt": "… IPv6 avec des exemples comme 8.8.8.8."
+        },
+        {
+          "sample": "man-058",
+          "split": "manuel",
+          "entityType": "FINANCIAL_AMOUNT",
+          "value": "52 000",
+          "excerpt": "…septembre 2023 fixe le SMIG à 52 000 FCFA. Explique son impact."
+        },
+        {
+          "sample": "man-060",
+          "split": "manuel",
+          "entityType": "PHONE",
+          "value": "4111 2233",
+          "excerpt": "…usé, et le numéro de commande 4111 2233 n'apparaît pas. Que faire ?"
+        },
+        {
+          "sample": "gen-020",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "3744748326841",
+          "excerpt": "…ciété Société Ouémé Agro, IFU 3744748326841, virement vers BJ67 BE88 0450…"
+        },
+        {
+          "sample": "gen-129",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1355227568084",
+          "excerpt": "…été Collège Les Lauriers, IFU 1355227568084, virement vers BJ92BE71737077…"
+        },
+        {
+          "sample": "gen-140",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1056795755318",
+          "excerpt": "…té Savonnerie de l'Ouémé, IFU 1056795755318, virement vers BJ17BJ58649604…"
+        },
+        {
+          "sample": "gen-162",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1951546735664",
+          "excerpt": "…été Collège Les Lauriers, IFU 1951546735664, virement vers BJ53BE45057863…"
+        },
+        {
+          "sample": "gen-208",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1678399941790",
+          "excerpt": "…ociété Imprimerie du Zou, IFU 1678399941790, virement vers BJ64BE61054783…"
+        },
+        {
+          "sample": "gen-222",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "3859901067286",
+          "excerpt": "…été Collège Les Lauriers, IFU 3859901067286, virement vers BJ72 CB40 9965…"
+        },
+        {
+          "sample": "gen-265",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1988349248332",
+          "excerpt": "…ociété Transports Alafia, IFU 1988349248332, virement vers BJ52 OB05 1407…"
+        },
+        {
+          "sample": "gen-267",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1456870266338",
+          "excerpt": "…ciété Hôtel Le Belvédère, IFU 1456870266338, virement vers BJ45EC27346898…"
+        },
+        {
+          "sample": "gen-275",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "3586345617741",
+          "excerpt": "…té BTP Mono Construction, IFU 3586345617741, virement vers BJ59 EC43 5921…"
+        },
+        {
+          "sample": "gen-292",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "3980322183985",
+          "excerpt": "…ciété Société Ouémé Agro, IFU 3980322183985, virement vers BJ47OB23934048…"
+        },
+        {
+          "sample": "gen-298",
+          "split": "genere",
+          "entityType": "NATIONAL_ID",
+          "value": "1459335215563",
+          "excerpt": "…té Clinique Les Palmiers, IFU 1459335215563, virement vers BJ06 EC27 4680…"
+        },
+        {
+          "sample": "long-04",
+          "split": "long",
+          "entityType": "NATIONAL_ID",
+          "value": "3761088055690",
+          "excerpt": "…té Savonnerie de l'Ouémé, IFU 3761088055690, virement vers BJ81CB94807803…"
+        },
+        {
+          "sample": "long-13",
+          "split": "long",
+          "entityType": "NATIONAL_ID",
+          "value": "1773237240861",
+          "excerpt": "…ciété Société Ouémé Agro, IFU 1773237240861, virement vers BJ40OB43841459…"
+        }
+      ]
+    }
+  ],
+  "context": [
+    {
+      "id": "mots-cles",
+      "label": "Lexiques (couche 3, repli)",
+      "n": 365,
+      "accuracy": 0.9123287671232877,
+      "macroF1": 0.9124236877822898,
+      "confusion": {
+        "RH": {
+          "RH": 61,
+          "Finance": 1,
+          "Juridique": 0,
+          "Technique": 0,
+          "Medical": 0,
+          "Generique": 9
+        },
+        "Finance": {
+          "RH": 0,
+          "Finance": 79,
+          "Juridique": 0,
+          "Technique": 0,
+          "Medical": 0,
+          "Generique": 2
+        },
+        "Juridique": {
+          "RH": 0,
+          "Finance": 0,
+          "Juridique": 40,
+          "Technique": 0,
+          "Medical": 1,
+          "Generique": 2
+        },
+        "Technique": {
+          "RH": 0,
+          "Finance": 1,
+          "Juridique": 0,
+          "Technique": 56,
+          "Medical": 1,
+          "Generique": 5
+        },
+        "Medical": {
+          "RH": 0,
+          "Finance": 0,
+          "Juridique": 0,
+          "Technique": 0,
+          "Medical": 42,
+          "Generique": 3
+        },
+        "Generique": {
+          "RH": 0,
+          "Finance": 1,
+          "Juridique": 6,
+          "Technique": 0,
+          "Medical": 0,
+          "Generique": 55
+        }
+      },
+      "bySplit": {
+        "manuel": {
+          "n": 65,
+          "correct": 40
+        },
+        "genere": {
+          "n": 300,
+          "correct": 293
+        }
+      }
+    },
+    {
+      "id": "llm",
+      "label": "LLM local (couche 3)",
+      "n": 365,
+      "accuracy": 0.5753424657534246,
+      "macroF1": 0.5502240762522411,
+      "confusion": {
+        "RH": {
+          "RH": 52,
+          "Finance": 2,
+          "Juridique": 15,
+          "Technique": 1,
+          "Medical": 0,
+          "Generique": 1
+        },
+        "Finance": {
+          "RH": 16,
+          "Finance": 65,
+          "Juridique": 0,
+          "Technique": 0,
+          "Medical": 0,
+          "Generique": 0
+        },
+        "Juridique": {
+          "RH": 0,
+          "Finance": 0,
+          "Juridique": 43,
+          "Technique": 0,
+          "Medical": 0,
+          "Generique": 0
+        },
+        "Technique": {
+          "RH": 18,
+          "Finance": 13,
+          "Juridique": 2,
+          "Technique": 30,
+          "Medical": 0,
+          "Generique": 0
+        },
+        "Medical": {
+          "RH": 29,
+          "Finance": 0,
+          "Juridique": 3,
+          "Technique": 0,
+          "Medical": 13,
+          "Generique": 0
+        },
+        "Generique": {
+          "RH": 48,
+          "Finance": 1,
+          "Juridique": 6,
+          "Technique": 0,
+          "Medical": 0,
+          "Generique": 7
+        }
+      },
+      "bySplit": {
+        "manuel": {
+          "n": 65,
+          "correct": 48
+        },
+        "genere": {
+          "n": 300,
+          "correct": 162
+        }
+      }
+    }
+  ],
+  "reidentification": [
+    {
+      "system": "aucun",
+      "label": "Sans passerelle (texte en clair)",
+      "byVariant": {
+        "direct": {
+          "n": 50,
+          "reidentified": 50,
+          "kLe5": 50,
+          "medianK": 1
+        },
+        "quasi-identifiants": {
+          "n": 50,
+          "reidentified": 50,
+          "kLe5": 50,
+          "medianK": 1
+        },
+        "identifiants": {
+          "n": 50,
+          "reidentified": 50,
+          "kLe5": 50,
+          "medianK": 1
+        },
+        "contact": {
+          "n": 50,
+          "reidentified": 49,
+          "kLe5": 50,
+          "medianK": 1
+        }
+      },
+      "global": {
+        "n": 200,
+        "reidentified": 199,
+        "kLe5": 200,
+        "medianK": 1
+      }
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "byVariant": {
+        "direct": {
+          "n": 50,
+          "reidentified": 50,
+          "kLe5": 50,
+          "medianK": 1
+        },
+        "quasi-identifiants": {
+          "n": 50,
+          "reidentified": 33,
+          "kLe5": 50,
+          "medianK": 1
+        },
+        "identifiants": {
+          "n": 50,
+          "reidentified": 0,
+          "kLe5": 0,
+          "medianK": 1020
+        },
+        "contact": {
+          "n": 50,
+          "reidentified": 45,
+          "kLe5": 50,
+          "medianK": 1
+        }
+      },
+      "global": {
+        "n": 200,
+        "reidentified": 128,
+        "kLe5": 150,
+        "medianK": 1
+      }
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "byVariant": {
+        "direct": {
+          "n": 50,
+          "reidentified": 50,
+          "kLe5": 50,
+          "medianK": 1
+        },
+        "quasi-identifiants": {
+          "n": 50,
+          "reidentified": 33,
+          "kLe5": 50,
+          "medianK": 1
+        },
+        "identifiants": {
+          "n": 50,
+          "reidentified": 0,
+          "kLe5": 0,
+          "medianK": 1020
+        },
+        "contact": {
+          "n": 50,
+          "reidentified": 45,
+          "kLe5": 50,
+          "medianK": 1
+        }
+      },
+      "global": {
+        "n": 200,
+        "reidentified": 128,
+        "kLe5": 150,
+        "medianK": 1
+      }
+    }
+  ],
+  "riskResponse": [
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "variant": "facteur-actif",
+      "byExposure": {
+        "reidentifiable": {
+          "n": 199,
+          "meanScore": 40.8,
+          "meanQiFactor": 0,
+          "bands": {
+            "low": 0,
+            "moderate": 149,
+            "high": 50,
+            "critical": 0
+          },
+          "actions": {
+            "ALLOW": 100,
+            "WARN": 0,
+            "MASK": 99,
+            "BLOCK": 0
+          },
+          "reidentifiedAfter": 145,
+          "passedInClear": 100
+        },
+        "k2-5": {
+          "n": 6,
+          "meanScore": 20.8,
+          "meanQiFactor": 0,
+          "bands": {
+            "low": 5,
+            "moderate": 1,
+            "high": 0,
+            "critical": 0
+          },
+          "actions": {
+            "ALLOW": 5,
+            "WARN": 0,
+            "MASK": 1,
+            "BLOCK": 0
+          },
+          "reidentifiedAfter": 0,
+          "passedInClear": 5
+        },
+        "anonyme": {
+          "n": 95,
+          "meanScore": 17,
+          "meanQiFactor": 0,
+          "bands": {
+            "low": 95,
+            "moderate": 0,
+            "high": 0,
+            "critical": 0
+          },
+          "actions": {
+            "ALLOW": 95,
+            "WARN": 0,
+            "MASK": 0,
+            "BLOCK": 0
+          },
+          "reidentifiedAfter": 0,
+          "passedInClear": 95
+        }
+      },
+      "byVariant": {
+        "direct": {
+          "n": 50,
+          "meanScore": 36,
+          "reidentifiedAfter": 50,
+          "actions": {
+            "ALLOW": 50,
+            "WARN": 0,
+            "MASK": 0,
+            "BLOCK": 0
+          }
+        },
+        "quasi-identifiants": {
+          "n": 50,
+          "meanScore": 36,
+          "reidentifiedAfter": 50,
+          "actions": {
+            "ALLOW": 50,
+            "WARN": 0,
+            "MASK": 0,
+            "BLOCK": 0
+          }
+        },
+        "identifiants": {
+          "n": 50,
+          "meanScore": 51,
+          "reidentifiedAfter": 0,
+          "actions": {
+            "ALLOW": 0,
+            "WARN": 0,
+            "MASK": 50,
+            "BLOCK": 0
+          }
+        },
+        "contact": {
+          "n": 50,
+          "meanScore": 40,
+          "reidentifiedAfter": 45,
+          "actions": {
+            "ALLOW": 0,
+            "WARN": 0,
+            "MASK": 50,
+            "BLOCK": 0
+          }
+        },
+        "temoin-commune": {
+          "n": 50,
+          "meanScore": 17,
+          "reidentifiedAfter": 0,
+          "actions": {
+            "ALLOW": 50,
+            "WARN": 0,
+            "MASK": 0,
+            "BLOCK": 0
+          }
+        },
+        "temoin-fonction": {
+          "n": 50,
+          "meanScore": 17,
+          "reidentifiedAfter": 0,
+          "actions": {
+            "ALLOW": 50,
+            "WARN": 0,
+            "MASK": 0,
+            "BLOCK": 0
+          }
+        }
+      }
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "variant": "facteur-neutralise",
+      "byExposure": {
+        "reidentifiable": {
+          "n": 199,
+          "meanScore": 54.8,
+          "meanQiFactor": 0,
+          "bands": {
+            "low": 0,
+            "moderate": 100,
+            "high": 99,
+            "critical": 0
+          },
+          "actions": {
+            "ALLOW": 100,
+            "WARN": 0,
+            "MASK": 99,
+            "BLOCK": 0
+          },
+          "reidentifiedAfter": 145,
+          "passedInClear": 100
+        },
+        "k2-5": {
+          "n": 6,
+          "meanScore": 27.2,
+          "meanQiFactor": 0,
+          "bands": {
+            "low": 5,
+            "moderate": 0,
+            "high": 1,
+            "critical": 0
+          },
+          "actions": {
+            "ALLOW": 5,
+            "WARN": 0,
+            "MASK": 1,
+            "BLOCK": 0
+          },
+          "reidentifiedAfter": 0,
+          "passedInClear": 5
+        },
+        "anonyme": {
+          "n": 95,
+          "meanScore": 22,
+          "meanQiFactor": 0,
+          "bands": {
+            "low": 95,
+            "moderate": 0,
+            "high": 0,
+            "critical": 0
+          },
+          "actions": {
+            "ALLOW": 95,
+            "WARN": 0,
+            "MASK": 0,
+            "BLOCK": 0
+          },
+          "reidentifiedAfter": 0,
+          "passedInClear": 95
+        }
+      },
+      "byVariant": {
+        "direct": {
+          "n": 50,
+          "meanScore": 49,
+          "reidentifiedAfter": 50,
+          "actions": {
+            "ALLOW": 50,
+            "WARN": 0,
+            "MASK": 0,
+            "BLOCK": 0
+          }
+        },
+        "quasi-identifiants": {
+          "n": 50,
+          "meanScore": 49,
+          "reidentifiedAfter": 50,
+          "actions": {
+            "ALLOW": 50,
+            "WARN": 0,
+            "MASK": 0,
+            "BLOCK": 0
+          }
+        },
+        "identifiants": {
+          "n": 50,
+          "meanScore": 68,
+          "reidentifiedAfter": 0,
+          "actions": {
+            "ALLOW": 0,
+            "WARN": 0,
+            "MASK": 50,
+            "BLOCK": 0
+          }
+        },
+        "contact": {
+          "n": 50,
+          "meanScore": 53,
+          "reidentifiedAfter": 45,
+          "actions": {
+            "ALLOW": 0,
+            "WARN": 0,
+            "MASK": 50,
+            "BLOCK": 0
+          }
+        },
+        "temoin-commune": {
+          "n": 50,
+          "meanScore": 22,
+          "reidentifiedAfter": 0,
+          "actions": {
+            "ALLOW": 50,
+            "WARN": 0,
+            "MASK": 0,
+            "BLOCK": 0
+          }
+        },
+        "temoin-fonction": {
+          "n": 50,
+          "meanScore": 22,
+          "reidentifiedAfter": 0,
+          "actions": {
+            "ALLOW": 50,
+            "WARN": 0,
+            "MASK": 0,
+            "BLOCK": 0
+          }
+        }
+      }
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "variant": "facteur-actif",
+      "byExposure": {
+        "reidentifiable": {
+          "n": 199,
+          "meanScore": 42,
+          "meanQiFactor": 0,
+          "bands": {
+            "low": 0,
+            "moderate": 149,
+            "high": 50,
+            "critical": 0
+          },
+          "actions": {
+            "ALLOW": 100,
+            "WARN": 0,
+            "MASK": 99,
+            "BLOCK": 0
+          },
+          "reidentifiedAfter": 145,
+          "passedInClear": 100
+        },
+        "k2-5": {
+          "n": 6,
+          "meanScore": 20.8,
+          "meanQiFactor": 0,
+          "bands": {
+            "low": 5,
+            "moderate": 1,
+            "high": 0,
+            "critical": 0
+          },
+          "actions": {
+            "ALLOW": 5,
+            "WARN": 0,
+            "MASK": 1,
+            "BLOCK": 0
+          },
+          "reidentifiedAfter": 0,
+          "passedInClear": 5
+        },
+        "anonyme": {
+          "n": 95,
+          "meanScore": 17,
+          "meanQiFactor": 0,
+          "bands": {
+            "low": 95,
+            "moderate": 0,
+            "high": 0,
+            "critical": 0
+          },
+          "actions": {
+            "ALLOW": 95,
+            "WARN": 0,
+            "MASK": 0,
+            "BLOCK": 0
+          },
+          "reidentifiedAfter": 0,
+          "passedInClear": 95
+        }
+      },
+      "byVariant": {
+        "direct": {
+          "n": 50,
+          "meanScore": 36,
+          "reidentifiedAfter": 50,
+          "actions": {
+            "ALLOW": 50,
+            "WARN": 0,
+            "MASK": 0,
+            "BLOCK": 0
+          }
+        },
+        "quasi-identifiants": {
+          "n": 50,
+          "meanScore": 40.8,
+          "reidentifiedAfter": 50,
+          "actions": {
+            "ALLOW": 50,
+            "WARN": 0,
+            "MASK": 0,
+            "BLOCK": 0
+          }
+        },
+        "identifiants": {
+          "n": 50,
+          "meanScore": 51,
+          "reidentifiedAfter": 0,
+          "actions": {
+            "ALLOW": 0,
+            "WARN": 0,
+            "MASK": 50,
+            "BLOCK": 0
+          }
+        },
+        "contact": {
+          "n": 50,
+          "meanScore": 40,
+          "reidentifiedAfter": 45,
+          "actions": {
+            "ALLOW": 0,
+            "WARN": 0,
+            "MASK": 50,
+            "BLOCK": 0
+          }
+        },
+        "temoin-commune": {
+          "n": 50,
+          "meanScore": 17,
+          "reidentifiedAfter": 0,
+          "actions": {
+            "ALLOW": 50,
+            "WARN": 0,
+            "MASK": 0,
+            "BLOCK": 0
+          }
+        },
+        "temoin-fonction": {
+          "n": 50,
+          "meanScore": 17,
+          "reidentifiedAfter": 0,
+          "actions": {
+            "ALLOW": 50,
+            "WARN": 0,
+            "MASK": 0,
+            "BLOCK": 0
+          }
+        }
+      }
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "variant": "facteur-neutralise",
+      "byExposure": {
+        "reidentifiable": {
+          "n": 199,
+          "meanScore": 55.8,
+          "meanQiFactor": 0,
+          "bands": {
+            "low": 0,
+            "moderate": 50,
+            "high": 149,
+            "critical": 0
+          },
+          "actions": {
+            "ALLOW": 50,
+            "WARN": 50,
+            "MASK": 99,
+            "BLOCK": 0
+          },
+          "reidentifiedAfter": 145,
+          "passedInClear": 100
+        },
+        "k2-5": {
+          "n": 6,
+          "meanScore": 27.2,
+          "meanQiFactor": 0,
+          "bands": {
+            "low": 5,
+            "moderate": 0,
+            "high": 1,
+            "critical": 0
+          },
+          "actions": {
+            "ALLOW": 5,
+            "WARN": 0,
+            "MASK": 1,
+            "BLOCK": 0
+          },
+          "reidentifiedAfter": 0,
+          "passedInClear": 5
+        },
+        "anonyme": {
+          "n": 95,
+          "meanScore": 22,
+          "meanQiFactor": 0,
+          "bands": {
+            "low": 95,
+            "moderate": 0,
+            "high": 0,
+            "critical": 0
+          },
+          "actions": {
+            "ALLOW": 95,
+            "WARN": 0,
+            "MASK": 0,
+            "BLOCK": 0
+          },
+          "reidentifiedAfter": 0,
+          "passedInClear": 95
+        }
+      },
+      "byVariant": {
+        "direct": {
+          "n": 50,
+          "meanScore": 48,
+          "reidentifiedAfter": 50,
+          "actions": {
+            "ALLOW": 50,
+            "WARN": 0,
+            "MASK": 0,
+            "BLOCK": 0
+          }
+        },
+        "quasi-identifiants": {
+          "n": 50,
+          "meanScore": 54.1,
+          "reidentifiedAfter": 50,
+          "actions": {
+            "ALLOW": 0,
+            "WARN": 50,
+            "MASK": 0,
+            "BLOCK": 0
+          }
+        },
+        "identifiants": {
+          "n": 50,
+          "meanScore": 68,
+          "reidentifiedAfter": 0,
+          "actions": {
+            "ALLOW": 0,
+            "WARN": 0,
+            "MASK": 50,
+            "BLOCK": 0
+          }
+        },
+        "contact": {
+          "n": 50,
+          "meanScore": 53,
+          "reidentifiedAfter": 45,
+          "actions": {
+            "ALLOW": 0,
+            "WARN": 0,
+            "MASK": 50,
+            "BLOCK": 0
+          }
+        },
+        "temoin-commune": {
+          "n": 50,
+          "meanScore": 22,
+          "reidentifiedAfter": 0,
+          "actions": {
+            "ALLOW": 50,
+            "WARN": 0,
+            "MASK": 0,
+            "BLOCK": 0
+          }
+        },
+        "temoin-fonction": {
+          "n": 50,
+          "meanScore": 22,
+          "reidentifiedAfter": 0,
+          "actions": {
+            "ALLOW": 50,
+            "WARN": 0,
+            "MASK": 0,
+            "BLOCK": 0
+          }
+        }
+      }
+    }
+  ],
+  "riskResponseProfiles": [
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "profile": "low-llm-interne",
+      "profileLabel": "LLM interne (BJ), direction à risque faible",
+      "n": 300,
+      "bandChanged": 100,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 24.5,
+      "gapNeutral": 32.3,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": []
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "profile": "low-chat.mistral.ai",
+      "profileLabel": "Mistral (UE), direction à risque faible",
+      "n": 300,
+      "bandChanged": 100,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 24.5,
+      "gapNeutral": 32.3,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": []
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "profile": "low-chatgpt.com",
+      "profileLabel": "ChatGPT (US), direction à risque faible",
+      "n": 300,
+      "bandChanged": 100,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 24.3,
+      "gapNeutral": 32.3,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": []
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "profile": "low-chat.deepseek.com",
+      "profileLabel": "DeepSeek (CN), direction à risque faible",
+      "n": 300,
+      "bandChanged": 250,
+      "actionChanged": 100,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 100,
+      "gapActive": 24.5,
+      "gapNeutral": 32.3,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 100,
+        "WARN": 100,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-direct-001 : WARN → ALLOW",
+        "reid-direct-002 : WARN → ALLOW",
+        "reid-direct-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "profile": "moderate-llm-interne",
+      "profileLabel": "LLM interne (BJ), direction à risque modéré",
+      "n": 300,
+      "bandChanged": 150,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 24.3,
+      "gapNeutral": 32.8,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": []
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "profile": "moderate-chat.mistral.ai",
+      "profileLabel": "Mistral (UE), direction à risque modéré",
+      "n": 300,
+      "bandChanged": 50,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 24.3,
+      "gapNeutral": 32.8,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": []
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "profile": "moderate-chatgpt.com",
+      "profileLabel": "ChatGPT (US), direction à risque modéré",
+      "n": 300,
+      "bandChanged": 50,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 23.8,
+      "gapNeutral": 32.8,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": []
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "profile": "moderate-chat.deepseek.com",
+      "profileLabel": "DeepSeek (CN), direction à risque modéré",
+      "n": 300,
+      "bandChanged": 300,
+      "actionChanged": 150,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 150,
+      "gapActive": 24.3,
+      "gapNeutral": 32.8,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 100,
+        "WARN": 100,
+        "MASK": 50,
+        "BLOCK": 50
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-direct-001 : WARN → ALLOW",
+        "reid-direct-002 : WARN → ALLOW",
+        "reid-direct-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "profile": "high-llm-interne",
+      "profileLabel": "LLM interne (BJ), direction à risque élevé",
+      "n": 300,
+      "bandChanged": 50,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 24.8,
+      "gapNeutral": 32,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": []
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "profile": "high-chat.mistral.ai",
+      "profileLabel": "Mistral (UE), direction à risque élevé",
+      "n": 300,
+      "bandChanged": 250,
+      "actionChanged": 100,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 100,
+      "gapActive": 24.8,
+      "gapNeutral": 32,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 100,
+        "WARN": 100,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-direct-001 : WARN → ALLOW",
+        "reid-direct-002 : WARN → ALLOW",
+        "reid-direct-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "profile": "high-chatgpt.com",
+      "profileLabel": "ChatGPT (US), direction à risque élevé",
+      "n": 300,
+      "bandChanged": 250,
+      "actionChanged": 100,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 100,
+      "gapActive": 24.5,
+      "gapNeutral": 32.3,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 100,
+        "WARN": 100,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-direct-001 : WARN → ALLOW",
+        "reid-direct-002 : WARN → ALLOW",
+        "reid-direct-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "regles",
+      "label": "Règles seules",
+      "profile": "high-chat.deepseek.com",
+      "profileLabel": "DeepSeek (CN), direction à risque élevé",
+      "n": 300,
+      "bandChanged": 300,
+      "actionChanged": 150,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 150,
+      "gapActive": 24.8,
+      "gapNeutral": 32,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 100,
+        "WARN": 100,
+        "MASK": 50,
+        "BLOCK": 50
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-direct-001 : WARN → ALLOW",
+        "reid-direct-002 : WARN → ALLOW",
+        "reid-direct-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "profile": "low-llm-interne",
+      "profileLabel": "LLM interne (BJ), direction à risque faible",
+      "n": 300,
+      "bandChanged": 50,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 25.2,
+      "gapNeutral": 33.5,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": []
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "profile": "low-chat.mistral.ai",
+      "profileLabel": "Mistral (UE), direction à risque faible",
+      "n": 300,
+      "bandChanged": 150,
+      "actionChanged": 50,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 50,
+      "gapActive": 25.2,
+      "gapNeutral": 33.5,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 150,
+        "WARN": 50,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-quasi-identifiants-001 : WARN → ALLOW",
+        "reid-quasi-identifiants-002 : WARN → ALLOW",
+        "reid-quasi-identifiants-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "profile": "low-chatgpt.com",
+      "profileLabel": "ChatGPT (US), direction à risque faible",
+      "n": 300,
+      "bandChanged": 150,
+      "actionChanged": 50,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 50,
+      "gapActive": 25,
+      "gapNeutral": 33.7,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 150,
+        "WARN": 50,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-quasi-identifiants-001 : WARN → ALLOW",
+        "reid-quasi-identifiants-002 : WARN → ALLOW",
+        "reid-quasi-identifiants-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "profile": "low-chat.deepseek.com",
+      "profileLabel": "DeepSeek (CN), direction à risque faible",
+      "n": 300,
+      "bandChanged": 250,
+      "actionChanged": 100,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 100,
+      "gapActive": 25.2,
+      "gapNeutral": 33.5,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 100,
+        "WARN": 100,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-direct-001 : WARN → ALLOW",
+        "reid-direct-002 : WARN → ALLOW",
+        "reid-direct-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "profile": "moderate-llm-interne",
+      "profileLabel": "LLM interne (BJ), direction à risque modéré",
+      "n": 300,
+      "bandChanged": 100,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 25.3,
+      "gapNeutral": 33.8,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": []
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "profile": "moderate-chat.mistral.ai",
+      "profileLabel": "Mistral (UE), direction à risque modéré",
+      "n": 300,
+      "bandChanged": 100,
+      "actionChanged": 50,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 50,
+      "gapActive": 25.3,
+      "gapNeutral": 33.8,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 150,
+        "WARN": 50,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-quasi-identifiants-001 : WARN → ALLOW",
+        "reid-quasi-identifiants-002 : WARN → ALLOW",
+        "reid-quasi-identifiants-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "profile": "moderate-chatgpt.com",
+      "profileLabel": "ChatGPT (US), direction à risque modéré",
+      "n": 300,
+      "bandChanged": 100,
+      "actionChanged": 50,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 50,
+      "gapActive": 25,
+      "gapNeutral": 33.8,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 150,
+        "WARN": 50,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-quasi-identifiants-001 : WARN → ALLOW",
+        "reid-quasi-identifiants-002 : WARN → ALLOW",
+        "reid-quasi-identifiants-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "profile": "moderate-chat.deepseek.com",
+      "profileLabel": "DeepSeek (CN), direction à risque modéré",
+      "n": 300,
+      "bandChanged": 300,
+      "actionChanged": 150,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 150,
+      "gapActive": 25.3,
+      "gapNeutral": 33.8,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 100,
+        "WARN": 100,
+        "MASK": 50,
+        "BLOCK": 50
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-direct-001 : WARN → ALLOW",
+        "reid-direct-002 : WARN → ALLOW",
+        "reid-direct-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "profile": "high-llm-interne",
+      "profileLabel": "LLM interne (BJ), direction à risque élevé",
+      "n": 300,
+      "bandChanged": 50,
+      "actionChanged": 0,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 0,
+      "gapActive": 25.8,
+      "gapNeutral": 34,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": []
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "profile": "high-chat.mistral.ai",
+      "profileLabel": "Mistral (UE), direction à risque élevé",
+      "n": 300,
+      "bandChanged": 150,
+      "actionChanged": 100,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 100,
+      "gapActive": 25.8,
+      "gapNeutral": 34,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 100,
+        "WARN": 100,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-direct-001 : WARN → ALLOW",
+        "reid-direct-002 : WARN → ALLOW",
+        "reid-direct-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "profile": "high-chatgpt.com",
+      "profileLabel": "ChatGPT (US), direction à risque élevé",
+      "n": 300,
+      "bandChanged": 250,
+      "actionChanged": 100,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 100,
+      "gapActive": 25.5,
+      "gapNeutral": 34,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 100,
+        "WARN": 100,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-direct-001 : WARN → ALLOW",
+        "reid-direct-002 : WARN → ALLOW",
+        "reid-direct-003 : WARN → ALLOW"
+      ]
+    },
+    {
+      "system": "moteur-degrade",
+      "label": "Moteur sans NER",
+      "profile": "high-chat.deepseek.com",
+      "profileLabel": "DeepSeek (CN), direction à risque élevé",
+      "n": 300,
+      "bandChanged": 300,
+      "actionChanged": 150,
+      "stricterWithFactor": 0,
+      "laxerWithFactor": 150,
+      "gapActive": 25.8,
+      "gapNeutral": 34,
+      "actionsActive": {
+        "ALLOW": 200,
+        "WARN": 0,
+        "MASK": 100,
+        "BLOCK": 0
+      },
+      "actionsNeutral": {
+        "ALLOW": 100,
+        "WARN": 100,
+        "MASK": 50,
+        "BLOCK": 50
+      },
+      "reidAfterActive": 145,
+      "reidAfterNeutral": 145,
+      "examples": [
+        "reid-direct-001 : WARN → ALLOW",
+        "reid-direct-002 : WARN → ALLOW",
+        "reid-direct-003 : WARN → ALLOW"
+      ]
+    }
+  ]
+}

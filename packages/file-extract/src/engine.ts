@@ -64,6 +64,7 @@ async function extractOneInternal(
     const ext = extensionOf(input.fileName);
     let text = "";
     let method: ExtractedFile["extractionMethod"] = "native";
+    let warning: string | undefined;
 
     if (isTextLikeMime(mime, input.fileName) || mime.startsWith("text/")) {
       text = ext === ".csv" || mime === "text/csv" ? extractCsvAsText(input.data) : extractPlainText(input.data);
@@ -82,8 +83,19 @@ async function extractOneInternal(
     } else if (ext === ".odt" || ext === ".ods" || ext === ".odp" || mime.includes("opendocument")) {
       text = await extractOpenDocument(input.data);
     } else if (ext === ".pdf" || mime === "application/pdf") {
-      text = await extractPdf(input.data, options.maxPages);
-      if (!text.trim()) base.extractionDegraded = true;
+      const pdf = await extractPdf(input.data, { maxPages: options.maxPages, ocr: options.enableOcr });
+      text = pdf.text;
+      method = pdf.method;
+      if (pdf.degraded) base.extractionDegraded = true;
+      if (!text.trim()) {
+        // Rien de lisible : échec explicite, l'agent passe en mode dégradé au lieu d'envoyer un fichier non analysé.
+        return fail(
+          base,
+          pdf.warning ?? (options.enableOcr ? "PDF sans texte lisible" : "PDF sans couche texte — OCR requis"),
+          input.data,
+        );
+      }
+      warning = pdf.warning;
     } else if (ext === ".zip" || ext === ".jar" || mime === "application/zip" || isZipLike(input.data)) {
       if (depth >= options.maxArchiveDepth) {
         return fail(base, `Archive trop imbriquée (profondeur max ${options.maxArchiveDepth})`);
@@ -127,10 +139,6 @@ async function extractOneInternal(
       }
     }
 
-    if (!text.trim() && (ext === ".pdf" || isImageMime(mime)) && options.enableOcr && !isImageMime(mime)) {
-      return fail(base, "PDF sans couche texte — OCR requis");
-    }
-
     return {
       ...base,
       text,
@@ -141,6 +149,7 @@ async function extractOneInternal(
         isTextLikeMime(mime, input.fileName) ||
         (Boolean(text.trim()) && isOfficeSanitizable(ext, mime)),
       sourceData: input.data,
+      ...(warning ? { error: warning } : {}),
     };
   } catch (err) {
     return fail(base, err instanceof Error ? err.message : String(err), input.data);

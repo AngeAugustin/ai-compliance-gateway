@@ -3,6 +3,7 @@ declare module "@huggingface/transformers" {
     allowLocalModels: boolean;
     allowRemoteModels: boolean;
     useBrowserCache?: boolean;
+    localModelPath?: string;
   };
   export function pipeline(
     task: string,

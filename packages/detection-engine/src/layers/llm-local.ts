@@ -6,15 +6,43 @@ import { isModelTrusted, verifyModelFile, type ModelIntegrityResult } from "../i
 
 const MODEL_VERSION = "phi-3.5-mini-instruct-Q4_K_M";
 
-const SYSTEM_PROMPT = `Tu classifies un prompt d'entreprise dans UNE catégorie fermée.
-Catégories: RH, Finance, Juridique, Technique, Medical, Generique.
-Réponds uniquement par un JSON: {"context_category":"...","confidence":0.0,"rationale":"..."}
-rationale ≤ 20 mots. Pas d'autre texte.`;
+/**
+ * Les définitions guident le modèle (sans elles, « contrat » part en RH).
+ * La réponse est réduite au seul nom de catégorie, imposé par une grammaire :
+ * 2-3 jetons générés au lieu d'une vingtaine pour un JSON, soit ~2 s au lieu
+ * de ~10 s sur un CPU portable.
+ */
+const SYSTEM_PROMPT = `Classe la demande d'un employé dans UNE catégorie :
+- RH : salariés, recrutement, paie, congés, évaluations.
+- Finance : comptabilité, budget, factures, marges, banque.
+- Juridique : contrats, clauses, litiges, conformité, RGPD.
+- Technique : code, logiciel, serveurs, bases de données.
+- Medical : santé, patients, diagnostics, traitements.
+- Generique : tout le reste.
+Réponds uniquement par le nom de la catégorie.`;
+
+const CATEGORY_GRAMMAR = `root ::= ${CONTEXT_CATEGORIES.map((c) => `"${c}"`).join(" | ")}`;
+
+/** Le début du texte suffit à classer ; chaque caractère lu coûte du temps CPU. */
+const MAX_INPUT_CHARS = 1500;
+const CONTEXT_SIZE = 2048;
 
 export interface LlmLocalConfig {
   modelPath?: string;
   expectedSha256?: string;
+  /**
+   * Accélération : "cpu" (défaut), "auto", "vulkan", "cuda" ou "metal".
+   * Défaut CPU : sur un GPU intégré (Intel UHD), Vulkan est 2 à 3 fois plus lent.
+   * Lu depuis LLM_GPU si absent.
+   */
+  gpu?: string;
 }
+
+type ChatSession = {
+  prompt: (p: string, o?: { grammar?: unknown; maxTokens?: number; temperature?: number }) => Promise<string>;
+  getChatHistory: () => unknown;
+  setChatHistory: (h: unknown) => void;
+};
 
 export class LlmLocalLayer implements DetectionLayerProvider {
   readonly layer = "llm_context" as const;
@@ -25,7 +53,11 @@ export class LlmLocalLayer implements DetectionLayerProvider {
    */
   readonly optional = true;
   private ready = false;
-  private session: { prompt: (p: string) => Promise<string>; dispose?: () => Promise<void> } | null = null;
+  private session: ChatSession | null = null;
+  private initialHistory: unknown = null;
+  private grammar: unknown = null;
+  /** Une seule séquence de contexte : les appels concurrents passent un par un. */
+  private queue: Promise<unknown> = Promise.resolve();
   private integrity: ModelIntegrityResult | null = null;
   private lastError: string | undefined;
 
@@ -41,14 +73,19 @@ export class LlmLocalLayer implements DetectionLayerProvider {
     try {
       const llama = await import("node-llama-cpp");
       const { getLlama, LlamaChatSession } = llama as unknown as {
-        getLlama: () => Promise<{ loadModel: (o: { modelPath: string }) => Promise<{ createContext: () => Promise<unknown> }> }>;
-        LlamaChatSession: new (o: { contextSequence: unknown }) => { prompt: (p: string) => Promise<string> };
+        getLlama: (o?: { gpu?: unknown }) => Promise<{
+          loadModel: (o: { modelPath: string }) => Promise<{ createContext: (o?: { contextSize?: number }) => Promise<unknown> }>;
+          createGrammar: (o: { grammar: string }) => Promise<unknown>;
+        }>;
+        LlamaChatSession: new (o: { contextSequence: unknown; systemPrompt?: string }) => ChatSession;
       };
-      const runtime = await getLlama();
+      const runtime = await getLlama({ gpu: resolveGpu(this.config.gpu ?? process.env.LLM_GPU) });
       const model = await runtime.loadModel({ modelPath: this.config.modelPath! });
-      const context = await model.createContext();
+      const context = await model.createContext({ contextSize: CONTEXT_SIZE });
       const sequence = (context as { getSequence: () => unknown }).getSequence();
-      this.session = new LlamaChatSession({ contextSequence: sequence });
+      this.session = new LlamaChatSession({ contextSequence: sequence, systemPrompt: SYSTEM_PROMPT });
+      this.initialHistory = this.session.getChatHistory();
+      this.grammar = await runtime.createGrammar({ grammar: CATEGORY_GRAMMAR });
       this.ready = true;
       this.lastError = undefined;
     } catch (err) {
@@ -75,55 +112,60 @@ export class LlmLocalLayer implements DetectionLayerProvider {
 
   async detect(text: string): Promise<DetectionResult> {
     const started = now();
-    if (!this.ready || !this.session) {
-      const fallback = classifyByKeywords(text);
-      return {
-        layer: "llm_context",
-        entities: [],
-        context: fallback,
-        processingTimeMs: Math.round((now() - started) * 100) / 100,
-        modelVersion: "llm-fallback-keywords",
-        degraded: true,
-      };
-    }
+    const done = (context: DetectionResult["context"], degraded: boolean): DetectionResult => ({
+      layer: "llm_context",
+      entities: [],
+      context,
+      processingTimeMs: Math.round((now() - started) * 100) / 100,
+      modelVersion: degraded ? "llm-fallback-keywords" : MODEL_VERSION,
+      degraded,
+    });
+    const keywords = classifyByKeywords(text);
+    if (!this.ready || !this.session) return done(keywords, true);
     try {
-      const raw = await this.session.prompt(`${SYSTEM_PROMPT}\n\nPROMPT:\n${text.slice(0, 4000)}`);
-      const parsed = parseLlmJson(raw);
-      return {
-        layer: "llm_context",
-        entities: [],
-        context: parsed,
-        processingTimeMs: Math.round((now() - started) * 100) / 100,
-        modelVersion: MODEL_VERSION,
-        degraded: false,
-      };
+      const category = await this.classify(text);
+      return done(withConfidence(category, keywords), false);
     } catch {
-      const fallback = classifyByKeywords(text);
-      return {
-        layer: "llm_context",
-        entities: [],
-        context: fallback,
-        processingTimeMs: Math.round((now() - started) * 100) / 100,
-        modelVersion: "llm-fallback-keywords",
-        degraded: true,
-      };
+      return done(keywords, true);
     }
+  }
+
+  private classify(text: string): Promise<ContextCategory> {
+    const run = async (): Promise<ContextCategory> => {
+      const session = this.session!;
+      // Chaque prompt est classé seul : on repart de l'historique initial
+      // (sinon les échanges précédents s'accumulent et ralentissent tout).
+      session.setChatHistory(this.initialHistory);
+      const raw = await session.prompt(`Demande :\n${text.slice(0, MAX_INPUT_CHARS)}`, {
+        grammar: this.grammar,
+        maxTokens: 8,
+        temperature: 0,
+      });
+      const cat = raw.trim();
+      return (CONTEXT_CATEGORIES as readonly string[]).includes(cat) ? (cat as ContextCategory) : "Generique";
+    };
+    const next = this.queue.then(run, run);
+    this.queue = next.catch(() => undefined);
+    return next;
   }
 }
 
-function parseLlmJson(raw: string): { contextCategory: ContextCategory; confidence: number; rationale: string } {
-  const match = raw.match(/\{[\s\S]*\}/);
-  if (!match) return classifyByKeywords(raw);
-  try {
-    const json = JSON.parse(match[0]!) as { context_category?: string; contextCategory?: string; confidence?: number; rationale?: string };
-    const cat = (json.context_category ?? json.contextCategory ?? "Generique") as string;
-    const contextCategory = (CONTEXT_CATEGORIES as readonly string[]).includes(cat) ? (cat as ContextCategory) : "Generique";
-    return {
-      contextCategory,
-      confidence: Math.max(0, Math.min(1, Number(json.confidence ?? 0.6))),
-      rationale: String(json.rationale ?? "").slice(0, 240),
-    };
-  } catch {
-    return classifyByKeywords(raw);
+function resolveGpu(value: string | undefined): unknown {
+  const v = (value ?? "cpu").trim().toLowerCase();
+  if (v === "" || v === "cpu" || v === "false" || v === "0") return false;
+  return v; // "auto" | "vulkan" | "cuda" | "metal"
+}
+
+/**
+ * Le modèle ne renvoie que la catégorie ; la confiance vient de son accord avec
+ * les lexiques métier (deux méthodes indépendantes qui concordent).
+ */
+function withConfidence(
+  category: ContextCategory,
+  keywords: { contextCategory: ContextCategory; confidence: number; rationale: string },
+): { contextCategory: ContextCategory; confidence: number; rationale: string } {
+  if (keywords.contextCategory === category) {
+    return { contextCategory: category, confidence: 0.9, rationale: `LLM local, confirmé par ${keywords.rationale}` };
   }
+  return { contextCategory: category, confidence: 0.75, rationale: `LLM local (lexiques : ${keywords.contextCategory})` };
 }

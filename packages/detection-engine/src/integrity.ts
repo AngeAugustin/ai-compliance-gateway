@@ -1,6 +1,11 @@
 import { createHash } from "node:crypto";
-import { readFile } from "node:fs/promises";
-import { existsSync } from "node:fs";
+import { createReadStream, existsSync } from "node:fs";
+
+async function sha256File(path: string): Promise<string> {
+  const hash = createHash("sha256");
+  for await (const chunk of createReadStream(path)) hash.update(chunk as Buffer);
+  return hash.digest("hex");
+}
 
 export interface ModelIntegrityResult {
   name: string;
@@ -18,8 +23,8 @@ export async function verifyModelFile(name: string, path: string | undefined, ex
   if (!path || !existsSync(path)) {
     return { name, path: path ?? null, expectedSha256: expectedSha256 ?? null, actualSha256: null, status: "absent" };
   }
-  const buf = await readFile(path);
-  const actualSha256 = createHash("sha256").update(buf).digest("hex");
+  // Lecture en flux : un GGUF dépasse souvent 2 Gio, limite de readFile.
+  const actualSha256 = await sha256File(path);
   if (!expectedSha256) {
     return { name, path, expectedSha256: null, actualSha256, status: "unverified" };
   }

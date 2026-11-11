@@ -1,0 +1,7 @@
+{
+  "corpus.docx": "docx 9 (bibliothèque JavaScript)",
+  "corpus.xlsx": "SheetJS 0.18",
+  "corpus.pptx": "pptxgenjs 4",
+  "corpus-texte.pdf": "pdf-lib 1.17, Helvetica WinAnsi (1 caractère(s) hors encodage remplacé(s))",
+  "corpus-scanne.pdf": "pdf-lib 1.17 (10 images PNG pleine page, aucune couche texte)"
+}

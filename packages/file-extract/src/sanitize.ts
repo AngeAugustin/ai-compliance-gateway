@@ -88,7 +88,12 @@ export async function sanitizeExtractedFile(
   }
 
   if ((ext === ".pdf" || file.mimeType === "application/pdf") && source) {
-    let data = sanitizePdfBinary(source, replacements);
+    // Texte lu dans des images : le remplacement dans le binaire ne les touche pas, on reconstruit.
+    let data = file.extractionMethod === "ocr" ? null : sanitizePdfBinary(source, replacements);
+    if (data && !(await pdfIsClean(data, fileEntities))) {
+      // Une valeur subsiste (flux compressé, autre encodage) : on ne renvoie pas ce binaire.
+      data = null;
+    }
     if (!data) {
       data = rebuildMinimalPdf(masked.replace(/\s+/g, " ").slice(0, 500));
     }
@@ -96,4 +101,14 @@ export async function sanitizeExtractedFile(
   }
 
   return sanitizeTextFile(file, fileEntities);
+}
+
+/** Relit le PDF réécrit : aucune valeur sensible ne doit y rester lisible. */
+async function pdfIsClean(data: Uint8Array, entities: SensitiveEntity[]): Promise<boolean> {
+  const { extractPdf } = await import("./extractors/pdf.js");
+  const reread = await extractPdf(data, { ocr: false });
+  if (reread.degraded && !reread.text) return false;
+  const norm = (s: string) => s.replace(/\s+/g, "");
+  const text = norm(reread.text);
+  return entities.every((e) => !e.value || !text.includes(norm(e.value)));
 }

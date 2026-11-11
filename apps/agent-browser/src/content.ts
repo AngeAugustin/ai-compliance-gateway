@@ -145,6 +145,13 @@ function writeText(el: HTMLTextAreaElement | HTMLElement, value: string) {
 let gating = false;
 let passThrough = false;
 let lastGate: { text: string; res: GateResponse; at: number } | null = null;
+/**
+ * Texte masqué que l'agent vient d'écrire dans le composeur avant de relancer l'envoi.
+ * Le page-hook voit passer ce texte dans le fetch : il est déjà analysé (et journalisé
+ * sous la décision MASK), le réévaluer créerait un second événement ALLOW.
+ */
+let lastMaskedOutbound: { key: string; at: number } | null = null;
+const MASKED_OUTBOUND_TTL_MS = 5000;
 
 function allowNativeOnce() {
   passThrough = true;
@@ -199,6 +206,10 @@ async function gateText(text: string, files: PendingFileWire[] = pendingFiles())
   if (lastGate && lastGate.text === cacheKey && Date.now() - lastGate.at < 2500) {
     return lastGate.res;
   }
+  if (lastMaskedOutbound && lastMaskedOutbound.key === cacheKey && Date.now() - lastMaskedOutbound.at < MASKED_OUTBOUND_TTL_MS) {
+    lastMaskedOutbound = null;
+    return { action: "ALLOW", outbound: text };
+  }
 
   try {
     const { tokens, ...res } = await sendToBackground<GateResponse>({
@@ -210,6 +221,9 @@ async function gateText(text: string, files: PendingFileWire[] = pendingFiles())
     // Les valeurs d'origine ne doivent pas atteindre le page-hook (monde MAIN, lisible par la page).
     rememberTokens(tokens);
     lastGate = { text: cacheKey, res, at: Date.now() };
+    if (res.action === "MASK" && res.outbound && res.outbound.trim() !== trimmed) {
+      lastMaskedOutbound = { key: gateCacheKey(res.outbound.trim(), res.sanitizedFiles ?? files), at: Date.now() };
+    }
     return res;
   } catch (err) {
     if (isContextInvalidated(err)) {

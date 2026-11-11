@@ -25,11 +25,19 @@
     "agents:build": "pnpm --filter @acg/agent-runtime build && pnpm --filter @acg/agent-browser build && pnpm --filter @acg/agent-cli build",
     "eval:detection": "tsx tools/eval/run.ts",
     "test:e2e:texte": "vitest run packages/agent-runtime/src/e2e-texte.test.ts",
+    "test:e2e:extension": "pnpm --filter @acg/agent-browser build && vitest run --config apps/agent-browser/e2e/vitest.config.ts",
+    "test:e2e:dashboard": "vitest run --config apps/dashboard/e2e/vitest.config.ts",
     "test:e2e:fichiers": "vitest run packages/agent-runtime/src/e2e-fichiers.test.ts packages/file-extract/src/file-extract.test.ts",
     "fixtures:fichiers": "tsx data/fixtures-fichiers/generate.ts",
     "models:ner": "tsx tools/prepare-ner-model.ts",
     "eval:detection:rapide": "tsx tools/eval/run.ts --sans-ner --repetitions 1",
-    "eval:heartbeat": "tsx tools/eval/heartbeat-latency.ts"
+    "eval:heartbeat": "tsx tools/eval/heartbeat-latency.ts",
+    "eval:heartbeat:fausses-alertes": "tsx tools/eval/heartbeat-fausses-alertes.ts",
+    "eval:charge": "tsx tools/eval/decision-charge.ts",
+    "eval:extraction": "tsx tools/eval/extraction-fichiers.ts",
+    "eval:extraction:fichiers": "tsx tools/eval/fichiers-bibliotheques.ts",
+    "eval:utilisabilite": "tsx tools/eval/utilisabilite.ts",
+    "eval:accord": "tsx tools/eval/accord-annotateurs.ts"
   },
   "dependencies": {
     "pg": "^8.16.3"
@@ -40,9 +48,13 @@
     "@typescript-eslint/eslint-plugin": "^8.44.0",
     "@typescript-eslint/parser": "^8.44.0",
     "concurrently": "^9.2.1",
+    "docx": "^9.15.3",
     "dotenv": "^17.2.2",
     "esbuild": "^0.25.9",
     "eslint": "^9.36.0",
+    "pdf-lib": "^1.17.1",
+    "playwright": "1.56.1",
+    "pptxgenjs": "^4.0.1",
     "tsx": "^4.20.5",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"

@@ -5,6 +5,8 @@ export interface QueuedEvent {
   createdAt: string;
   payload: unknown;
   attempts: number;
+  /** Pas de nouvelle tentative avant cette date (backoff après échec). Absent : dès que possible. */
+  nextAttemptAt?: string;
 }
 
 /**
@@ -14,6 +16,7 @@ export interface QueuedEvent {
  */
 export class SecureQueue {
   private items: QueuedEvent[] = [];
+  private rejectedCount = 0;
 
   constructor(
     private readonly persist: (raw: string) => Promise<void> = async () => undefined,
@@ -41,8 +44,18 @@ export class SecureQueue {
     return this.items.slice(0, limit);
   }
 
+  /** L'événement peut-il être retenté maintenant (backoff écoulé) ? */
+  isDue(item: QueuedEvent, now = Date.now()): boolean {
+    return !item.nextAttemptAt || Date.parse(item.nextAttemptAt) <= now;
+  }
+
   size(): number {
     return this.items.length;
+  }
+
+  /** Événements retirés parce que le serveur les a refusés définitivement (depuis le démarrage). */
+  rejected(): number {
+    return this.rejectedCount;
   }
 
   async ack(id: string): Promise<void> {
@@ -50,9 +63,23 @@ export class SecureQueue {
     await this.flush();
   }
 
+  /**
+   * Refus définitif du serveur (corps invalide…) : le renvoyer ne changera rien, et le garder
+   * en tête bloquerait tous les événements suivants. Il est retiré et compté.
+   */
+  async reject(id: string): Promise<void> {
+    const before = this.items.length;
+    this.items = this.items.filter((i) => i.id !== id);
+    if (this.items.length < before) this.rejectedCount++;
+    await this.flush();
+  }
+
   async fail(id: string): Promise<void> {
     const item = this.items.find((i) => i.id === id);
-    if (item) item.attempts += 1;
+    if (item) {
+      item.attempts += 1;
+      item.nextAttemptAt = new Date(Date.now() + this.backoffMs(item.attempts)).toISOString();
+    }
     await this.flush();
   }
 

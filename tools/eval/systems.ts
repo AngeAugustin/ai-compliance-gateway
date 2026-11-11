@@ -65,7 +65,7 @@ export async function buildSystems(options: { withNer: boolean }): Promise<Syste
   let ner: SystemsSetup["ner"] = { available: false, detail: "désactivé (--sans-ner)", initMs: 0 };
   let nerLayer: NerOnnxLayer | null = null;
   if (options.withNer) {
-    const layer = new NerOnnxLayer();
+    const layer = new NerOnnxLayer({ modelPath: process.env.NER_MODEL_PATH || undefined });
     const started = performance.now();
     const status = await layer.initialize();
     ner = { available: status.available, detail: status.detail, initMs: Math.round(performance.now() - started) };

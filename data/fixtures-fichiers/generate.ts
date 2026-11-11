@@ -62,7 +62,7 @@ function textPdf(lines: string[]): string {
 function docx(paragraphs: string[]): Uint8Array {
   const body = paragraphs.map((t) => `<w:p><w:r><w:t xml:space="preserve">${escapeXml(t)}</w:t></w:r></w:p>`).join("");
   const documentXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${body}</w:body></w:document>`;
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${body}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1417" w:right="1417" w:bottom="1417" w:left="1417" w:header="708" w:footer="708" w:gutter="0"/></w:sectPr></w:body></w:document>`;
   const contentTypes = `<?xml version="1.0" encoding="UTF-8"?>
 <Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
   <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
@@ -80,16 +80,100 @@ function docx(paragraphs: string[]): Uint8Array {
   });
 }
 
-/** Une diapositive par tableau de lignes. */
+const NS_A = "http://schemas.openxmlformats.org/drawingml/2006/main";
+const NS_P = "http://schemas.openxmlformats.org/presentationml/2006/main";
+const NS_R = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+const NS_REL = "http://schemas.openxmlformats.org/package/2006/relationships";
+const REL = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+const XML_HEAD = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n`;
+const EMPTY_TREE = `<p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr/>`;
+
+function rels(items: [string, string, string][]): Uint8Array {
+  return enc.encode(
+    `${XML_HEAD}<Relationships xmlns="${NS_REL}">${items
+      .map(([id, type, target]) => `<Relationship Id="${id}" Type="${REL}/${type}" Target="${target}"/>`)
+      .join("")}</Relationships>`,
+  );
+}
+
+/** Thème minimal (couleurs, polices, styles de format) exigé par PowerPoint. */
+function pptxTheme(): string {
+  const solid = (c: string) => `<a:solidFill><a:srgbClr val="${c}"/></a:solidFill>`;
+  const fills = `<a:fillStyleLst>${solid("FFFFFF")}${solid("FFFFFF")}${solid("FFFFFF")}</a:fillStyleLst>`;
+  const lines = `<a:lnStyleLst>${[1, 2, 3].map(() => `<a:ln w="9525">${solid("000000")}</a:ln>`).join("")}</a:lnStyleLst>`;
+  const effects = `<a:effectStyleLst>${[1, 2, 3].map(() => `<a:effectStyle><a:effectLst/></a:effectStyle>`).join("")}</a:effectStyleLst>`;
+  const colors = [
+    ["dk1", "000000"], ["lt1", "FFFFFF"], ["dk2", "1F3864"], ["lt2", "E7E6E6"],
+    ["accent1", "1F6FB2"], ["accent2", "ED7D31"], ["accent3", "A5A5A5"], ["accent4", "FFC000"],
+    ["accent5", "5B9BD5"], ["accent6", "70AD47"], ["hlink", "0563C1"], ["folHlink", "954F72"],
+  ].map(([n, c]) => `<a:${n}><a:srgbClr val="${c}"/></a:${n}>`).join("");
+  return `${XML_HEAD}<a:theme xmlns:a="${NS_A}" name="Fixture"><a:themeElements>
+<a:clrScheme name="Fixture">${colors}</a:clrScheme>
+<a:fontScheme name="Fixture"><a:majorFont><a:latin typeface="Calibri"/><a:ea typeface=""/><a:cs typeface=""/></a:majorFont><a:minorFont><a:latin typeface="Calibri"/><a:ea typeface=""/><a:cs typeface=""/></a:minorFont></a:fontScheme>
+<a:fmtScheme name="Fixture">${fills}${lines}${effects}<a:bgFillStyleLst>${solid("FFFFFF")}${solid("FFFFFF")}${solid("FFFFFF")}</a:bgFillStyleLst></a:fmtScheme>
+</a:themeElements></a:theme>`;
+}
+
+/** Zone de texte positionnée (EMU). */
+function pptxShape(id: number, y: number, h: number, size: number, bold: boolean, text: string): string {
+  return `<p:sp><p:nvSpPr><p:cNvPr id="${id}" name="Texte ${id}"/><p:cNvSpPr txBox="1"/><p:nvPr/></p:nvSpPr>
+<p:spPr><a:xfrm><a:off x="457200" y="${y}"/><a:ext cx="8229600" cy="${h}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr>
+<p:txBody><a:bodyPr wrap="square"><a:normAutofit/></a:bodyPr><a:lstStyle/><a:p><a:r><a:rPr lang="fr-FR" sz="${size}" b="${bold ? 1 : 0}"/><a:t>${escapeXml(text)}</a:t></a:r></a:p></p:txBody></p:sp>`;
+}
+
+/** Une diapositive par tableau de lignes (1re ligne = titre). Paquet PresentationML complet. */
 function pptx(slides: string[][]): Uint8Array {
   const files: Record<string, Uint8Array> = {};
+  const slideOverrides = slides
+    .map((_, i) => `<Override PartName="/ppt/slides/slide${i + 1}.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slide+xml"/>`)
+    .join("");
+  files["[Content_Types].xml"] = enc.encode(`${XML_HEAD}<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+<Default Extension="xml" ContentType="application/xml"/>
+<Override PartName="/ppt/presentation.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.presentation.main+xml"/>
+<Override PartName="/ppt/slideMasters/slideMaster1.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slideMaster+xml"/>
+<Override PartName="/ppt/slideLayouts/slideLayout1.xml" ContentType="application/vnd.openxmlformats-officedocument.presentationml.slideLayout+xml"/>
+<Override PartName="/ppt/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/>
+${slideOverrides}</Types>`);
+  files["_rels/.rels"] = rels([["rId1", "officeDocument", "ppt/presentation.xml"]]);
+
+  const sldIds = slides.map((_, i) => `<p:sldId id="${256 + i}" r:id="rId${i + 3}"/>`).join("");
+  files["ppt/presentation.xml"] = enc.encode(`${XML_HEAD}<p:presentation xmlns:a="${NS_A}" xmlns:r="${NS_R}" xmlns:p="${NS_P}">
+<p:sldMasterIdLst><p:sldMasterId id="2147483648" r:id="rId1"/></p:sldMasterIdLst>
+<p:sldIdLst>${sldIds}</p:sldIdLst>
+<p:sldSz cx="9144000" cy="6858000" type="screen4x3"/><p:notesSz cx="6858000" cy="9144000"/>
+</p:presentation>`);
+  files["ppt/_rels/presentation.xml.rels"] = rels([
+    ["rId1", "slideMaster", "slideMasters/slideMaster1.xml"],
+    ["rId2", "theme", "theme/theme1.xml"],
+    ...slides.map((_, i): [string, string, string] => [`rId${i + 3}`, "slide", `slides/slide${i + 1}.xml`]),
+  ]);
+
+  files["ppt/theme/theme1.xml"] = enc.encode(pptxTheme());
+  files["ppt/slideMasters/slideMaster1.xml"] = enc.encode(`${XML_HEAD}<p:sldMaster xmlns:a="${NS_A}" xmlns:r="${NS_R}" xmlns:p="${NS_P}">
+<p:cSld><p:bg><p:bgRef idx="1001"><a:schemeClr val="bg1"/></p:bgRef></p:bg><p:spTree>${EMPTY_TREE}</p:spTree></p:cSld>
+<p:clrMap bg1="lt1" tx1="dk1" bg2="lt2" tx2="dk2" accent1="accent1" accent2="accent2" accent3="accent3" accent4="accent4" accent5="accent5" accent6="accent6" hlink="hlink" folHlink="folHlink"/>
+<p:sldLayoutIdLst><p:sldLayoutId id="2147483649" r:id="rId1"/></p:sldLayoutIdLst>
+</p:sldMaster>`);
+  files["ppt/slideMasters/_rels/slideMaster1.xml.rels"] = rels([
+    ["rId1", "slideLayout", "../slideLayouts/slideLayout1.xml"],
+    ["rId2", "theme", "../theme/theme1.xml"],
+  ]);
+  files["ppt/slideLayouts/slideLayout1.xml"] = enc.encode(`${XML_HEAD}<p:sldLayout xmlns:a="${NS_A}" xmlns:r="${NS_R}" xmlns:p="${NS_P}" type="blank" preserve="1">
+<p:cSld name="Vide"><p:spTree>${EMPTY_TREE}</p:spTree></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr>
+</p:sldLayout>`);
+  files["ppt/slideLayouts/_rels/slideLayout1.xml.rels"] = rels([["rId1", "slideMaster", "../slideMasters/slideMaster1.xml"]]);
+
   slides.forEach((lines, i) => {
-    const shapes = lines.map((t) => `<p:sp><p:txBody><a:p><a:r><a:t>${escapeXml(t)}</a:t></a:r></a:p></p:txBody></p:sp>`).join("");
-    files[`ppt/slides/slide${i + 1}.xml`] = enc.encode(`<?xml version="1.0" encoding="UTF-8"?>
-<p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
-       xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
-  <p:cSld><p:spTree>${shapes}</p:spTree></p:cSld>
+    const [title = "", ...body] = lines;
+    const shapes = [
+      pptxShape(2, 457200, 914400, 3200, true, title),
+      ...body.map((t, j) => pptxShape(3 + j, 1600200 + j * 640080, 548640, 2000, false, t)),
+    ].join("");
+    files[`ppt/slides/slide${i + 1}.xml`] = enc.encode(`${XML_HEAD}<p:sld xmlns:a="${NS_A}" xmlns:r="${NS_R}" xmlns:p="${NS_P}">
+<p:cSld><p:spTree>${EMPTY_TREE}${shapes}</p:spTree></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr>
 </p:sld>`);
+    files[`ppt/slides/_rels/slide${i + 1}.xml.rels`] = rels([["rId1", "slideLayout", "../slideLayouts/slideLayout1.xml"]]);
   });
   return zipStore(files);
 }

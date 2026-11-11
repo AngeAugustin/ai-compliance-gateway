@@ -30,6 +30,7 @@
     "@acg/detection-engine": "workspace:*",
     "@acg/shared": "workspace:*",
     "mammoth": "^1.11.0",
+    "pdfjs-dist": "4.10.38",
     "tesseract.js": "^5.1.1",
     "xlsx": "^0.18.5"
   }

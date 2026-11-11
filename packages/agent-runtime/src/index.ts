@@ -8,7 +8,7 @@ import {
   type HeartbeatPayload,
 } from "@acg/shared";
 import { DecisionCache } from "./cache.js";
-import { GatewayClient, emptyIntegrity } from "./client.js";
+import { AgentApiError, GatewayClient, emptyIntegrity } from "./client.js";
 import { type AgentPersistedConfig, type ConfigStore, DEFAULT_AGENT_CONFIG } from "./config.js";
 import { prepareFileAnalysis, type IncomingFile } from "./files.js";
 import { decideLocally, userFacingText, type LocalDecision } from "./pipeline.js";
@@ -341,17 +341,35 @@ export class AgentRuntime {
     }
   }
 
+  /**
+   * Rejoue la file dans l'ordre. Un échec passager (réseau, serveur) arrête le rejeu et
+   * applique le backoff ; un refus définitif retire l'événement pour ne pas bloquer la suite.
+   */
   private async flushQueue(): Promise<void> {
     for (const item of this.queue.peek(10)) {
+      if (!this.queue.isDue(item)) break;
       try {
         await this.client.evaluate(item.payload as EvaluateInteractionRequest);
         await this.queue.ack(item.id);
-      } catch {
+      } catch (err) {
+        if (isPermanentRejection(err)) {
+          await this.queue.reject(item.id);
+          continue;
+        }
         await this.queue.fail(item.id);
         break;
       }
     }
   }
+}
+
+/**
+ * Refus que renvoyer ne corrigera pas : corps invalide (400), ressource inconnue (404),
+ * conflit (409), trop volumineux (413), non traitable (422). 401/403 restent retentés :
+ * horloge décalée ou clé en cours de renouvellement sont passagers.
+ */
+function isPermanentRejection(err: unknown): boolean {
+  return err instanceof AgentApiError && [400, 404, 409, 413, 422].includes(err.status);
 }
 
 function uint8ToBase64(data: Uint8Array): string {

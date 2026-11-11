@@ -1,0 +1,179 @@
+[
+  {
+    "format": "DOCX",
+    "files": 1,
+    "failed": 0,
+    "degraded": 0,
+    "ms": 61.17450000000008,
+    "values": {
+      "found": 97,
+      "total": 97
+    },
+    "words": {
+      "found": 1124,
+      "total": 1124
+    },
+    "detSource": {
+      "found": 45,
+      "total": 97
+    },
+    "detExtracted": {
+      "found": 44,
+      "total": 97
+    },
+    "lost": [],
+    "secrets": {
+      "found": 8,
+      "total": 8
+    }
+  },
+  {
+    "format": "PDF texte",
+    "files": 1,
+    "failed": 0,
+    "degraded": 0,
+    "ms": 770.0996,
+    "values": {
+      "found": 96,
+      "total": 97
+    },
+    "words": {
+      "found": 1122,
+      "total": 1124
+    },
+    "detSource": {
+      "found": 45,
+      "total": 97
+    },
+    "detExtracted": {
+      "found": 44,
+      "total": 97
+    },
+    "lost": [
+      "PRIVATE_KEY « -----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA7vQ3mZ8xK2LpR9tYwN4cB6dF1gH3jK5mN7pQ9rS2tU4vW6xY\n8zA1bC3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5zA7bC9dE1fG3hI5jK7lM9nO\n-----END RSA PRIVATE KEY----- »"
+    ],
+    "secrets": {
+      "found": 8,
+      "total": 8
+    }
+  },
+  {
+    "format": "XLSX",
+    "files": 1,
+    "failed": 0,
+    "degraded": 0,
+    "ms": 13.879900000000134,
+    "values": {
+      "found": 97,
+      "total": 97
+    },
+    "words": {
+      "found": 1124,
+      "total": 1124
+    },
+    "detSource": {
+      "found": 45,
+      "total": 97
+    },
+    "detExtracted": {
+      "found": 44,
+      "total": 97
+    },
+    "lost": [],
+    "secrets": {
+      "found": 8,
+      "total": 8
+    }
+  },
+  {
+    "format": "PPTX",
+    "files": 1,
+    "failed": 0,
+    "degraded": 0,
+    "ms": 3.817399999999907,
+    "values": {
+      "found": 97,
+      "total": 97
+    },
+    "words": {
+      "found": 1124,
+      "total": 1124
+    },
+    "detSource": {
+      "found": 45,
+      "total": 97
+    },
+    "detExtracted": {
+      "found": 44,
+      "total": 97
+    },
+    "lost": [],
+    "secrets": {
+      "found": 8,
+      "total": 8
+    }
+  },
+  {
+    "format": "PDF scanné (images seules)",
+    "files": 1,
+    "failed": 0,
+    "degraded": 0,
+    "ms": 1920.8056000000001,
+    "values": {
+      "found": 18,
+      "total": 19
+    },
+    "words": {
+      "found": 156,
+      "total": 157
+    },
+    "detSource": {
+      "found": 10,
+      "total": 19
+    },
+    "detExtracted": {
+      "found": 8,
+      "total": 19
+    },
+    "lost": [
+      "API_KEY « sk-abcdefghijklmnopqrstuvwxyz012345 »"
+    ],
+    "secrets": {
+      "found": 1,
+      "total": 1
+    }
+  },
+  {
+    "format": "Image PNG (OCR)",
+    "files": 65,
+    "failed": 0,
+    "degraded": 0,
+    "ms": 56910.5791,
+    "values": {
+      "found": 93,
+      "total": 97
+    },
+    "words": {
+      "found": 1118,
+      "total": 1124
+    },
+    "detSource": {
+      "found": 44,
+      "total": 97
+    },
+    "detExtracted": {
+      "found": 39,
+      "total": 97
+    },
+    "lost": [
+      "API_KEY « sk-abcdefghijklmnopqrstuvwxyz012345 »",
+      "API_KEY « ghp_8xK2mQ9vL4nR7tY1wZ3pA6sD0fG5hJ8kL2qW »",
+      "PRIVATE_KEY « -----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA7vQ3mZ8xK2LpR9tYwN4cB6dF1gH3jK5mN7pQ9rS2tU4vW6xY\n8zA1bC3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5zA7bC9dE1fG3hI5jK7lM9nO\n-----END RSA PRIVATE KEY----- »",
+      "API_KEY « eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbi1jbnNzIiwicm9sZSI6IkFETUlOIn0.k3Jp0Q9w2vX8tB1nM4cZ7yL6aE5sD3fG2hJ1kL0qW9e »"
+    ],
+    "secrets": {
+      "found": 8,
+      "total": 8
+    }
+  }
+]

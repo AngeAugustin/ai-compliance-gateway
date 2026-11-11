@@ -8,6 +8,17 @@ allowBuilds:
   tesseract.js: true
   onnxruntime-node: true
   protobufjs: true
+  node-llama-cpp: true
 
 autoInstallPeers: false
 strictPeerDependencies: false
+
+# Réseau lent : pnpm 11 ne lit plus ces réglages dans .npmrc
+fetchTimeout: 600000
+fetchRetries: 5
+networkConcurrency: 4
+
+# node-llama-cpp : binaires CUDA (~350 Mo) inutiles ici, on garde CPU + Vulkan
+ignoredOptionalDependencies:
+  - "@node-llama-cpp/win-x64-cuda"
+  - "@node-llama-cpp/win-x64-cuda-ext"
