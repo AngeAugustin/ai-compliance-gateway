@@ -1,5 +1,7 @@
 # Protocole d'évaluation de la détection
 
+> Vue d'ensemble de tous les résultats (mesurés et objectifs restant à vérifier) : [synthese-resultats.md](synthese-resultats.md).
+
 Ce document décrit comment on mesure la qualité du moteur de détection (`packages/detection-engine`) : sur quelles données, avec quelles métriques, et ce que les chiffres permettent — ou non — d'affirmer. Les résultats chiffrés sont dans [resultats/resultats-detection.md](resultats/resultats-detection.md), régénérés par :
 
 ```bash

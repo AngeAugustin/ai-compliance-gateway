@@ -11,6 +11,8 @@ Sur ce poste, l'automatisation de Word (`tools/eval/fichiers-office.ps1`) se blo
 
 Un nouvel enregistrement par Office suffit : il réécrit tout le fichier dans le format Office (styles, découpage du texte en segments, compression), et c'est ce que la mesure doit éprouver. Ne modifiez pas le contenu. Si Word propose une conversion ou un mode de compatibilité, acceptez.
 
+**Résultat attendu** (hypothèse tant que la mesure n'est pas faite) : les mêmes taux que les fichiers des bibliothèques, soit 100 % des valeurs pour DOCX, XLSX et PPTX, au moins 99 % pour le PDF, et 100 % des secrets détectés. L'extracteur lit le format (XML Office, flux PDF), pas l'outil qui l'a produit. Un écart viendrait du découpage du texte en segments par Word, que les bibliothèques ne reproduisent pas.
+
 Puis :
 
 ```bash

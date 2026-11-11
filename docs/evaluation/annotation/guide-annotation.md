@@ -2,6 +2,18 @@
 
 Le corpus manuel (65 prompts) a été annoté par une seule personne. Un second annotateur, **indépendant**, l'annote à nouveau. On mesure ensuite l'accord entre les deux. Un accord élevé montre que les annotations ne reflètent pas seulement les choix d'une personne.
 
+## Objectifs fixés avant l'annotation
+
+Ces objectifs sont des hypothèses tant que le second annotateur n'a pas annoté le corpus.
+
+| Mesure | Objectif | Justification |
+| :--- | :--- | :--- |
+| Kappa de Cohen par caractère | ≥ 0,80 | « Presque parfait » selon Landis et Koch (1977) |
+| F1 protection (ce qui serait masqué) | ≥ 90 % | La mesure de sécurité du projet repose sur la protection, pas sur le type exact |
+| F1 strict | ≥ 80 % | Les bornes et le type exacts dépendent davantage des conventions |
+
+Si un objectif n'est pas atteint, les désaccords sont arbitrés, le guide est précisé, et les scores de détection sont recalculés sur l'annotation arbitrée.
+
 ## Consignes
 
 1. Ouvrez [a-annoter.txt](a-annoter.txt) (produit par `pnpm eval:accord export`) et enregistrez-en une copie sous **`annotations-2.txt`**, dans ce dossier.

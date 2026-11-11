@@ -8,6 +8,17 @@ Les tests automatisés ([dashboard.e2e.ts](../../../apps/dashboard/e2e/dashboard
 2. En combien de temps, avec quelles erreurs ?
 3. Quelle satisfaction perçue ? Mesurée par le questionnaire **SUS** (System Usability Scale, Brooke 1996), score de 0 à 100.
 
+### Objectifs fixés avant les séances
+
+Fixés **avant** toute mesure, pour qu'ils ne puissent pas être ajustés aux résultats. Tant que les séances n'ont pas eu lieu, ce sont des hypothèses, pas des résultats.
+
+| Critère | Objectif | Justification |
+| :--- | :--- | :--- |
+| SUS moyen | ≥ 68 | Moyenne observée sur des centaines d'études (Bangor et al., 2009) : l'outil doit être au moins dans la moyenne |
+| Réussite des tâches sans aide | ≥ 80 % en moyenne, aucune tâche < 60 % | Seuil courant pour un outil professionnel utilisé avec une courte prise en main |
+| Tâches critiques (4 : accès justifié, 7 : validation d'une politique) | 100 % de réussite, avec ou sans indice | Une erreur sur ces tâches a une conséquence juridique ou de sécurité |
+| Problèmes bloquants (gravité 3) | aucun problème rencontré par 2 participants ou plus | Un problème bloquant partagé doit être corrigé avant déploiement |
+
 ## 2. Participants
 
 - **5 à 8 personnes**. Cinq participants révèlent la plupart des problèmes d'utilisabilité majeurs (Nielsen et Landauer, 1993) ; au-delà de 8, l'intervalle de confiance du SUS se resserre peu.
