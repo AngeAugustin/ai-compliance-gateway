@@ -72,7 +72,9 @@ export const RULE_PATTERNS: RulePattern[] = [
     id: "private-key",
     entityType: "PRIVATE_KEY",
     confidence: 0.99,
-    regex: /-----BEGIN (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----[\s\S]+?-----END (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----/g,
+    // Blancs souples dans les en-têtes : la mise en page d'un document (Word, PDF) peut couper
+    // « END RSA PRIVATE KEY » sur deux lignes.
+    regex: /-----BEGIN\s+(?:(?:RSA|EC|OPENSSH|DSA)\s+)?PRIVATE\s+KEY-----[\s\S]+?-----END\s+(?:(?:RSA|EC|OPENSSH|DSA)\s+)?PRIVATE\s+KEY-----/g,
   },
   {
     id: "connection-string",

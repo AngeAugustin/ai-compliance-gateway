@@ -187,3 +187,16 @@ describe("couche optionnelle", () => {
     expect((await engine.detect("bonjour")).degraded).toBe(false);
   });
 });
+
+describe("clé privée coupée par la mise en page", () => {
+  it("reconnaît une clé dont l'en-tête de fin est coupé sur deux lignes (PDF exporté par Word)", async () => {
+    const text = "nginx : -----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA7vQ3mZ8xK2LpR9tYwN4cB6dF1gH3 -----END RSA PRIVATE\nKEY-----";
+    const types = (await rules.detect(text)).entities.map((e) => e.entityType);
+    expect(types).toContain("PRIVATE_KEY");
+  });
+
+  it("ne reconnaît pas un simple en-tête sans clé de fin", async () => {
+    const types = (await rules.detect("le format -----BEGIN PRIVATE KEY----- est documenté")).entities.map((e) => e.entityType);
+    expect(types).not.toContain("PRIVATE_KEY");
+  });
+});

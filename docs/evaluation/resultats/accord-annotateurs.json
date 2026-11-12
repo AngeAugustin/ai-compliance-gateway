@@ -1,0 +1,197 @@
+{
+  "documents": 65,
+  "entitiesA": 97,
+  "entitiesB": 85,
+  "f1Strict": 0.7142857142857143,
+  "f1Typed": 0.7912087912087912,
+  "f1Protection": 0.9010989010989011,
+  "kappaChars": 0.8363475207696881,
+  "perType": [
+    {
+      "type": "IBAN",
+      "na": 3,
+      "nb": 0,
+      "f1": 0
+    },
+    {
+      "type": "BANK_ACCOUNT",
+      "na": 0,
+      "nb": 3,
+      "f1": 0
+    },
+    {
+      "type": "JOB_TITLE",
+      "na": 7,
+      "nb": 0,
+      "f1": 0
+    },
+    {
+      "type": "SALARY",
+      "na": 3,
+      "nb": 0,
+      "f1": 0
+    },
+    {
+      "type": "CONNECTION_STRING",
+      "na": 2,
+      "nb": 0,
+      "f1": 0
+    },
+    {
+      "type": "MOBILE_MONEY",
+      "na": 3,
+      "nb": 1,
+      "f1": 0.5
+    },
+    {
+      "type": "INTERNAL_ID",
+      "na": 2,
+      "nb": 2,
+      "f1": 0.5
+    },
+    {
+      "type": "IP_ADDRESS",
+      "na": 1,
+      "nb": 3,
+      "f1": 0.5
+    },
+    {
+      "type": "PASSWORD",
+      "na": 1,
+      "nb": 2,
+      "f1": 0.6666666666666666
+    },
+    {
+      "type": "PHONE",
+      "na": 3,
+      "nb": 5,
+      "f1": 0.75
+    },
+    {
+      "type": "ORGANIZATION",
+      "na": 6,
+      "nb": 4,
+      "f1": 0.8
+    },
+    {
+      "type": "FINANCIAL_AMOUNT",
+      "na": 7,
+      "nb": 10,
+      "f1": 0.8235294117647058
+    },
+    {
+      "type": "MEDICAL",
+      "na": 6,
+      "nb": 6,
+      "f1": 0.8333333333333334
+    },
+    {
+      "type": "ADDRESS",
+      "na": 4,
+      "nb": 3,
+      "f1": 0.8571428571428571
+    },
+    {
+      "type": "PERSON",
+      "na": 26,
+      "nb": 23,
+      "f1": 0.9387755102040817
+    },
+    {
+      "type": "EMAIL",
+      "na": 5,
+      "nb": 5,
+      "f1": 1
+    },
+    {
+      "type": "API_KEY",
+      "na": 4,
+      "nb": 4,
+      "f1": 1
+    },
+    {
+      "type": "CNSS_INSURED_NUMBER",
+      "na": 3,
+      "nb": 3,
+      "f1": 1
+    },
+    {
+      "type": "DATE_OF_BIRTH",
+      "na": 3,
+      "nb": 3,
+      "f1": 1
+    },
+    {
+      "type": "NATIONAL_ID",
+      "na": 2,
+      "nb": 2,
+      "f1": 1
+    },
+    {
+      "type": "CREDIT_CARD",
+      "na": 2,
+      "nb": 2,
+      "f1": 1
+    },
+    {
+      "type": "CNSS_EMPLOYER_NUMBER",
+      "na": 1,
+      "nb": 1,
+      "f1": 1
+    },
+    {
+      "type": "TAX_ID",
+      "na": 1,
+      "nb": 1,
+      "f1": 1
+    },
+    {
+      "type": "INTERNAL_URL",
+      "na": 1,
+      "nb": 1,
+      "f1": 1
+    },
+    {
+      "type": "PRIVATE_KEY",
+      "na": 1,
+      "nb": 1,
+      "f1": 1
+    }
+  ],
+  "disagreements": [
+    "man-001 : « FR76 3000 6000 0112 3456 7890 189 » IBAN / BANK_ACCOUNT",
+    "man-002 : « 01 97 12 34 56 » MOBILE_MONEY / PHONE",
+    "man-007 : JOB_TITLE « magasinier » — absent chez l'annotateur 2",
+    "man-007 : « 185 000 » SALARY / FINANCIAL_AMOUNT",
+    "man-007 : « 15 000 » SALARY / FINANCIAL_AMOUNT",
+    "man-008 : JOB_TITLE « chauffeur » — absent chez l'annotateur 2",
+    "man-011 : bornes « Grâce Dossou » / « Mme Grâce Dossou »",
+    "man-011 : JOB_TITLE « secrétaire de direction » — absent chez l'annotateur 2",
+    "man-013 : bornes « Codjo Sossa » / « M. Codjo Sossa »",
+    "man-014 : PERSON « Hermann Lokossou » — absent chez l'annotateur 2",
+    "man-014 : JOB_TITLE « contrôleur de gestion » — absent chez l'annotateur 2",
+    "man-015 : « FR1420041010050500013M02606 » IBAN / BANK_ACCOUNT",
+    "man-018 : « 3 456 780 » SALARY / FINANCIAL_AMOUNT",
+    "man-019 : ORGANIZATION « Boulangerie La Lagune » — absent chez l'annotateur 2",
+    "man-023 : bornes « 15000 » / « 15000F »",
+    "man-023 : « +229 01 51 22 33 44 » MOBILE_MONEY / PHONE",
+    "man-024 : bornes « 275 000 » / « 275 000 € »",
+    "man-026 : ORGANIZATION « Groupe Atlantique Services » — absent chez l'annotateur 2",
+    "man-026 : bornes « Clarisse Tchibozo » / « Me Clarisse Tchibozo »",
+    "man-028 : bornes « Hortense Assogba » / « Mme Hortense Assogba »",
+    "man-031 : « postgresql://prestations:Lagune#2025@10.20.4.17:5432/prod » CONNECTION_STRING / PASSWORD",
+    "man-031 : « redis://10.20.4.18:6379 » CONNECTION_STRING / IP_ADDRESS",
+    "man-040 : INTERNAL_ID « SUP-20260142 » — absent chez l'annotateur 2",
+    "man-041 : JOB_TITLE « aide-soignante » — absent chez l'annotateur 2",
+    "man-044 : bornes « Ange Houénou » / « M. Ange Houénou »",
+    "man-045 : MEDICAL « metformine 850 mg matin et soir » — ajouté par l'annotateur 2",
+    "man-046 : MEDICAL « AVC » — absent chez l'annotateur 2",
+    "man-049 : PERSON « Victoire Hounsou » — absent chez l'annotateur 2",
+    "man-052 : PERSON « Pascal » — absent chez l'annotateur 2",
+    "man-055 : « BJ59BJ0610100100144039000769 » IBAN / BANK_ACCOUNT",
+    "man-056 : JOB_TITLE « électricien » — absent chez l'annotateur 2",
+    "man-060 : INTERNAL_ID « 4111 2233 » — ajouté par l'annotateur 2",
+    "man-063 : JOB_TITLE « chef de garage » — absent chez l'annotateur 2",
+    "man-064 : ADDRESS « Malanville » — absent chez l'annotateur 2"
+  ]
+}

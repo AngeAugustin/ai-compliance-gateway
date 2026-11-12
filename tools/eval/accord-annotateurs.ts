@@ -225,13 +225,69 @@ function main() {
     console.log(`[accord] ${path} absent : faites annoter a-annoter.txt (pnpm eval:accord export) selon guide-annotation.md.`);
     return;
   }
-  const docs = compare(parseAnnotatedFile(readFileSync(path, "utf8")));
+  let content = readFileSync(path, "utf8");
+  let mappingNote = "";
+  if (process.argv.includes("--correspondance")) {
+    const { text, counts } = applyTypeSynonyms(content);
+    content = text;
+    mappingNote = mappingReport(counts);
+    console.log(`[accord] correspondance des types appliquée : ${Object.entries(counts).map(([k, n]) => `${k} ×${n}`).join(", ")}`);
+  }
+  const docs = compare(parseAnnotatedFile(content));
   if (docs.length < CORPUS_MANUEL.length) console.log(`[accord] ${CORPUS_MANUEL.length - docs.length} prompt(s) non annoté(s), ignoré(s)`);
   const r = agreement(docs);
   mkdirSync(OUT, { recursive: true });
-  writeFileSync(join(OUT, "accord-annotateurs.md"), report(r), "utf8");
+  writeFileSync(join(OUT, "accord-annotateurs.md"), report(r) + mappingNote, "utf8");
   writeFileSync(join(OUT, "accord-annotateurs.json"), JSON.stringify(r, null, 2), "utf8");
   console.log(`[accord] F1 strict ${(100 * r.f1Strict).toFixed(1)} %, protection ${(100 * r.f1Protection).toFixed(1)} %, kappa ${r.kappaChars.toFixed(3)} → ${join(OUT, "accord-annotateurs.md")}`);
+}
+
+/**
+ * Option --correspondance : le second annotateur a pu employer ses propres noms de types au lieu
+ * de ceux du guide. Table fixe, décidée sans regarder les désaccords : on ne renomme que lorsque
+ * le sens est sans ambiguïté ; null = type hors du guide, la balise est retirée (valeur gardée).
+ * Le fichier de l'annotateur n'est pas modifié.
+ */
+export const TYPE_SYNONYMS: Record<string, string | null> = {
+  PERSON_NAME: "PERSON",
+  PHONE_NUMBER: "PHONE",
+  INSURED_ID: "CNSS_INSURED_NUMBER",
+  EMPLOYER_ID: "CNSS_EMPLOYER_NUMBER",
+  HEALTH_INFORMATION: "MEDICAL",
+  MEDICAL_INFORMATION: "MEDICAL",
+  PAYMENT_CARD: "CREDIT_CARD",
+  ACCESS_TOKEN: "API_KEY",
+  AWS_ACCESS_KEY: "API_KEY",
+  DATABASE_CREDENTIAL: "PASSWORD",
+  CASE_ID: "INTERNAL_ID",
+  ORDER_REFERENCE: "INTERNAL_ID",
+  AGE: null,
+};
+
+export function applyTypeSynonyms(content: string): { text: string; counts: Record<string, number> } {
+  const counts: Record<string, number> = {};
+  const text = content.replace(/\[\[([A-Z_]+)\|([^\]]*)\]\]/g, (all, type: string, value: string) => {
+    if (!(type in TYPE_SYNONYMS)) return all;
+    counts[type] = (counts[type] ?? 0) + 1;
+    const to = TYPE_SYNONYMS[type];
+    return to ? `[[${to}|${value}]]` : value;
+  });
+  return { text, counts };
+}
+
+function mappingReport(counts: Record<string, number>): string {
+  const rows = Object.entries(counts).map(([from, n]) => `| ${from} | ${TYPE_SYNONYMS[from] ?? "(hors guide, balise retirée)"} | ${n} |`);
+  return [
+    "",
+    "## Correspondance des types (--correspondance)",
+    "",
+    "Le second annotateur a employé ses propres noms de types. Ils ont été ramenés à ceux du guide par une table fixe ([accord-annotateurs.ts](../../../tools/eval/accord-annotateurs.ts), `TYPE_SYNONYMS`) ; le fichier d'origine n'est pas modifié. Le F1 protection ne dépend pas des types ; le F1 strict et le kappa en dépendent.",
+    "",
+    "| Type de l'annotateur | Type du guide | Occurrences |",
+    "| :--- | :--- | ---: |",
+    ...rows,
+    "",
+  ].join("\n");
 }
 
 if (process.argv[1] && /accord-annotateurs\.ts$/.test(process.argv[1])) main();

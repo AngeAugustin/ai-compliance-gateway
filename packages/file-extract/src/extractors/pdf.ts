@@ -34,8 +34,48 @@ interface PdfJsImage {
   kind?: number;
 }
 
+export interface PdfTextItem {
+  str?: string;
+  hasEOL?: boolean;
+  /** Matrice [a, b, c, d, x, y] : position et corps du fragment. */
+  transform?: number[];
+  width?: number;
+}
+
+/**
+ * Assemble les fragments de texte d'une page. Un espace n'est inséré que s'il y a un vrai blanc
+ * entre deux fragments d'une même ligne : Word découpe le texte en fragments au milieu des mots
+ * (tirets, changements de police), et un espace systématique transformait « REC-20250318 »
+ * en « REC - 20250318 », que la détection ne reconnaît plus.
+ */
+export function joinTextItems(items: PdfTextItem[]): string {
+  let out = "";
+  let prev: PdfTextItem | null = null;
+  for (const it of items) {
+    const str = it.str ?? "";
+    if (prev && !prev.hasEOL && str) out += separator(prev, it);
+    out += str;
+    if (it.hasEOL) out += "\n";
+    if (str || it.hasEOL) prev = it;
+  }
+  return out;
+}
+
+function separator(prev: PdfTextItem, next: PdfTextItem): string {
+  const a = prev.str ?? "";
+  const b = next.str ?? "";
+  if (!a || /\s$/.test(a) || /^\s/.test(b)) return "";
+  const t1 = prev.transform;
+  const t2 = next.transform;
+  if (!t1 || !t2 || t1.length < 6 || t2.length < 6 || typeof prev.width !== "number") return " ";
+  const size = Math.max(Math.abs(t1[3]!), Math.abs(t1[0]!), 1);
+  if (Math.abs(t2[5]! - t1[5]!) > size * 0.5) return "\n"; // autre ligne sans fin de ligne marquée
+  const gap = t2[4]! - (t1[4]! + prev.width);
+  return gap > size * 0.15 ? " " : "";
+}
+
 interface PdfJsPage {
-  getTextContent(): Promise<{ items: Array<{ str?: string; hasEOL?: boolean }> }>;
+  getTextContent(): Promise<{ items: PdfTextItem[] }>;
   getOperatorList(): Promise<{ fnArray: number[]; argsArray: unknown[][] }>;
   objs: { get(id: string, callback: (obj: unknown) => void): unknown };
   commonObjs: { get(id: string, callback: (obj: unknown) => void): unknown };
@@ -90,7 +130,7 @@ export async function extractPdf(data: Uint8Array, opts: PdfExtractOptions = {})
       const page = await doc.getPage(i);
       const content = await page.getTextContent();
       // Mise en page : un jeton trop long pour la ligne est coupé ; on le recolle comme pour l'OCR.
-      parts.push(rejoinBrokenTokens(content.items.map((it) => (it.str ?? "") + (it.hasEOL ? "\n" : " ")).join("")));
+      parts.push(rejoinBrokenTokens(joinTextItems(content.items)));
       for (const img of await pageImages(pdfjs, page)) {
         if (img.width < MIN_IMAGE_SIDE || img.height < MIN_IMAGE_SIDE || img.width * img.height < MIN_IMAGE_AREA) continue;
         if (images.length >= maxImages) skippedImages++;

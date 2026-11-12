@@ -1,5 +1,7 @@
 # Évaluation sur des prompts réels anonymisés
 
+> **Statut (12/11/2026)** : non réalisée. Le projet est conduit seul et ne disposait pas des participants nécessaires. Le protocole, le kit et le script de calcul sont prêts et testés, pour un déploiement pilote.
+
 Le corpus d'évaluation est synthétique : les 65 prompts manuels ont été écrits pour ressembler à des demandes d'agents de la CNSS, mais personne ne les a réellement envoyés. Cette évaluation vérifie que les résultats tiennent sur des **formulations réelles**.
 
 Un prompt réel d'agent de la CNSS contient, par nature, des données personnelles d'assurés : noms, numéros, pathologies, salaires. Leur collecte est un **traitement de données personnelles**. Elle demande l'accord préalable du DPO, et doit respecter la loi béninoise n° 2017-20 (Code du numérique, livre V) et le RGPD si des données de résidents européens sont concernées.
@@ -20,6 +22,8 @@ Chaque prompt collecté est **pseudonymisé à la main avant toute annotation et
 La passerelle elle-même ne sert **pas** à pseudonymiser : on mesurerait alors le moteur sur ce qu'il sait déjà trouver, et les données qu'il manque resteraient en clair.
 
 ## 2. Collecte
+
+Documents prêts à l'emploi (note d'autorisation du DPO, notice aux volontaires, fiche de pseudonymisation, format du fichier final) : [kit-collecte.md](kit-collecte.md).
 
 - **Autorisation** : note du DPO validant la finalité (évaluation du dispositif), la durée de conservation (fin du projet), les personnes habilitées (collecteur et deux annotateurs).
 - **Volontariat** : agents volontaires de 4 directions au moins (Prestations, Cotisations, Finance, Informatique), informés par écrit. Chacun soumet des demandes qu'il a réellement faites ou voulu faire à un service d'IA.
@@ -52,7 +56,7 @@ Ce sont des hypothèses tant que la collecte n'a pas eu lieu.
 | Mesure | Objectif | Justification |
 | :--- | :--- | :--- |
 | Rappel protection du moteur complet | ≥ 75 % | Au plus 5 points sous le corpus manuel (80,4 %), le plus proche de l'usage réel : au-delà, le corpus synthétique surestime nettement la protection |
-| F1 partiel | ≥ 75 % | Comparable au corpus manuel (78,2 %), le plus proche de l'usage réel |
+| F1 partiel | ≥ 75 % | Comparable au corpus manuel (76,8 % sur la référence arbitrée), le plus proche de l'usage réel |
 | Secrets techniques (clés, mots de passe, chaînes de connexion) | 100 % détectés | Ce sont les données dont la fuite est la plus grave et les plus régulières |
 
 ## 6. Limites

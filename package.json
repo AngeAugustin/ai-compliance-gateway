@@ -42,7 +42,8 @@
     "eval:llm:pipeline": "tsx tools/eval/llm-pipeline.ts",
     "eval:agents-reels": "tsx tools/eval/agents-reels.ts",
     "eval:heartbeat:reel": "tsx tools/eval/heartbeat-reel.ts",
-    "eval:prompts-reels": "tsx tools/eval/prompts-reels.ts"
+    "eval:prompts-reels": "tsx tools/eval/prompts-reels.ts",
+    "utilisabilite:preparer": "tsx tools/eval/preparer-utilisabilite.ts"
   },
   "dependencies": {
     "pg": "^8.16.3"

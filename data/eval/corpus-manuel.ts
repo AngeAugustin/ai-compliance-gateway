@@ -299,7 +299,7 @@ export const CORPUS_MANUEL: AnnotatedSource[] = [
     id: "man-045",
     context: "Medical",
     markup:
-      "Ordonnance : metformine 850 mg matin et soir, pour ⟦MEDICAL|diabète de type 2⟧. Patient : ⟦PERSON|Comlan Ahouandjinou⟧, ⟦DATE_OF_BIRTH|12/04/1968⟧.",
+      "Ordonnance : ⟦MEDICAL|metformine 850 mg matin et soir⟧, pour ⟦MEDICAL|diabète de type 2⟧. Patient : ⟦PERSON|Comlan Ahouandjinou⟧, ⟦DATE_OF_BIRTH|12/04/1968⟧.",
     note: "Date de naissance sans libellé « né le ».",
   },
   {
@@ -393,7 +393,7 @@ export const CORPUS_MANUEL: AnnotatedSource[] = [
     id: "man-060",
     context: "Finance",
     markup:
-      "Paiement par carte ⟦CREDIT_CARD|5500-0000-0000-0004⟧ refusé, et le numéro de commande 4111 2233 n'apparaît pas. Que faire ?",
+      "Paiement par carte ⟦CREDIT_CARD|5500-0000-0000-0004⟧ refusé, et le numéro de commande ⟦INTERNAL_ID|4111 2233⟧ n'apparaît pas. Que faire ?",
     note: "Numéro de commande à 8 chiffres : négatif difficile.",
   },
   {
@@ -419,7 +419,7 @@ export const CORPUS_MANUEL: AnnotatedSource[] = [
     id: "man-064",
     context: "Juridique",
     markup:
-      "Peut-on transmettre à un cabinet externe la liste des assurés de ⟦ADDRESS|Malanville⟧ avec leurs numéros de téléphone ? Quelles précautions RGPD/APDP ?",
+      "Peut-on transmettre à un cabinet externe la liste des assurés de Malanville avec leurs numéros de téléphone ? Quelles précautions RGPD/APDP ?",
     note: "Commune liée à un groupe d'assurés : annotée ADDRESS.",
   },
   {

@@ -4,7 +4,7 @@ Le corpus manuel (65 prompts) a été annoté par une seule personne. Un second 
 
 ## Objectifs fixés avant l'annotation
 
-Ces objectifs sont des hypothèses tant que le second annotateur n'a pas annoté le corpus.
+Résultats du 12/11/2026 ([accord-annotateurs-avant-arbitrage.md](../resultats/accord-annotateurs-avant-arbitrage.md)) : kappa 0,836 et F1 protection 90,1 % atteints, F1 strict 71,4 % non atteint.
 
 | Mesure | Objectif | Justification |
 | :--- | :--- | :--- |
@@ -60,6 +60,15 @@ Si un objectif n'est pas atteint, les désaccords sont arbitrés, le guide est p
 - On annote **la valeur seule**, sans libellé ni unité : « 350 000 », pas « 350 000 FCFA » ; « Lagune#2025 », pas « mot de passe : Lagune#2025 ».
 - Une valeur contenue dans une autre n'est annotée qu'une fois, avec le type le plus englobant : le mot de passe d'une chaîne de connexion fait partie de la chaîne.
 - Dans le doute entre deux types, choisissez celui qui décrit le **rôle** de la donnée dans la phrase, et notez l'hésitation.
+
+## Arbitrage des désaccords
+
+[arbitrage.csv](arbitrage.csv) liste chaque désaccord avec le texte du prompt et la règle du guide qui s'applique. Les deux annotateurs le parcourent **ensemble** et remplissent « Décision » :
+- `1` : l'annotation de référence est la bonne ;
+- `2` : celle du second annotateur est la bonne, et la référence du corpus sera corrigée ;
+- autre : texte libre (les deux ont tort, cas à ajouter au guide…).
+
+L'accord mesuré avant arbitrage reste le résultat publié. L'arbitrage consolide la référence et précise le guide ; si la référence change, les scores de détection sont recalculés.
 
 ## Après l'annotation
 

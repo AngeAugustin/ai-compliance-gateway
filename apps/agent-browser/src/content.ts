@@ -546,7 +546,9 @@ window.addEventListener("message", (ev: MessageEvent) => {
       if (res.action === "BLOCK") {
         // Ne pas appeler applyFileBlock ici : le fetch est déjà annulé côté page-hook.
         // Muter le composeur depuis un fetch provoquait des états incohérents après un BLOCK.
+        // La bannière, elle, ne touche pas au composeur : l'utilisateur doit savoir pourquoi rien n'est parti.
         reply(res);
+        showBanner(res.userMessage ?? "Interaction bloquée par la politique de sécurité.", "BLOCK");
         return;
       }
 
@@ -555,6 +557,13 @@ window.addEventListener("message", (ev: MessageEvent) => {
       }
 
       reply(res);
+      // Sur les vrais sites (ChatGPT), l'envoi est souvent intercepté ici et non par Entrée / bouton :
+      // sans cette bannière, le masquage avait lieu sans que l'utilisateur en soit averti.
+      if (res.action === "MASK") {
+        showBanner(res.userMessage ?? "Données sensibles remplacées par des jetons. Envoi du prompt masqué.", "MASK");
+      } else if (res.action === "WARN") {
+        showBanner(res.userMessage ?? "Interaction journalisée.", "WARN");
+      }
     } catch (err) {
       reply({
         action: "WARN",

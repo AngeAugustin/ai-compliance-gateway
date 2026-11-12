@@ -4,7 +4,7 @@
     "files": 1,
     "failed": 0,
     "degraded": 0,
-    "ms": 61.17450000000008,
+    "ms": 167.3028000000004,
     "values": {
       "found": 97,
       "total": 97
@@ -32,7 +32,7 @@
     "files": 1,
     "failed": 0,
     "degraded": 0,
-    "ms": 770.0996,
+    "ms": 2404.4141,
     "values": {
       "found": 96,
       "total": 97
@@ -62,7 +62,7 @@
     "files": 1,
     "failed": 0,
     "degraded": 0,
-    "ms": 13.879900000000134,
+    "ms": 37.07669999999962,
     "values": {
       "found": 97,
       "total": 97
@@ -90,7 +90,7 @@
     "files": 1,
     "failed": 0,
     "degraded": 0,
-    "ms": 3.817399999999907,
+    "ms": 9.813799999999901,
     "values": {
       "found": 97,
       "total": 97
@@ -118,7 +118,7 @@
     "files": 1,
     "failed": 0,
     "degraded": 0,
-    "ms": 1920.8056000000001,
+    "ms": 4635.3836,
     "values": {
       "found": 18,
       "total": 19
@@ -144,11 +144,125 @@
     }
   },
   {
+    "format": "DOCX (Word)",
+    "files": 1,
+    "failed": 0,
+    "degraded": 0,
+    "ms": 22.24959999999919,
+    "values": {
+      "found": 97,
+      "total": 97
+    },
+    "words": {
+      "found": 1124,
+      "total": 1124
+    },
+    "detSource": {
+      "found": 45,
+      "total": 97
+    },
+    "detExtracted": {
+      "found": 45,
+      "total": 97
+    },
+    "lost": [],
+    "secrets": {
+      "found": 8,
+      "total": 8
+    }
+  },
+  {
+    "format": "PDF texte (Word)",
+    "files": 1,
+    "failed": 0,
+    "degraded": 0,
+    "ms": 264.58330000000024,
+    "values": {
+      "found": 96,
+      "total": 97
+    },
+    "words": {
+      "found": 1122,
+      "total": 1124
+    },
+    "detSource": {
+      "found": 45,
+      "total": 97
+    },
+    "detExtracted": {
+      "found": 44,
+      "total": 97
+    },
+    "lost": [
+      "PRIVATE_KEY « -----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA7vQ3mZ8xK2LpR9tYwN4cB6dF1gH3jK5mN7pQ9rS2tU4vW6xY\n8zA1bC3dE5fG7hI9jK1lM3nO5pQ7rS9tU1vW3xY5zA7bC9dE1fG3hI5jK7lM9nO\n-----END RSA PRIVATE KEY----- »"
+    ],
+    "secrets": {
+      "found": 8,
+      "total": 8
+    }
+  },
+  {
+    "format": "XLSX (Excel)",
+    "files": 1,
+    "failed": 0,
+    "degraded": 0,
+    "ms": 26.65389999999934,
+    "values": {
+      "found": 97,
+      "total": 97
+    },
+    "words": {
+      "found": 1124,
+      "total": 1124
+    },
+    "detSource": {
+      "found": 45,
+      "total": 97
+    },
+    "detExtracted": {
+      "found": 44,
+      "total": 97
+    },
+    "lost": [],
+    "secrets": {
+      "found": 8,
+      "total": 8
+    }
+  },
+  {
+    "format": "PPTX (PowerPoint)",
+    "files": 1,
+    "failed": 0,
+    "degraded": 0,
+    "ms": 275.3727999999992,
+    "values": {
+      "found": 97,
+      "total": 97
+    },
+    "words": {
+      "found": 1124,
+      "total": 1124
+    },
+    "detSource": {
+      "found": 45,
+      "total": 97
+    },
+    "detExtracted": {
+      "found": 44,
+      "total": 97
+    },
+    "lost": [],
+    "secrets": {
+      "found": 8,
+      "total": 8
+    }
+  },
+  {
     "format": "Image PNG (OCR)",
     "files": 65,
     "failed": 0,
     "degraded": 0,
-    "ms": 56910.5791,
+    "ms": 145476.19370000006,
     "values": {
       "found": 93,
       "total": 97

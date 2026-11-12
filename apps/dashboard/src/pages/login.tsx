@@ -42,11 +42,23 @@ export function LoginPage() {
 
   /** POST d'authentification ; null en cas d'échec (message ou verrouillage déjà affiché). */
   async function post(path: string, body: unknown): Promise<AuthResponse | null> {
-    const res = await fetch(`${API}${path}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
+    let res: Response;
+    try {
+      res = await fetch(`${API}${path}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+        signal: AbortSignal.timeout(15_000),
+      });
+    } catch (e) {
+      const timedOut = e instanceof DOMException && e.name === "TimeoutError";
+      setError(
+        timedOut
+          ? "Le serveur d'authentification ne répond pas (délai dépassé). Vérifiez que l'API est démarrée."
+          : "Impossible de joindre le serveur d'authentification. Vérifiez que l'API est démarrée.",
+      );
+      return null;
+    }
     if (res.ok) return (await res.json()) as AuthResponse;
     const err = parseLoginError(await res.text(), res.status);
     if (err.code === "ACCOUNT_LOCKED" || res.status === 423) {

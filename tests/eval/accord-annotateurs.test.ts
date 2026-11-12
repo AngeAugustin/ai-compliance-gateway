@@ -36,3 +36,14 @@ describe("accord entre annotateurs", () => {
     expect(kappaLabel(0.5)).toBe("modéré");
   });
 });
+
+describe("correspondance des types du second annotateur", () => {
+  it("renomme les synonymes, retire les types hors guide et ne touche pas aux types du guide", async () => {
+    const { applyTypeSynonyms } = await import("../../tools/eval/accord-annotateurs.js");
+    const { text, counts } = applyTypeSynonyms(
+      "[[PERSON_NAME|Jean Dupont]], [[AGE|34 ans]], [[EMAIL|j@cnss.bj]], [[HEALTH_INFORMATION|diabète]]",
+    );
+    expect(text).toBe("[[PERSON|Jean Dupont]], 34 ans, [[EMAIL|j@cnss.bj]], [[MEDICAL|diabète]]");
+    expect(counts).toEqual({ PERSON_NAME: 1, AGE: 1, HEALTH_INFORMATION: 1 });
+  });
+});

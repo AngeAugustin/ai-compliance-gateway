@@ -3,7 +3,7 @@
 Document de référence pour le mémoire et la soutenance. Chaque chiffre porte un statut :
 
 - **Mesuré** : obtenu par un script reproductible, rapport détaillé en lien ;
-- **Objectif** : critère fixé avant la mesure, qui reste à vérifier ; ce n'est pas un résultat.
+- **Non réalisé** : validation conçue (protocole, objectifs fixés à l'avance, script de calcul testé) mais pas menée, faute de participants dans un projet conduit seul ; c'est une perspective, pas un résultat.
 
 Protocole complet : [protocole-detection.md](protocole-detection.md).
 
@@ -11,33 +11,33 @@ Protocole complet : [protocole-detection.md](protocole-detection.md).
 
 | Question | Réponse | Statut |
 | :--- | :--- | :--- |
-| Le moteur trouve-t-il les données sensibles ? | F1 **90,8 %** (IC 95 % : 89,3–92,2 %), rappel protection **93,6 %**, sur 385 prompts et 975 entités | Mesuré |
-| Que reste-t-il de lisible après masquage ? | **6,4 %** des entités, dont 44 sur 62 sont des fonctions / postes, hors périmètre de détection | Mesuré |
+| Le moteur trouve-t-il les données sensibles ? | F1 **90,6 %** (IC 95 % : 89,1–92,1 %), rappel protection **93,5 %**, sur 385 prompts et 976 entités | Mesuré |
+| Que reste-t-il de lisible après masquage ? | **6,5 %** des entités, dont 44 sur 63 sont des fonctions / postes, hors périmètre de détection | Mesuré |
 | Peut-on encore identifier la personne ? | Ré-identification **99,5 % → 2,0 %** ; taille médiane du groupe de candidats 1 → 77 | Mesuré |
 | Le blocage ralentit-il l'utilisateur ? | **75 ms** en médiane, 151 ms au p95, décision et journalisation comprises | Mesuré |
 | Le serveur tient-il la charge ? | **0 erreur** jusqu'à 50 agents simultanés, environ 130 req/s sur un portable chargé ; chaîne d'audit intacte sur 11 258 événements ; 20 vrais agents : 0 erreur sur 17 927 interactions | Mesuré |
 | Et sur un réseau lent ? | Le délai suit le réseau : 333 ms en médiane avec 300 ms d'aller-retour, mêmes décisions | Mesuré |
 | Que se passe-t-il si la détection tombe ? | Directions à risque bloquées (politique, puis filet du code) ; 15 tests | Mesuré |
-| Les fichiers joints sont-ils lus ? | **100 %** des valeurs en DOCX, XLSX et PPTX ; 99 % en PDF ; **100 % des secrets** détectés dans tous les formats, images comprises | Mesuré |
+| Les fichiers joints sont-ils lus ? | **100 %** des valeurs en DOCX, XLSX et PPTX ; 99 % en PDF ; **100 % des secrets** détectés dans tous les formats, images comprises ; mêmes taux pour les fichiers enregistrés par Microsoft Office | Mesuré |
 | Les agents désactivés sont-ils repérés ? | Alerte **5 min 10 s** en médiane après le dernier signal ; aucune fausse alerte jusqu'à 4 signaux perdus ; vrais agents : signal toutes les 60 s, 0 alerte en 15 min | Mesuré |
-| L'extension marche-t-elle sur les vrais sites ? | 100 % sur ChatGPT, Gemini, Claude, Copilot | Objectif |
-| Les résultats tiennent-ils sur des prompts réels ? | Rappel protection ≥ 75 %, F1 ≥ 75 % | Objectif |
-| Le tableau de bord est-il facile à utiliser ? | SUS ≥ 68, ≥ 80 % de tâches réussies sans aide | Objectif |
-| L'annotation est-elle fiable ? | Kappa ≥ 0,80, F1 protection ≥ 90 % entre deux annotateurs | Objectif |
+| L'extension marche-t-elle sur les vrais sites ? | **8 sites sur 8 conformes** (blocage, masquage, fichiers, journal), après correction d'un défaut de bannière révélé par le vrai ChatGPT | Mesuré |
+| Les résultats tiennent-ils sur des prompts réels ? | Non mesuré : collecte soumise à l'accord du DPO et à des volontaires. Le corpus manuel (65 prompts écrits à la main) en tient lieu : F1 76,8 % | Non réalisé |
+| Le tableau de bord est-il facile à utiliser ? | Non mesuré : demande 5 à 8 participants. Le fonctionnement est vérifié (16 tests de bout en bout), pas la facilité d'usage | Non réalisé |
+| L'annotation est-elle fiable ? | Sur ce qui serait masqué, oui : F1 protection **90,1 %**, kappa **0,836** ; sur le type et les bornes exacts, F1 strict **71,4 %**, sous l'objectif de 80 % | Mesuré |
 
 ## 2. Détection des données sensibles — mesuré
 
-Rapport : [resultats-detection.md](resultats/resultats-detection.md) (`pnpm eval:detection`, graine 2026). Corpus : 65 prompts écrits à la main, 300 générés, 20 documents longs ; 975 entités annotées ; 103 prompts sans donnée sensible.
+Rapport : [resultats-detection.md](resultats/resultats-detection.md) (`pnpm eval:detection`, graine 2026). Corpus : 65 prompts écrits à la main, 300 générés, 20 documents longs ; 976 entités annotées (référence arbitrée par deux annotateurs, [arbitrage.csv](annotation/arbitrage.csv)) ; 104 prompts sans donnée sensible.
 
 | Configuration | Précision | Rappel | F1 (IC 95 %) | Rappel protection | Latence p50 / p95 |
 | :--- | ---: | ---: | ---: | ---: | ---: |
-| Règles seules | 96,5 % | 50,9 % | 66,6 % (63,8–69,0 %) | 52,3 % | 0,24 / 1,43 ms |
-| NER seul | 78,7 % | 40,6 % | 53,6 % (50,9–56,3 %) | 42,8 % | 82,6 / 337 ms |
-| **Moteur complet** | **90,2 %** | **91,4 %** | **90,8 % (89,3–92,2 %)** | **93,6 %** | 114 / 350 ms |
+| Règles seules | 96,5 % | 50,8 % | 66,6 % (63,8–68,9 %) | 52,4 % | 0,36 / 2,11 ms |
+| NER seul | 78,5 % | 40,5 % | 53,4 % (50,7–56,1 %) | 42,6 % | 96,3 / 326 ms |
+| **Moteur complet** | **90,1 %** | **91,2 %** | **90,6 % (89,1–92,1 %)** | **93,5 %** | 99,6 / 370 ms |
 
 - Les couches se complètent : les règles couvrent les identifiants structurés (IBAN, numéros CNSS, clés : 100 %), le NER les noms, organisations et adresses (noms : 97 %).
-- Corpus manuel, le plus proche de l'usage réel : F1 **78,2 %**, plus bas que sur le corpus généré (92,8 %), dont les gabarits sont réguliers. Le manuel est la référence pour la généralisation.
-- Données encore lisibles après la passerelle : **6,4 %** des entités. La principale cause est connue : les fonctions et postes ne sont pas détectés (44 entités sur 62).
+- Corpus manuel, le plus proche de l'usage réel : F1 **76,8 %**, plus bas que sur le corpus généré (92,8 %), dont les gabarits sont réguliers. Le manuel est la référence pour la généralisation.
+- Données encore lisibles après la passerelle : **6,5 %** des entités. La principale cause est connue : les fonctions et postes ne sont pas détectés (44 entités sur 63).
 
 ### Ré-identification
 
@@ -97,6 +97,8 @@ Rapport : [extraction-fichiers.md](resultats/extraction-fichiers.md) (`pnpm eval
 | PDF scanné (OCR) | 94,7 % (18/19) | 100 % (1/1) |
 | Images (OCR) | 95,9 % (93/97) | 100 % (8/8) |
 
+**Fichiers enregistrés par Microsoft Office** (Word, Excel, PowerPoint 2016, enregistrement à la main) : DOCX, XLSX et PPTX à **100 %** (97/97), PDF exporté par Word à **99,0 %** (96/97), **100 % des secrets** dans les quatre formats. La première mesure donnait 91,8 % et 6 secrets sur 8 pour le PDF de Word ; deux défauts, invisibles avec les fichiers des bibliothèques, ont été corrigés (voir [protocole-detection.md](protocole-detection.md) § 5 quinquies).
+
 L'évaluation a révélé un défaut grave, corrigé depuis : l'extraction PDF échouait **en silence**, avec 0 % des valeurs lues et aucun signal d'alerte. Elle passe maintenant par pdfjs et l'OCR, signale toute lecture incomplète, et le PDF masqué est relu avant d'être renvoyé.
 
 ## 5. Surveillance des agents — mesuré
@@ -111,9 +113,9 @@ Rapports : [heartbeat-latence.md](resultats/heartbeat-latence.md), [heartbeat-fa
 
 | Suite | Résultat |
 | :--- | ---: |
-| Tests unitaires et d'intégration (`pnpm test`), dont 15 sur le mode dégradé | 263/263 |
+| Tests unitaires et d'intégration (`pnpm test`), dont 15 sur le mode dégradé | 272/272 |
 | LLM local avec le vrai modèle (`pnpm test:llm`) | 4/4 |
-| Extension dans Chromium, contre l'API réelle (`pnpm test:e2e:extension`) | 10/10 |
+| Extension dans Chromium, contre l'API réelle (`pnpm test:e2e:extension`) | 11/11 |
 | Tableau de bord dans Chromium, MFA réelle (`pnpm test:e2e:dashboard`) | 16/16 |
 
 L'extension est vérifiée sur : blocage d'un secret par trois voies d'envoi, masquage sans que la page voie la valeur, pièces jointes, journalisation. Le tableau de bord est vérifié sur : double authentification, séparation des rôles RSSI / DPO / collaborateur, pages et journal.
@@ -124,27 +126,25 @@ L'extension est vérifiée sur : blocage d'un secret par trois voies d'envoi, ma
 - les autres directions restent servies par les règles, qui bloquent toujours une clé API ;
 - l'absence du LLM, couche facultative, ne déclenche pas le mode dégradé.
 
-## 7. Validations restantes — objectifs
+## 7. Validations non réalisées — perspectives
 
-Les protocoles et les scripts de calcul sont prêts et testés. Les objectifs ont été fixés **avant** toute mesure.
+Deux validations demandent des participants que ce projet, conduit seul, ne pouvait pas réunir. Elles ne sont pas présentées comme faites. Leur protocole, leurs objectifs (fixés à l'avance) et leur script de calcul sont prêts et testés : elles peuvent être menées telles quelles lors d'un déploiement pilote.
 
-| Validation | Objectif | Protocole | Calcul |
+| Validation | Objectif fixé à l'avance | Protocole et kit | Calcul |
 | :--- | :--- | :--- | :--- |
-| Utilisabilité (5 à 8 participants RSSI, DPO, métier) | SUS ≥ 68 ; ≥ 80 % de tâches réussies sans aide ; 100 % sur les tâches critiques (accès justifié, validation de politique) | [utilisabilite/protocole.md](utilisabilite/protocole.md) | `pnpm eval:utilisabilite` |
-| Accord entre deux annotateurs (65 prompts) | Kappa ≥ 0,80 ; F1 protection ≥ 90 % ; F1 strict ≥ 80 % | [annotation/guide-annotation.md](annotation/guide-annotation.md) | `pnpm eval:accord` |
-| Fichiers produits par Microsoft Office | Mêmes taux que les bibliothèques : 100 % DOCX / XLSX / PPTX, ≥ 99 % PDF, 100 % des secrets | [LISEZMOI.md](../../data/eval/fichiers-office/office/LISEZMOI.md) | `pnpm eval:extraction` |
-| Extension sur les vrais services d'IA (8 sites, données fictives) | 100 % de conformité sur ChatGPT, Gemini, Claude et Copilot | [sites-reels/protocole.md](sites-reels/protocole.md) | Grille à la main |
-| Prompts réels anonymisés (150 à 200, accord du DPO) | Rappel protection ≥ 75 % ; F1 partiel ≥ 75 % ; 100 % des secrets (corpus manuel de référence : 80,4 % et 78,4 %) | [prompts-reels/protocole.md](prompts-reels/protocole.md) | `pnpm eval:prompts-reels` |
+| Utilisabilité (5 à 8 participants RSSI, DPO, métier) | SUS ≥ 68 ; ≥ 80 % de tâches réussies sans aide ; 100 % sur les tâches critiques (accès justifié, validation de politique) | [utilisabilite/protocole.md](utilisabilite/protocole.md), [kit-seance.md](utilisabilite/kit-seance.md) | `pnpm eval:utilisabilite` |
+| Prompts réels anonymisés (150 à 200, accord du DPO) | Rappel protection ≥ 75 % ; F1 partiel ≥ 75 % ; 100 % des secrets (corpus manuel de référence : 80,4 % et 78,4 %) | [prompts-reels/protocole.md](prompts-reels/protocole.md), [kit-collecte.md](prompts-reels/kit-collecte.md) | `pnpm eval:prompts-reels` |
 
 **Formulation proposée pour la conclusion** :
 
-> Sur les mesures réalisées, la passerelle détecte 93,6 % des données sensibles et réduit la ré-identification de 99,5 % à 2,0 %, pour un délai de 75 ms en médiane. Sous réserve que les validations restantes (utilisabilité, accord inter-annotateurs, fichiers Office, vrais services d'IA, prompts réels) atteignent les objectifs fixés, le système répond aux exigences de protection, de performance et d'exploitabilité posées au départ.
+> Sur un corpus synthétique de 385 prompts, la passerelle détecte 93,5 % des données sensibles et réduit la ré-identification de 99,5 % à 2,0 %, pour un délai de 75 ms en médiane. Elle tient la charge de 20 agents réels sans erreur, lit les fichiers bureautiques produits par Microsoft Office et fonctionne sur les 8 services d'IA testés. Le système répond donc aux exigences de protection et de performance posées au départ. Deux questions restent ouvertes et constituent les prochaines étapes d'un déploiement pilote : la tenue de ces résultats sur des demandes réelles d'agents, et la facilité d'usage du tableau de bord par ses futurs utilisateurs. Les protocoles correspondants sont prêts.
 
 ## 8. Limites
 
-- **Corpus synthétique**, annoté par une seule personne pour l'instant ; l'évaluation sur des prompts réels anonymisés est préparée (protocole, script) mais demande l'accord du DPO.
+- **Corpus synthétique** ; accord entre deux annotateurs bon sur la protection (90,1 %) mais F1 strict de 71,4 % (mesuré avant arbitrage ; les 34 désaccords ont ensuite été arbitrés, 3 corrections de la référence) ; l'évaluation sur des prompts réels anonymisés n'a pas été menée (accord du DPO et volontaires nécessaires) ; protocole, kit et script sont prêts.
+- **Utilisabilité non évaluée** : les tests vérifient que le tableau de bord fonctionne, pas qu'il est facile à utiliser ; les séances (5 à 8 participants) n'ont pas pu être organisées dans un projet conduit seul.
 - **Une seule machine** pour la latence et la charge ; le débit dépend de la charge du poste. Le réseau est simulé par un délai fixe, sans perte ni gigue.
-- **Extension testée sur une page simulée** : les vrais sites changent sans préavis ; la grille de vérification manuelle ne vaut qu'à sa date.
+- **Vrais sites** : grille manuelle du 12/11/2026, qui ne vaut qu'à sa date (les sites changent sans préavis). Seul chatgpt.com a été recoupé avec le journal en base ; les 7 autres sites ont été testés sur d'autres postes, relevé de l'opérateur.
 - **Heartbeat réel** mesuré poste éveillé et navigateur ouvert ; la veille et la fermeture du navigateur ne sont pas couvertes (l'alerte y est voulue).
 - **Fonctions et postes non détectés** : c'est la principale source de données encore lisibles après masquage.
 - **Secrets dans les fichiers** : seuls 8 secrets sont annotés, c'est un contrôle plutôt qu'une estimation précise. L'OCR est mesuré sur des images nettes, pas sur des scans réels.

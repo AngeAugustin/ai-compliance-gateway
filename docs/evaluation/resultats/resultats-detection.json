@@ -1,18 +1,18 @@
 {
   "meta": {
-    "date": "2026-10-30",
+    "date": "2026-11-12",
     "seed": 2026,
     "repetitions": 3,
     "node": "24.12.0",
     "platform": "win32-x64",
     "cpu": "Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz",
-    "durationMs": 573573.4724,
+    "durationMs": 666435.3907999999,
     "populationSize": 2000
   },
   "setup": {
     "ner": {
       "available": true,
-      "initMs": 4947
+      "initMs": 6458
     },
     "llm": {
       "available": false,
@@ -26,7 +26,7 @@
       "genere": 300,
       "long": 20
     },
-    "entities": 975,
+    "entities": 976,
     "entitiesByType": {
       "FINANCIAL_AMOUNT": 54,
       "IBAN": 38,
@@ -39,21 +39,21 @@
       "JOB_TITLE": 44,
       "SALARY": 36,
       "DATE_OF_BIRTH": 43,
-      "ADDRESS": 55,
+      "ADDRESS": 54,
       "NATIONAL_ID": 17,
       "ORGANIZATION": 90,
       "CREDIT_CARD": 18,
       "CNSS_EMPLOYER_NUMBER": 16,
       "TAX_ID": 14,
-      "INTERNAL_ID": 27,
+      "INTERNAL_ID": 28,
       "CONNECTION_STRING": 17,
       "IP_ADDRESS": 15,
       "INTERNAL_URL": 15,
       "PASSWORD": 11,
       "PRIVATE_KEY": 1,
-      "MEDICAL": 53
+      "MEDICAL": 54
     },
-    "negatives": 103,
+    "negatives": 104,
     "contexts": {
       "Finance": 81,
       "RH": 71,
@@ -96,48 +96,48 @@
           "counts": {
             "tp": 484,
             "fp": 30,
-            "fn": 491
+            "fn": 492
           },
           "prf": {
             "precision": 0.9416342412451362,
-            "recall": 0.49641025641025643,
-            "f1": 0.6501007387508395
+            "recall": 0.4959016393442623,
+            "f1": 0.6496644295302013
           },
           "ci95": {
-            "low": 0.6232114467408585,
-            "high": 0.6737967914438503
+            "low": 0.6222222222222222,
+            "high": 0.673913043478261
           }
         },
         "partiel": {
           "counts": {
             "tp": 496,
             "fp": 18,
-            "fn": 479
+            "fn": 480
           },
           "prf": {
             "precision": 0.9649805447470817,
-            "recall": 0.5087179487179487,
-            "f1": 0.6662189388851579
+            "recall": 0.5081967213114754,
+            "f1": 0.6657718120805369
           },
           "ci95": {
-            "low": 0.6377383300460224,
-            "high": 0.6897767332549941
+            "low": 0.6376146788990825,
+            "high": 0.6894243641231592
           }
         },
         "protection": {
           "counts": {
-            "tp": 510,
-            "fp": 4,
+            "tp": 511,
+            "fp": 3,
             "fn": 465
           },
           "prf": {
-            "precision": 0.9922178988326849,
-            "recall": 0.5230769230769231,
-            "f1": 0.6850235057085293
+            "precision": 0.9941634241245136,
+            "recall": 0.5235655737704918,
+            "f1": 0.6859060402684565
           },
           "ci95": {
-            "low": 0.6578366445916115,
-            "high": 0.7071380920613742
+            "low": 0.6588845654993515,
+            "high": 0.7083607636603028
           }
         }
       },
@@ -147,36 +147,36 @@
             "counts": {
               "tp": 44,
               "fp": 5,
-              "fn": 53
+              "fn": 54
             },
             "prf": {
               "precision": 0.8979591836734694,
-              "recall": 0.4536082474226804,
-              "f1": 0.6027397260273972
+              "recall": 0.4489795918367347,
+              "f1": 0.5986394557823129
             }
           },
           "partiel": {
             "counts": {
               "tp": 44,
               "fp": 5,
-              "fn": 53
+              "fn": 54
             },
             "prf": {
               "precision": 0.8979591836734694,
-              "recall": 0.4536082474226804,
-              "f1": 0.6027397260273972
+              "recall": 0.4489795918367347,
+              "f1": 0.5986394557823129
             }
           },
           "protection": {
             "counts": {
-              "tp": 45,
-              "fp": 4,
+              "tp": 46,
+              "fp": 3,
               "fn": 52
             },
             "prf": {
-              "precision": 0.9183673469387755,
-              "recall": 0.4639175257731959,
-              "f1": 0.6164383561643836
+              "precision": 0.9387755102040817,
+              "recall": 0.46938775510204084,
+              "f1": 0.6258503401360545
             }
           }
         },
@@ -290,11 +290,11 @@
         },
         {
           "entityType": "ADDRESS",
-          "support": 55,
+          "support": 54,
           "counts": {
             "tp": 0,
             "fp": 0,
-            "fn": 55
+            "fn": 54
           },
           "prf": {
             "precision": 1,
@@ -320,16 +320,16 @@
         },
         {
           "entityType": "MEDICAL",
-          "support": 53,
+          "support": 54,
           "counts": {
             "tp": 49,
             "fp": 0,
-            "fn": 4
+            "fn": 5
           },
           "prf": {
             "precision": 1,
-            "recall": 0.9245283018867925,
-            "f1": 0.9607843137254902
+            "recall": 0.9074074074074074,
+            "f1": 0.9514563106796117
           },
           "inCoverage": true
         },
@@ -424,22 +424,22 @@
           "inCoverage": true
         },
         {
-          "entityType": "EMAIL",
-          "support": 27,
+          "entityType": "INTERNAL_ID",
+          "support": 28,
           "counts": {
             "tp": 27,
             "fp": 0,
-            "fn": 0
+            "fn": 1
           },
           "prf": {
             "precision": 1,
-            "recall": 1,
-            "f1": 1
+            "recall": 0.9642857142857143,
+            "f1": 0.9818181818181818
           },
           "inCoverage": true
         },
         {
-          "entityType": "INTERNAL_ID",
+          "entityType": "EMAIL",
           "support": 27,
           "counts": {
             "tp": 27,
@@ -619,49 +619,49 @@
           "inCoverage": true
         }
       ],
-      "macroF1": 0.7720978722504487,
+      "macroF1": 0.7709516296992946,
       "perimetre": {
         "counts": {
           "tp": 496,
           "fp": 18,
-          "fn": 23
+          "fn": 25
         },
         "prf": {
           "precision": 0.9649805447470817,
-          "recall": 0.9556840077071291,
-          "f1": 0.9603097773475315
+          "recall": 0.9520153550863724,
+          "f1": 0.9584541062801933
         }
       },
       "latency": {
         "runs": 1155,
-        "p50": 0.23610000000007858,
-        "p95": 1.42870000000039,
-        "p99": 4.932999999999083,
-        "mean": 0.511878268398292,
-        "max": 20.95219999999972,
-        "charsPerMs": 398.30391221937094,
+        "p50": 0.3603999999995722,
+        "p95": 2.1098999999994703,
+        "p99": 6.248199999999997,
+        "mean": 0.6953709956709708,
+        "max": 25.90469999999914,
+        "charsPerMs": 293.20049031724125,
         "byLength": {
           "court": {
             "n": 1092,
-            "p50": 0.22360000000116997,
-            "p95": 1.0311000000001513
+            "p50": 0.3349999999991269,
+            "p95": 1.497800000001007
           },
           "moyen": {
             "n": 33,
-            "p50": 1.413300000000163,
-            "p95": 2.20679999999993
+            "p50": 1.3685000000004948,
+            "p95": 2.690600000001723
           },
           "long": {
             "n": 30,
-            "p50": 3.773300000000745,
-            "p95": 6.483599999999569
+            "p50": 3.7325999999993655,
+            "p95": 11.682200000001103
           }
         }
       },
       "masking": {
         "global": {
-          "total": 975,
-          "complet": 508,
+          "total": 976,
+          "complet": 509,
           "partiel": 2,
           "aucun": 465
         },
@@ -685,15 +685,6 @@
             }
           },
           {
-            "entityType": "ADDRESS",
-            "line": {
-              "total": 55,
-              "complet": 0,
-              "partiel": 0,
-              "aucun": 55
-            }
-          },
-          {
             "entityType": "FINANCIAL_AMOUNT",
             "line": {
               "total": 54,
@@ -703,12 +694,21 @@
             }
           },
           {
+            "entityType": "ADDRESS",
+            "line": {
+              "total": 54,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 54
+            }
+          },
+          {
             "entityType": "MEDICAL",
             "line": {
-              "total": 53,
+              "total": 54,
               "complet": 47,
               "partiel": 2,
-              "aucun": 4
+              "aucun": 5
             }
           },
           {
@@ -766,6 +766,15 @@
             }
           },
           {
+            "entityType": "INTERNAL_ID",
+            "line": {
+              "total": 28,
+              "complet": 28,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
             "entityType": "EMAIL",
             "line": {
               "total": 27,
@@ -776,15 +785,6 @@
           },
           {
             "entityType": "PHONE",
-            "line": {
-              "total": 27,
-              "complet": 27,
-              "partiel": 0,
-              "aucun": 0
-            }
-          },
-          {
-            "entityType": "INTERNAL_ID",
             "line": {
               "total": 27,
               "complet": 27,
@@ -1202,50 +1202,50 @@
       "global": {
         "strict": {
           "counts": {
-            "tp": 378,
-            "fp": 125,
-            "fn": 597
+            "tp": 377,
+            "fp": 126,
+            "fn": 599
           },
           "prf": {
-            "precision": 0.7514910536779325,
-            "recall": 0.38769230769230767,
-            "f1": 0.5115020297699595
+            "precision": 0.7495029821073559,
+            "recall": 0.3862704918032787,
+            "f1": 0.5098039215686274
           },
           "ci95": {
-            "low": 0.48243870112657383,
-            "high": 0.541444866920152
+            "low": 0.4803605924018029,
+            "high": 0.5404120443740095
           }
         },
         "partiel": {
           "counts": {
-            "tp": 396,
-            "fp": 107,
-            "fn": 579
+            "tp": 395,
+            "fp": 108,
+            "fn": 581
           },
           "prf": {
-            "precision": 0.7872763419483101,
-            "recall": 0.40615384615384614,
-            "f1": 0.5358592692828146
+            "precision": 0.7852882703777336,
+            "recall": 0.4047131147540984,
+            "f1": 0.5341446923597025
           },
           "ci95": {
-            "low": 0.5093425605536333,
-            "high": 0.5632107023411371
+            "low": 0.5074224021592443,
+            "high": 0.5612244897959184
           }
         },
         "protection": {
           "counts": {
-            "tp": 417,
-            "fp": 86,
-            "fn": 558
+            "tp": 416,
+            "fp": 87,
+            "fn": 560
           },
           "prf": {
-            "precision": 0.8290258449304175,
-            "recall": 0.4276923076923077,
-            "f1": 0.564276048714479
+            "precision": 0.827037773359841,
+            "recall": 0.4262295081967213,
+            "f1": 0.5625422582826234
           },
           "ci95": {
-            "low": 0.5389473684210526,
-            "high": 0.590186592950933
+            "low": 0.5373924553275977,
+            "high": 0.5884146341463414
           }
         }
       },
@@ -1253,38 +1253,38 @@
         "manuel": {
           "strict": {
             "counts": {
-              "tp": 29,
-              "fp": 27,
-              "fn": 68
+              "tp": 28,
+              "fp": 28,
+              "fn": 70
             },
             "prf": {
-              "precision": 0.5178571428571429,
-              "recall": 0.29896907216494845,
-              "f1": 0.3790849673202615
+              "precision": 0.5,
+              "recall": 0.2857142857142857,
+              "f1": 0.36363636363636365
             }
           },
           "partiel": {
             "counts": {
-              "tp": 33,
-              "fp": 23,
-              "fn": 64
+              "tp": 32,
+              "fp": 24,
+              "fn": 66
             },
             "prf": {
-              "precision": 0.5892857142857143,
-              "recall": 0.3402061855670103,
-              "f1": 0.43137254901960786
+              "precision": 0.5714285714285714,
+              "recall": 0.32653061224489793,
+              "f1": 0.41558441558441556
             }
           },
           "protection": {
             "counts": {
-              "tp": 34,
-              "fp": 22,
-              "fn": 63
+              "tp": 33,
+              "fp": 23,
+              "fn": 65
             },
             "prf": {
-              "precision": 0.6071428571428571,
-              "recall": 0.35051546391752575,
-              "f1": 0.4444444444444444
+              "precision": 0.5892857142857143,
+              "recall": 0.336734693877551,
+              "f1": 0.4285714285714286
             }
           }
         },
@@ -1398,16 +1398,16 @@
         },
         {
           "entityType": "ADDRESS",
-          "support": 55,
+          "support": 54,
           "counts": {
-            "tp": 50,
-            "fp": 38,
+            "tp": 49,
+            "fp": 39,
             "fn": 5
           },
           "prf": {
-            "precision": 0.5681818181818182,
-            "recall": 0.9090909090909091,
-            "f1": 0.6993006993006994
+            "precision": 0.5568181818181818,
+            "recall": 0.9074074074074074,
+            "f1": 0.6901408450704225
           },
           "inCoverage": true
         },
@@ -1428,11 +1428,11 @@
         },
         {
           "entityType": "MEDICAL",
-          "support": 53,
+          "support": 54,
           "counts": {
             "tp": 0,
             "fp": 0,
-            "fn": 53
+            "fn": 54
           },
           "prf": {
             "precision": 1,
@@ -1532,12 +1532,12 @@
           "inCoverage": false
         },
         {
-          "entityType": "EMAIL",
-          "support": 27,
+          "entityType": "INTERNAL_ID",
+          "support": 28,
           "counts": {
             "tp": 0,
             "fp": 0,
-            "fn": 27
+            "fn": 28
           },
           "prf": {
             "precision": 1,
@@ -1547,7 +1547,7 @@
           "inCoverage": false
         },
         {
-          "entityType": "INTERNAL_ID",
+          "entityType": "EMAIL",
           "support": 27,
           "counts": {
             "tp": 0,
@@ -1727,51 +1727,51 @@
           "inCoverage": false
         }
       ],
-      "macroF1": 0.09998159321825077,
+      "macroF1": 0.09959993262532257,
       "perimetre": {
         "counts": {
-          "tp": 396,
-          "fp": 107,
+          "tp": 395,
+          "fp": 108,
           "fn": 16
         },
         "prf": {
-          "precision": 0.7872763419483101,
-          "recall": 0.9611650485436893,
-          "f1": 0.8655737704918033
+          "precision": 0.7852882703777336,
+          "recall": 0.9610705596107056,
+          "f1": 0.864332603938731
         }
       },
       "latency": {
         "runs": 1155,
-        "p50": 82.59850000000733,
-        "p95": 337.2044999999998,
-        "p99": 1691.7994999999937,
-        "mean": 138.19958571428597,
-        "max": 3131.7534999999916,
-        "charsPerMs": 1.4752802320596325,
+        "p50": 96.27599999999802,
+        "p95": 326.1570000000065,
+        "p99": 1504.4489000000176,
+        "mean": 143.53353220779238,
+        "max": 3938.2863999999827,
+        "charsPerMs": 1.420456347356915,
         "byLength": {
           "court": {
             "n": 1092,
-            "p50": 81.04219999999623,
-            "p95": 140.66210000000137
+            "p50": 94.44129999999132,
+            "p95": 164.23070000000007
           },
           "moyen": {
             "n": 33,
-            "p50": 503.07360000000335,
-            "p95": 669.37950000001
+            "p50": 413.6429000000062,
+            "p95": 536.5413000000117
           },
           "long": {
             "n": 30,
-            "p50": 1539.516300000003,
-            "p95": 3095.411300000007
+            "p50": 1336.1015999999945,
+            "p95": 2551.978000000003
           }
         }
       },
       "masking": {
         "global": {
-          "total": 975,
-          "complet": 395,
+          "total": 976,
+          "complet": 394,
           "partiel": 22,
-          "aucun": 558
+          "aucun": 560
         },
         "byType": [
           {
@@ -1793,15 +1793,6 @@
             }
           },
           {
-            "entityType": "ADDRESS",
-            "line": {
-              "total": 55,
-              "complet": 53,
-              "partiel": 1,
-              "aucun": 1
-            }
-          },
-          {
             "entityType": "FINANCIAL_AMOUNT",
             "line": {
               "total": 54,
@@ -1811,12 +1802,21 @@
             }
           },
           {
+            "entityType": "ADDRESS",
+            "line": {
+              "total": 54,
+              "complet": 52,
+              "partiel": 1,
+              "aucun": 1
+            }
+          },
+          {
             "entityType": "MEDICAL",
             "line": {
-              "total": 53,
+              "total": 54,
               "complet": 0,
               "partiel": 0,
-              "aucun": 53
+              "aucun": 54
             }
           },
           {
@@ -1874,6 +1874,15 @@
             }
           },
           {
+            "entityType": "INTERNAL_ID",
+            "line": {
+              "total": 28,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 28
+            }
+          },
+          {
             "entityType": "EMAIL",
             "line": {
               "total": 27,
@@ -1884,15 +1893,6 @@
           },
           {
             "entityType": "PHONE",
-            "line": {
-              "total": 27,
-              "complet": 0,
-              "partiel": 0,
-              "aucun": 27
-            }
-          },
-          {
-            "entityType": "INTERNAL_ID",
             "line": {
               "total": 27,
               "complet": 0,
@@ -2313,6 +2313,13 @@
         {
           "sample": "man-064",
           "split": "manuel",
+          "entityType": "ADDRESS",
+          "value": "Malanville",
+          "excerpt": "…terne la liste des assurés de Malanville avec leurs numéros de télépho…"
+        },
+        {
+          "sample": "man-064",
+          "split": "manuel",
           "entityType": "ORGANIZATION",
           "value": "RGPD/APDP",
           "excerpt": "…léphone ? Quelles précautions RGPD/APDP ?"
@@ -2337,13 +2344,6 @@
           "entityType": "ORGANIZATION",
           "value": "CN",
           "excerpt": "…de Gisèle Hounkanrin, assurée CNSS C05305926. Citer la procédu…"
-        },
-        {
-          "sample": "gen-005",
-          "split": "genere",
-          "entityType": "ADDRESS",
-          "value": "Benin",
-          "excerpt": "… ? postgres://app_prestations:Benin#2020!@10.30.105.86:5432/prest…"
         }
       ]
     },
@@ -2378,48 +2378,48 @@
           "counts": {
             "tp": 484,
             "fp": 30,
-            "fn": 491
+            "fn": 492
           },
           "prf": {
             "precision": 0.9416342412451362,
-            "recall": 0.49641025641025643,
-            "f1": 0.6501007387508395
+            "recall": 0.4959016393442623,
+            "f1": 0.6496644295302013
           },
           "ci95": {
-            "low": 0.6232114467408585,
-            "high": 0.6737967914438503
+            "low": 0.6222222222222222,
+            "high": 0.673913043478261
           }
         },
         "partiel": {
           "counts": {
             "tp": 496,
             "fp": 18,
-            "fn": 479
+            "fn": 480
           },
           "prf": {
             "precision": 0.9649805447470817,
-            "recall": 0.5087179487179487,
-            "f1": 0.6662189388851579
+            "recall": 0.5081967213114754,
+            "f1": 0.6657718120805369
           },
           "ci95": {
-            "low": 0.6377383300460224,
-            "high": 0.6897767332549941
+            "low": 0.6376146788990825,
+            "high": 0.6894243641231592
           }
         },
         "protection": {
           "counts": {
-            "tp": 510,
-            "fp": 4,
+            "tp": 511,
+            "fp": 3,
             "fn": 465
           },
           "prf": {
-            "precision": 0.9922178988326849,
-            "recall": 0.5230769230769231,
-            "f1": 0.6850235057085293
+            "precision": 0.9941634241245136,
+            "recall": 0.5235655737704918,
+            "f1": 0.6859060402684565
           },
           "ci95": {
-            "low": 0.6578366445916115,
-            "high": 0.7071380920613742
+            "low": 0.6588845654993515,
+            "high": 0.7083607636603028
           }
         }
       },
@@ -2429,36 +2429,36 @@
             "counts": {
               "tp": 44,
               "fp": 5,
-              "fn": 53
+              "fn": 54
             },
             "prf": {
               "precision": 0.8979591836734694,
-              "recall": 0.4536082474226804,
-              "f1": 0.6027397260273972
+              "recall": 0.4489795918367347,
+              "f1": 0.5986394557823129
             }
           },
           "partiel": {
             "counts": {
               "tp": 44,
               "fp": 5,
-              "fn": 53
+              "fn": 54
             },
             "prf": {
               "precision": 0.8979591836734694,
-              "recall": 0.4536082474226804,
-              "f1": 0.6027397260273972
+              "recall": 0.4489795918367347,
+              "f1": 0.5986394557823129
             }
           },
           "protection": {
             "counts": {
-              "tp": 45,
-              "fp": 4,
+              "tp": 46,
+              "fp": 3,
               "fn": 52
             },
             "prf": {
-              "precision": 0.9183673469387755,
-              "recall": 0.4639175257731959,
-              "f1": 0.6164383561643836
+              "precision": 0.9387755102040817,
+              "recall": 0.46938775510204084,
+              "f1": 0.6258503401360545
             }
           }
         },
@@ -2572,11 +2572,11 @@
         },
         {
           "entityType": "ADDRESS",
-          "support": 55,
+          "support": 54,
           "counts": {
             "tp": 0,
             "fp": 0,
-            "fn": 55
+            "fn": 54
           },
           "prf": {
             "precision": 1,
@@ -2602,16 +2602,16 @@
         },
         {
           "entityType": "MEDICAL",
-          "support": 53,
+          "support": 54,
           "counts": {
             "tp": 49,
             "fp": 0,
-            "fn": 4
+            "fn": 5
           },
           "prf": {
             "precision": 1,
-            "recall": 0.9245283018867925,
-            "f1": 0.9607843137254902
+            "recall": 0.9074074074074074,
+            "f1": 0.9514563106796117
           },
           "inCoverage": true
         },
@@ -2706,22 +2706,22 @@
           "inCoverage": true
         },
         {
-          "entityType": "EMAIL",
-          "support": 27,
+          "entityType": "INTERNAL_ID",
+          "support": 28,
           "counts": {
             "tp": 27,
             "fp": 0,
-            "fn": 0
+            "fn": 1
           },
           "prf": {
             "precision": 1,
-            "recall": 1,
-            "f1": 1
+            "recall": 0.9642857142857143,
+            "f1": 0.9818181818181818
           },
           "inCoverage": true
         },
         {
-          "entityType": "INTERNAL_ID",
+          "entityType": "EMAIL",
           "support": 27,
           "counts": {
             "tp": 27,
@@ -2901,49 +2901,49 @@
           "inCoverage": true
         }
       ],
-      "macroF1": 0.7720978722504487,
+      "macroF1": 0.7709516296992946,
       "perimetre": {
         "counts": {
           "tp": 496,
           "fp": 18,
-          "fn": 23
+          "fn": 25
         },
         "prf": {
           "precision": 0.9649805447470817,
-          "recall": 0.9556840077071291,
-          "f1": 0.9603097773475315
+          "recall": 0.9520153550863724,
+          "f1": 0.9584541062801933
         }
       },
       "latency": {
         "runs": 1155,
-        "p50": 0.7603999999992084,
-        "p95": 2.5348999999987427,
-        "p99": 8.280399999988731,
-        "mean": 1.1027919480519155,
-        "max": 11.32070000001113,
-        "charsPerMs": 184.8790401882031,
+        "p50": 1.24910000001546,
+        "p95": 5.6828999999852385,
+        "p99": 16.55350000000908,
+        "mean": 2.040546233766789,
+        "max": 25.050400000007357,
+        "charsPerMs": 99.91595069461111,
         "byLength": {
           "court": {
             "n": 1092,
-            "p50": 0.7146000000066124,
-            "p95": 1.951600000000326
+            "p50": 1.1915000000153668,
+            "p95": 3.993400000006659
           },
           "moyen": {
             "n": 33,
-            "p50": 2.473200000007637,
-            "p95": 5.469599999982165
+            "p50": 5.010199999989709,
+            "p95": 9.67379999998957
           },
           "long": {
             "n": 30,
-            "p50": 7.574700000026496,
-            "p95": 9.908699999999953
+            "p50": 14.635299999994459,
+            "p95": 24.633499999996275
           }
         }
       },
       "masking": {
         "global": {
-          "total": 975,
-          "complet": 508,
+          "total": 976,
+          "complet": 509,
           "partiel": 2,
           "aucun": 465
         },
@@ -2967,15 +2967,6 @@
             }
           },
           {
-            "entityType": "ADDRESS",
-            "line": {
-              "total": 55,
-              "complet": 0,
-              "partiel": 0,
-              "aucun": 55
-            }
-          },
-          {
             "entityType": "FINANCIAL_AMOUNT",
             "line": {
               "total": 54,
@@ -2985,12 +2976,21 @@
             }
           },
           {
+            "entityType": "ADDRESS",
+            "line": {
+              "total": 54,
+              "complet": 0,
+              "partiel": 0,
+              "aucun": 54
+            }
+          },
+          {
             "entityType": "MEDICAL",
             "line": {
-              "total": 53,
+              "total": 54,
               "complet": 47,
               "partiel": 2,
-              "aucun": 4
+              "aucun": 5
             }
           },
           {
@@ -3048,6 +3048,15 @@
             }
           },
           {
+            "entityType": "INTERNAL_ID",
+            "line": {
+              "total": 28,
+              "complet": 28,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
             "entityType": "EMAIL",
             "line": {
               "total": 27,
@@ -3058,15 +3067,6 @@
           },
           {
             "entityType": "PHONE",
-            "line": {
-              "total": 27,
-              "complet": 27,
-              "partiel": 0,
-              "aucun": 0
-            }
-          },
-          {
-            "entityType": "INTERNAL_ID",
             "line": {
               "total": 27,
               "complet": 27,
@@ -3504,50 +3504,50 @@
       "global": {
         "strict": {
           "counts": {
-            "tp": 862,
-            "fp": 126,
-            "fn": 113
+            "tp": 861,
+            "fp": 127,
+            "fn": 115
           },
           "prf": {
-            "precision": 0.8724696356275303,
-            "recall": 0.884102564102564,
-            "f1": 0.8782475802343351
+            "precision": 0.8714574898785425,
+            "recall": 0.882172131147541,
+            "f1": 0.8767820773930755
           },
           "ci95": {
-            "low": 0.8593673965936739,
-            "high": 0.896116504854369
+            "low": 0.8574585635359115,
+            "high": 0.8947368421052632
           }
         },
         "partiel": {
           "counts": {
-            "tp": 891,
-            "fp": 97,
-            "fn": 84
+            "tp": 890,
+            "fp": 98,
+            "fn": 86
           },
           "prf": {
-            "precision": 0.9018218623481782,
-            "recall": 0.9138461538461539,
-            "f1": 0.9077941925624045
+            "precision": 0.9008097165991903,
+            "recall": 0.9118852459016393,
+            "f1": 0.9063136456211812
           },
           "ci95": {
-            "low": 0.8926038500506586,
-            "high": 0.9223300970873787
+            "low": 0.8905852417302799,
+            "high": 0.9206945096198966
           }
         },
         "protection": {
           "counts": {
             "tp": 913,
             "fp": 75,
-            "fn": 62
+            "fn": 63
           },
           "prf": {
             "precision": 0.9240890688259109,
-            "recall": 0.9364102564102564,
-            "f1": 0.9302088639836985
+            "recall": 0.9354508196721312,
+            "f1": 0.9297352342158859
           },
           "ci95": {
-            "low": 0.9177001127395716,
-            "high": 0.9414707353676839
+            "low": 0.9173760640961444,
+            "high": 0.9412360688956434
           }
         }
       },
@@ -3555,38 +3555,38 @@
         "manuel": {
           "strict": {
             "counts": {
-              "tp": 73,
-              "fp": 27,
-              "fn": 24
+              "tp": 72,
+              "fp": 28,
+              "fn": 26
             },
             "prf": {
-              "precision": 0.73,
-              "recall": 0.7525773195876289,
-              "f1": 0.7411167512690355
+              "precision": 0.72,
+              "recall": 0.7346938775510204,
+              "f1": 0.7272727272727272
             }
           },
           "partiel": {
             "counts": {
-              "tp": 77,
-              "fp": 23,
-              "fn": 20
+              "tp": 76,
+              "fp": 24,
+              "fn": 22
             },
             "prf": {
-              "precision": 0.77,
-              "recall": 0.7938144329896907,
-              "f1": 0.7817258883248732
+              "precision": 0.76,
+              "recall": 0.7755102040816326,
+              "f1": 0.7676767676767676
             }
           },
           "protection": {
             "counts": {
               "tp": 79,
               "fp": 21,
-              "fn": 18
+              "fn": 19
             },
             "prf": {
               "precision": 0.79,
-              "recall": 0.8144329896907216,
-              "f1": 0.802030456852792
+              "recall": 0.8061224489795918,
+              "f1": 0.7979797979797979
             }
           }
         },
@@ -3700,16 +3700,16 @@
         },
         {
           "entityType": "ADDRESS",
-          "support": 55,
+          "support": 54,
           "counts": {
-            "tp": 50,
-            "fp": 31,
+            "tp": 49,
+            "fp": 32,
             "fn": 5
           },
           "prf": {
-            "precision": 0.6172839506172839,
-            "recall": 0.9090909090909091,
-            "f1": 0.7352941176470589
+            "precision": 0.6049382716049383,
+            "recall": 0.9074074074074074,
+            "f1": 0.725925925925926
           },
           "inCoverage": true
         },
@@ -3730,16 +3730,16 @@
         },
         {
           "entityType": "MEDICAL",
-          "support": 53,
+          "support": 54,
           "counts": {
             "tp": 49,
             "fp": 0,
-            "fn": 4
+            "fn": 5
           },
           "prf": {
             "precision": 1,
-            "recall": 0.9245283018867925,
-            "f1": 0.9607843137254902
+            "recall": 0.9074074074074074,
+            "f1": 0.9514563106796117
           },
           "inCoverage": true
         },
@@ -3834,22 +3834,22 @@
           "inCoverage": true
         },
         {
-          "entityType": "EMAIL",
-          "support": 27,
+          "entityType": "INTERNAL_ID",
+          "support": 28,
           "counts": {
             "tp": 27,
             "fp": 0,
-            "fn": 0
+            "fn": 1
           },
           "prf": {
             "precision": 1,
-            "recall": 1,
-            "f1": 1
+            "recall": 0.9642857142857143,
+            "f1": 0.9818181818181818
           },
           "inCoverage": true
         },
         {
-          "entityType": "INTERNAL_ID",
+          "entityType": "EMAIL",
           "support": 27,
           "counts": {
             "tp": 27,
@@ -4029,51 +4029,51 @@
           "inCoverage": true
         }
       ],
-      "macroF1": 0.8764111396134687,
+      "macroF1": 0.8748745557406008,
       "perimetre": {
         "counts": {
-          "tp": 891,
-          "fp": 97,
-          "fn": 40
+          "tp": 890,
+          "fp": 98,
+          "fn": 42
         },
         "prf": {
-          "precision": 0.9018218623481782,
-          "recall": 0.9570354457572503,
-          "f1": 0.9286086503387181
+          "precision": 0.9008097165991903,
+          "recall": 0.9549356223175965,
+          "f1": 0.9270833333333333
         }
       },
       "latency": {
         "runs": 1155,
-        "p50": 113.84250000002794,
-        "p95": 349.91659999999683,
-        "p99": 1689.446100000001,
-        "mean": 163.07110978354945,
-        "max": 2675.626199999999,
-        "charsPerMs": 1.2502712292431122,
+        "p50": 99.5857000000542,
+        "p95": 369.66599999999744,
+        "p99": 1834.7802000000374,
+        "mean": 161.4090381818178,
+        "max": 3308.7220999999554,
+        "charsPerMs": 1.2631456031195385,
         "byLength": {
           "court": {
             "n": 1092,
-            "p50": 111.35610000000452,
-            "p95": 197.80940000002738
+            "p50": 97.01469999999972,
+            "p95": 167.92939999996452
           },
           "moyen": {
             "n": 33,
-            "p50": 421.0779999999795,
-            "p95": 539.4285999999847
+            "p50": 531.7653999999748,
+            "p95": 699.1857999999775
           },
           "long": {
             "n": 30,
-            "p50": 1492.7319000000134,
-            "p95": 2486.698700000008
+            "p50": 1768.0524999999907,
+            "p95": 3263.2969000000157
           }
         }
       },
       "masking": {
         "global": {
-          "total": 975,
+          "total": 976,
           "complet": 901,
           "partiel": 12,
-          "aucun": 62
+          "aucun": 63
         },
         "byType": [
           {
@@ -4095,15 +4095,6 @@
             }
           },
           {
-            "entityType": "ADDRESS",
-            "line": {
-              "total": 55,
-              "complet": 53,
-              "partiel": 1,
-              "aucun": 1
-            }
-          },
-          {
             "entityType": "FINANCIAL_AMOUNT",
             "line": {
               "total": 54,
@@ -4113,12 +4104,21 @@
             }
           },
           {
+            "entityType": "ADDRESS",
+            "line": {
+              "total": 54,
+              "complet": 52,
+              "partiel": 1,
+              "aucun": 1
+            }
+          },
+          {
             "entityType": "MEDICAL",
             "line": {
-              "total": 53,
+              "total": 54,
               "complet": 47,
               "partiel": 2,
-              "aucun": 4
+              "aucun": 5
             }
           },
           {
@@ -4176,6 +4176,15 @@
             }
           },
           {
+            "entityType": "INTERNAL_ID",
+            "line": {
+              "total": 28,
+              "complet": 28,
+              "partiel": 0,
+              "aucun": 0
+            }
+          },
+          {
             "entityType": "EMAIL",
             "line": {
               "total": 27,
@@ -4186,15 +4195,6 @@
           },
           {
             "entityType": "PHONE",
-            "line": {
-              "total": 27,
-              "complet": 27,
-              "partiel": 0,
-              "aucun": 0
-            }
-          },
-          {
-            "entityType": "INTERNAL_ID",
             "line": {
               "total": 27,
               "complet": 27,
@@ -4382,6 +4382,13 @@
         {
           "sample": "man-045",
           "split": "manuel",
+          "entityType": "MEDICAL",
+          "value": "metformine 850 mg matin et soir",
+          "excerpt": "Ordonnance : metformine 850 mg matin et soir, pour diabète de type 2. Pati…"
+        },
+        {
+          "sample": "man-045",
+          "split": "manuel",
           "entityType": "PERSON",
           "value": "Comlan Ahouandjinou",
           "excerpt": "… diabète de type 2. Patient : Comlan Ahouandjinou, 12/04/1968."
@@ -4406,6 +4413,13 @@
           "entityType": "JOB_TITLE",
           "value": "électricien",
           "excerpt": "…e ? « Boris Amoussou, 34 ans, électricien chez BTP Mono Construction, h…"
+        },
+        {
+          "sample": "man-060",
+          "split": "manuel",
+          "entityType": "INTERNAL_ID",
+          "value": "4111 2233",
+          "excerpt": "…usé, et le numéro de commande 4111 2233 n'apparaît pas. Que faire ?"
         },
         {
           "sample": "man-061",
@@ -4455,20 +4469,6 @@
           "entityType": "TAX_ID",
           "value": "3744748326841",
           "excerpt": "…ciété Société Ouémé Agro, IFU 3744748326841, virement vers BJ67 BE88 0450…"
-        },
-        {
-          "sample": "gen-031",
-          "split": "genere",
-          "entityType": "JOB_TITLE",
-          "value": "chauffeur",
-          "excerpt": "…ail de Mme Yasmine Yessoufou, chauffeur, pour un salaire brut mensuel…"
-        },
-        {
-          "sample": "gen-036",
-          "split": "genere",
-          "entityType": "JOB_TITLE",
-          "value": "électricien",
-          "excerpt": "…ge Les Lauriers en qualité de électricien, NPI 0020196226."
         }
       ],
       "spurious": [
@@ -4615,6 +4615,13 @@
         {
           "sample": "man-064",
           "split": "manuel",
+          "entityType": "ADDRESS",
+          "value": "Malanville",
+          "excerpt": "…terne la liste des assurés de Malanville avec leurs numéros de télépho…"
+        },
+        {
+          "sample": "man-064",
+          "split": "manuel",
           "entityType": "ORGANIZATION",
           "value": "RGPD/APDP",
           "excerpt": "…léphone ? Quelles précautions RGPD/APDP ?"
@@ -4639,13 +4646,6 @@
           "entityType": "ORGANIZATION",
           "value": "Bénin",
           "excerpt": "…le et cotisation patronale au Bénin, avec un exemple chiffré simp…"
-        },
-        {
-          "sample": "gen-020",
-          "split": "genere",
-          "entityType": "NATIONAL_ID",
-          "value": "3744748326841",
-          "excerpt": "…ciété Société Ouémé Agro, IFU 3744748326841, virement vers BJ67 BE88 0450…"
         }
       ]
     }

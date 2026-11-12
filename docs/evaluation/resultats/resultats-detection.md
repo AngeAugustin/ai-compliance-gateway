@@ -1,17 +1,17 @@
 # Résultats de l'évaluation de la détection
 
-> Rapport généré par `pnpm eval:detection` le 2026-10-30 — graine 2026, 3 répétitions de latence, Node 24.12.0 (win32-x64, Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz), durée 574 s. Protocole : [protocole-detection.md](../protocole-detection.md). Ne pas modifier à la main.
+> Rapport généré par `pnpm eval:detection` le 2026-11-12 — graine 2026, 3 répétitions de latence, Node 24.12.0 (win32-x64, Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz), durée 666 s. Protocole : [protocole-detection.md](../protocole-detection.md). Ne pas modifier à la main.
 
-NER : chargé en 4947 ms. LLM de contexte : non évalué (LLM_MODEL_PATH non renseigné).
+NER : chargé en 6458 ms. LLM de contexte : non évalué (LLM_MODEL_PATH non renseigné).
 
 ## 1. Synthèse
 
 | Configuration | Précision | Rappel | F1 (IC 95 %) | F1 strict | Rappel protection | Latence p50 / p95 |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: |
-| **Règles seules** | 96,5 % | 50,9 % | 66,6 % (63,8 % – 69,0 %) | 65,0 % | 52,3 % | 0,24 / 1,43 ms |
-| **NER seul** | 78,7 % | 40,6 % | 53,6 % (50,9 % – 56,3 %) | 51,2 % | 42,8 % | 82,6 / 337 ms |
-| **Moteur sans NER** | 96,5 % | 50,9 % | 66,6 % (63,8 % – 69,0 %) | 65,0 % | 52,3 % | 0,76 / 2,53 ms |
-| **Moteur complet** | 90,2 % | 91,4 % | 90,8 % (89,3 % – 92,2 %) | 87,8 % | 93,6 % | 114 / 350 ms |
+| **Règles seules** | 96,5 % | 50,8 % | 66,6 % (63,8 % – 68,9 %) | 65,0 % | 52,4 % | 0,36 / 2,11 ms |
+| **NER seul** | 78,5 % | 40,5 % | 53,4 % (50,7 % – 56,1 %) | 51,0 % | 42,6 % | 96,3 / 326 ms |
+| **Moteur sans NER** | 96,5 % | 50,8 % | 66,6 % (63,8 % – 68,9 %) | 65,0 % | 52,4 % | 1,25 / 5,68 ms |
+| **Moteur complet** | 90,1 % | 91,2 % | 90,6 % (89,1 % – 92,1 %) | 87,7 % | 93,5 % | 99,6 / 370 ms |
 
 Appariement **partiel** (même type, chevauchement) sauf mention contraire, micro-moyenne sur tout le corpus. **Rappel protection** : part des données sensibles recouvertes par une détection, quel que soit le type — c'est ce qui conditionne le masquage.
 
@@ -23,24 +23,24 @@ Appariement **partiel** (même type, chevauchement) sauf mention contraire, micr
 | Généré | 300 |
 | Documents multi-demandes | 20 |
 
-385 prompts, 975 entités annotées, 103 prompts sans aucune donnée sensible (négatifs). 200 scénarios supplémentaires pour l'expérience de ré-identification.
+385 prompts, 976 entités annotées, 104 prompts sans aucune donnée sensible (négatifs). 200 scénarios supplémentaires pour l'expérience de ré-identification.
 
 | Type | Entités annotées |
 | :--- | ---: |
 | Nom de personne | 267 |
 | Organisation | 90 |
-| Adresse postale | 55 |
 | Montant financier | 54 |
-| Donnée médicale | 53 |
+| Adresse postale | 54 |
+| Donnée médicale | 54 |
 | Fonction / poste | 44 |
 | Date de naissance | 43 |
 | Clé d'API | 39 |
 | IBAN | 38 |
 | Numéro d'assuré CNSS | 38 |
 | Salaire / cotisation | 36 |
+| Identifiant interne | 28 |
 | Adresse e-mail | 27 |
 | Numéro de téléphone | 27 |
-| Identifiant interne | 27 |
 | Carte bancaire | 18 |
 | Identifiant national (NPI/IFU) | 17 |
 | Chaîne de connexion | 17 |
@@ -56,53 +56,53 @@ Appariement **partiel** (même type, chevauchement) sauf mention contraire, micr
 
 ### Règles seules
 
-Couche 1 (regex + validateurs), sortie brute. Macro-F1 (par type) : 77,2 %. F1 sur son périmètre déclaré : 96,0 %.
+Couche 1 (regex + validateurs), sortie brute. Macro-F1 (par type) : 77,1 %. F1 sur son périmètre déclaré : 95,8 %.
 
 | Sous-ensemble | VP | FP | FN | Précision | Rappel | F1 |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Tout — Strict | 484 | 30 | 491 | 94,2 % | 49,6 % | 65,0 % |
-| Tout — Partiel | 496 | 18 | 479 | 96,5 % | 50,9 % | 66,6 % |
-| Tout — Protection | 510 | 4 | 465 | 99,2 % | 52,3 % | 68,5 % |
-| Manuel — Partiel | 44 | 5 | 53 | 89,8 % | 45,4 % | 60,3 % |
+| Tout — Strict | 484 | 30 | 492 | 94,2 % | 49,6 % | 65,0 % |
+| Tout — Partiel | 496 | 18 | 480 | 96,5 % | 50,8 % | 66,6 % |
+| Tout — Protection | 511 | 3 | 465 | 99,4 % | 52,4 % | 68,6 % |
+| Manuel — Partiel | 44 | 5 | 54 | 89,8 % | 44,9 % | 59,9 % |
 | Généré — Partiel | 263 | 11 | 275 | 96,0 % | 48,9 % | 64,8 % |
 | Documents multi-demandes — Partiel | 189 | 2 | 151 | 99,0 % | 55,6 % | 71,2 % |
 
 ### NER seul
 
-Couche 2 (BERT multilingue quantifié, transformers.js), sortie brute. Macro-F1 (par type) : 10,0 %. F1 sur son périmètre déclaré : 86,6 %.
+Couche 2 (BERT multilingue quantifié, transformers.js), sortie brute. Macro-F1 (par type) : 10,0 %. F1 sur son périmètre déclaré : 86,4 %.
 
 | Sous-ensemble | VP | FP | FN | Précision | Rappel | F1 |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Tout — Strict | 378 | 125 | 597 | 75,1 % | 38,8 % | 51,2 % |
-| Tout — Partiel | 396 | 107 | 579 | 78,7 % | 40,6 % | 53,6 % |
-| Tout — Protection | 417 | 86 | 558 | 82,9 % | 42,8 % | 56,4 % |
-| Manuel — Partiel | 33 | 23 | 64 | 58,9 % | 34,0 % | 43,1 % |
+| Tout — Strict | 377 | 126 | 599 | 75,0 % | 38,6 % | 51,0 % |
+| Tout — Partiel | 395 | 108 | 581 | 78,5 % | 40,5 % | 53,4 % |
+| Tout — Protection | 416 | 87 | 560 | 82,7 % | 42,6 % | 56,3 % |
+| Manuel — Partiel | 32 | 24 | 66 | 57,1 % | 32,7 % | 41,6 % |
 | Généré — Partiel | 235 | 43 | 303 | 84,5 % | 43,7 % | 57,6 % |
 | Documents multi-demandes — Partiel | 128 | 41 | 212 | 75,7 % | 37,6 % | 50,3 % |
 
 ### Moteur sans NER
 
-Règles + mots-clés + réglages (seuils, contexte) — mode dégradé. Macro-F1 (par type) : 77,2 %. F1 sur son périmètre déclaré : 96,0 %.
+Règles + mots-clés + réglages (seuils, contexte) — mode dégradé. Macro-F1 (par type) : 77,1 %. F1 sur son périmètre déclaré : 95,8 %.
 
 | Sous-ensemble | VP | FP | FN | Précision | Rappel | F1 |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Tout — Strict | 484 | 30 | 491 | 94,2 % | 49,6 % | 65,0 % |
-| Tout — Partiel | 496 | 18 | 479 | 96,5 % | 50,9 % | 66,6 % |
-| Tout — Protection | 510 | 4 | 465 | 99,2 % | 52,3 % | 68,5 % |
-| Manuel — Partiel | 44 | 5 | 53 | 89,8 % | 45,4 % | 60,3 % |
+| Tout — Strict | 484 | 30 | 492 | 94,2 % | 49,6 % | 65,0 % |
+| Tout — Partiel | 496 | 18 | 480 | 96,5 % | 50,8 % | 66,6 % |
+| Tout — Protection | 511 | 3 | 465 | 99,4 % | 52,4 % | 68,6 % |
+| Manuel — Partiel | 44 | 5 | 54 | 89,8 % | 44,9 % | 59,9 % |
 | Généré — Partiel | 263 | 11 | 275 | 96,0 % | 48,9 % | 64,8 % |
 | Documents multi-demandes — Partiel | 189 | 2 | 151 | 99,0 % | 55,6 % | 71,2 % |
 
 ### Moteur complet
 
-Règles + NER + mots-clés + réglages — configuration de production. Macro-F1 (par type) : 87,6 %. F1 sur son périmètre déclaré : 92,9 %.
+Règles + NER + mots-clés + réglages — configuration de production. Macro-F1 (par type) : 87,5 %. F1 sur son périmètre déclaré : 92,7 %.
 
 | Sous-ensemble | VP | FP | FN | Précision | Rappel | F1 |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Tout — Strict | 862 | 126 | 113 | 87,2 % | 88,4 % | 87,8 % |
-| Tout — Partiel | 891 | 97 | 84 | 90,2 % | 91,4 % | 90,8 % |
-| Tout — Protection | 913 | 75 | 62 | 92,4 % | 93,6 % | 93,0 % |
-| Manuel — Partiel | 77 | 23 | 20 | 77,0 % | 79,4 % | 78,2 % |
+| Tout — Strict | 861 | 127 | 115 | 87,1 % | 88,2 % | 87,7 % |
+| Tout — Partiel | 890 | 98 | 86 | 90,1 % | 91,2 % | 90,6 % |
+| Tout — Protection | 913 | 75 | 63 | 92,4 % | 93,5 % | 93,0 % |
+| Manuel — Partiel | 76 | 24 | 22 | 76,0 % | 77,6 % | 76,8 % |
 | Généré — Partiel | 498 | 37 | 40 | 93,1 % | 92,6 % | 92,8 % |
 | Documents multi-demandes — Partiel | 316 | 37 | 24 | 89,5 % | 92,9 % | 91,2 % |
 
@@ -112,17 +112,17 @@ Règles + NER + mots-clés + réglages — configuration de production. Macro-F1
 | :--- | ---: | ---: | ---: | ---: | ---: |
 | Nom de personne | 267 | hors périmètre | 97 % (R 97 %) | hors périmètre | 97 % (R 97 %) |
 | Organisation | 90 | hors périmètre | 73 % (R 96 %) | hors périmètre | 80 % (R 96 %) |
-| Adresse postale | 55 | hors périmètre | 70 % (R 91 %) | hors périmètre | 74 % (R 91 %) |
+| Adresse postale | 54 | hors périmètre | 69 % (R 91 %) | hors périmètre | 73 % (R 91 %) |
 | Montant financier | 54 | 96 % (R 96 %) | hors périmètre | 96 % (R 96 %) | 96 % (R 96 %) |
-| Donnée médicale | 53 | 96 % (R 92 %) | hors périmètre | 96 % (R 92 %) | 96 % (R 92 %) |
+| Donnée médicale | 54 | 95 % (R 91 %) | hors périmètre | 95 % (R 91 %) | 95 % (R 91 %) |
 | Fonction / poste | 44 | hors périmètre | hors périmètre | hors périmètre | hors périmètre |
 | Date de naissance | 43 | 98 % (R 95 %) | hors périmètre | 98 % (R 95 %) | 98 % (R 95 %) |
 | Clé d'API | 39 | 100 % (R 100 %) | hors périmètre | 100 % (R 100 %) | 100 % (R 100 %) |
 | Numéro d'assuré CNSS | 38 | 100 % (R 100 %) | hors périmètre | 100 % (R 100 %) | 100 % (R 100 %) |
 | IBAN | 38 | 100 % (R 100 %) | hors périmètre | 100 % (R 100 %) | 100 % (R 100 %) |
 | Salaire / cotisation | 36 | 100 % (R 100 %) | hors périmètre | 100 % (R 100 %) | 100 % (R 100 %) |
+| Identifiant interne | 28 | 98 % (R 96 %) | hors périmètre | 98 % (R 96 %) | 98 % (R 96 %) |
 | Adresse e-mail | 27 | 100 % (R 100 %) | hors périmètre | 100 % (R 100 %) | 100 % (R 100 %) |
-| Identifiant interne | 27 | 100 % (R 100 %) | hors périmètre | 100 % (R 100 %) | 100 % (R 100 %) |
 | Numéro de téléphone | 27 | 98 % (R 100 %) | hors périmètre | 98 % (R 100 %) | 98 % (R 100 %) |
 | Carte bancaire | 18 | 100 % (R 100 %) | hors périmètre | 100 % (R 100 %) | 100 % (R 100 %) |
 | Chaîne de connexion | 17 | 100 % (R 100 %) | hors périmètre | 100 % (R 100 %) | 100 % (R 100 %) |
@@ -140,9 +140,9 @@ Règles + NER + mots-clés + réglages — configuration de production. Macro-F1
 Faux positifs les plus fréquents :
 
 - **Règles seules** : Identifiant national (NPI/IFU) (14), Montant financier (2), Numéro de téléphone (1), Adresse IP (1)
-- **NER seul** : Organisation (59), Adresse postale (38), Nom de personne (10)
+- **NER seul** : Organisation (59), Adresse postale (39), Nom de personne (10)
 - **Moteur sans NER** : Identifiant national (NPI/IFU) (14), Montant financier (2), Numéro de téléphone (1), Adresse IP (1)
-- **Moteur complet** : Organisation (39), Adresse postale (31), Identifiant national (NPI/IFU) (14), Nom de personne (9), Montant financier (2), Numéro de téléphone (1)
+- **Moteur complet** : Organisation (39), Adresse postale (32), Identifiant national (NPI/IFU) (14), Nom de personne (9), Montant financier (2), Numéro de téléphone (1)
 
 ## 5. Classification du contexte
 
@@ -163,28 +163,28 @@ Faux positifs les plus fréquents :
 
 | Configuration | Mesures | p50 | p95 | p99 | Moyenne | Max | Débit |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Règles seules | 1155 | 0,24 ms | 1,43 ms | 4,93 ms | 0,51 ms | 21,0 ms | 398 304 car./s |
-| NER seul | 1155 | 82,6 ms | 337 ms | 1692 ms | 138 ms | 3132 ms | 1 475 car./s |
-| Moteur sans NER | 1155 | 0,76 ms | 2,53 ms | 8,28 ms | 1,10 ms | 11,3 ms | 184 879 car./s |
-| Moteur complet | 1155 | 114 ms | 350 ms | 1689 ms | 163 ms | 2676 ms | 1 250 car./s |
+| Règles seules | 1155 | 0,36 ms | 2,11 ms | 6,25 ms | 0,70 ms | 25,9 ms | 293 200 car./s |
+| NER seul | 1155 | 96,3 ms | 326 ms | 1504 ms | 144 ms | 3938 ms | 1 420 car./s |
+| Moteur sans NER | 1155 | 1,25 ms | 5,68 ms | 16,6 ms | 2,04 ms | 25,1 ms | 99 916 car./s |
+| Moteur complet | 1155 | 99,6 ms | 370 ms | 1835 ms | 161 ms | 3309 ms | 1 263 car./s |
 
 | Configuration | Court (< 200 car.) p50 / p95 | Moyen (200–1 000) p50 / p95 | Long (> 1 000) p50 / p95 |
 | :--- | ---: | ---: | ---: |
-| Règles seules | 0,22 / 1,03 ms (n=1092) | 1,41 / 2,21 ms (n=33) | 3,77 / 6,48 ms (n=30) |
-| NER seul | 81,0 / 141 ms (n=1092) | 503 / 669 ms (n=33) | 1540 / 3095 ms (n=30) |
-| Moteur sans NER | 0,71 / 1,95 ms (n=1092) | 2,47 / 5,47 ms (n=33) | 7,57 / 9,91 ms (n=30) |
-| Moteur complet | 111 / 198 ms (n=1092) | 421 / 539 ms (n=33) | 1493 / 2487 ms (n=30) |
+| Règles seules | 0,33 / 1,50 ms (n=1092) | 1,37 / 2,69 ms (n=33) | 3,73 / 11,7 ms (n=30) |
+| NER seul | 94,4 / 164 ms (n=1092) | 414 / 537 ms (n=33) | 1336 / 2552 ms (n=30) |
+| Moteur sans NER | 1,19 / 3,99 ms (n=1092) | 5,01 / 9,67 ms (n=33) | 14,6 / 24,6 ms (n=30) |
+| Moteur complet | 97,0 / 168 ms (n=1092) | 532 / 699 ms (n=33) | 1768 / 3263 ms (n=30) |
 
-Temps mesuré autour de `detect()` en processus, après échauffement, hors réseau et hors politique côté serveur. Le chargement initial du modèle NER (4947 ms) n'est payé qu'une fois par processus.
+Temps mesuré autour de `detect()` en processus, après échauffement, hors réseau et hors politique côté serveur. Le chargement initial du modèle NER (6458 ms) n'est payé qu'une fois par processus.
 
 ## 7. Masquage : données encore lisibles après la passerelle
 
 | Configuration | Masquées entièrement | Partiellement | Pas du tout |
 | :--- | ---: | ---: | ---: |
-| Règles seules | 52,1 % | 0,2 % | 47,7 % |
-| NER seul | 40,5 % | 2,3 % | 57,2 % |
-| Moteur sans NER | 52,1 % | 0,2 % | 47,7 % |
-| Moteur complet | 92,4 % | 1,2 % | 6,4 % |
+| Règles seules | 52,2 % | 0,2 % | 47,6 % |
+| NER seul | 40,4 % | 2,3 % | 57,4 % |
+| Moteur sans NER | 52,2 % | 0,2 % | 47,6 % |
+| Moteur complet | 92,3 % | 1,2 % | 6,5 % |
 
 Détail pour **Moteur complet** :
 
@@ -192,18 +192,18 @@ Détail pour **Moteur complet** :
 | :--- | ---: | ---: | ---: | ---: |
 | Nom de personne | 267 | 96 % | 2 % | 1 % |
 | Organisation | 90 | 92 % | 3 % | 4 % |
-| Adresse postale | 55 | 96 % | 2 % | 2 % |
 | Montant financier | 54 | 96 % | 0 % | 4 % |
-| Donnée médicale | 53 | 89 % | 4 % | 8 % |
+| Adresse postale | 54 | 96 % | 2 % | 2 % |
+| Donnée médicale | 54 | 87 % | 4 % | 9 % |
 | Fonction / poste | 44 | 0 % | 0 % | 100 % |
 | Date de naissance | 43 | 95 % | 0 % | 5 % |
 | Clé d'API | 39 | 100 % | 0 % | 0 % |
 | IBAN | 38 | 100 % | 0 % | 0 % |
 | Numéro d'assuré CNSS | 38 | 100 % | 0 % | 0 % |
 | Salaire / cotisation | 36 | 100 % | 0 % | 0 % |
+| Identifiant interne | 28 | 100 % | 0 % | 0 % |
 | Adresse e-mail | 27 | 100 % | 0 % | 0 % |
 | Numéro de téléphone | 27 | 100 % | 0 % | 0 % |
-| Identifiant interne | 27 | 100 % | 0 % | 0 % |
 | Carte bancaire | 18 | 100 % | 0 % | 0 % |
 | Identifiant national (NPI/IFU) | 17 | 94 % | 0 % | 6 % |
 | Chaîne de connexion | 17 | 100 % | 0 % | 0 % |
@@ -340,10 +340,12 @@ Les tableaux ci-dessus portent sur un profil (direction à risque modéré, Chat
 | man-041 | Fonction / poste | `aide-soignante` | …ge pour Nafissatou Bio Sanni, aide-soignante à la Clinique Les Palmiers, s… |
 | man-041 | Donnée médicale | `drépanocytose` | …Les Palmiers, suivie pour une drépanocytose depuis l'enfance. |
 | man-044 | Donnée médicale | `séropositif` | M. Ange Houénou est séropositif, il demande que son employeur… |
+| man-045 | Donnée médicale | `metformine 850 mg matin et soir` | Ordonnance : metformine 850 mg matin et soir, pour diabète de type 2. Pati… |
 | man-045 | Nom de personne | `Comlan Ahouandjinou` | … diabète de type 2. Patient : Comlan Ahouandjinou, 12/04/1968. |
 | man-045 | Date de naissance | `12/04/1968` | …atient : Comlan Ahouandjinou, 12/04/1968. |
 | man-046 | Donnée médicale | `AVC` | Ma collègue a eu un AVC la semaine dernière, comment … |
 | man-056 | Fonction / poste | `électricien` | …e ? « Boris Amoussou, 34 ans, électricien chez BTP Mono Construction, h… |
+| man-060 | Identifiant interne | `4111 2233` | …usé, et le numéro de commande 4111 2233 n'apparaît pas. Que faire ? |
 | man-061 | Date de naissance | `1985-06-21` | …ntrôle médical, Gildas Sagbo, 1985-06-21, 2045789013, déclare une hern… |
 | man-061 | Identifiant national (NPI/IFU) | `2045789013` | …al, Gildas Sagbo, 1985-06-21, 2045789013, déclare une hernie discale s… |
 | man-061 | Donnée médicale | `hernie discale` | …6-21, 2045789013, déclare une hernie discale suite à un accident du travai… |
@@ -351,8 +353,6 @@ Les tableaux ci-dessus portent sur un profil (direction à risque modéré, Chat
 | gen-002 | Organisation | `Transports Alafia` | …se en demeure à l'encontre de Transports Alafia pour non-déclaration de Gisèl… |
 | gen-015 | Fonction / poste | `enseignant` | …il de Mme Gisèle Gnonlonfoun, enseignant, pour un salaire brut mensuel… |
 | gen-020 | Identifiant fiscal | `3744748326841` | …ciété Société Ouémé Agro, IFU 3744748326841, virement vers BJ67 BE88 0450… |
-| gen-031 | Fonction / poste | `chauffeur` | …ail de Mme Yasmine Yessoufou, chauffeur, pour un salaire brut mensuel… |
-| gen-036 | Fonction / poste | `électricien` | …ge Les Lauriers en qualité de électricien, NPI 0020196226. |
 
 ### Fausses alertes (extrait)
 
@@ -378,8 +378,8 @@ Les tableaux ci-dessus portent sur un profil (direction à risque modéré, Chat
 | man-058 | Montant financier | `52 000` | …septembre 2023 fixe le SMIG à 52 000 FCFA. Explique son impact. |
 | man-059 | Adresse postale | `Cotonou` | …u, carré 1245, quartier Agla, Cotonou, demande une attestation de c… |
 | man-060 | Numéro de téléphone | `4111 2233` | …usé, et le numéro de commande 4111 2233 n'apparaît pas. Que faire ? |
+| man-064 | Adresse postale | `Malanville` | …terne la liste des assurés de Malanville avec leurs numéros de télépho… |
 | man-064 | Organisation | `RGPD/APDP` | …léphone ? Quelles précautions RGPD/APDP ? |
 | man-065 | Organisation | `LinkedIn` | Rédige un post LinkedIn pour célébrer les 55 ans de l… |
 | man-065 | Organisation | `CNSS` | …our célébrer les 55 ans de la CNSS, ton institutionnel, avec tro… |
 | gen-012 | Organisation | `Bénin` | …le et cotisation patronale au Bénin, avec un exemple chiffré simp… |
-| gen-020 | Identifiant national (NPI/IFU) | `3744748326841` | …ciété Société Ouémé Agro, IFU 3744748326841, virement vers BJ67 BE88 0450… |

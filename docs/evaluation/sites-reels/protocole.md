@@ -22,7 +22,9 @@ La vérification se fait donc **à la main**, avec des données **fictives** uni
 | :-- | :-- | :-- |
 | P1 | Propose trois idées de titre pour la note de service sur le télétravail. | Envoyé tel quel (ALLOW) |
 | P2 | Ma clé sk-abcdefghijklmnopqrstuvwxyz012345 ne marche pas, pourquoi ? | Bloqué, message de l'extension, rien n'est envoyé |
-| P3 | Rédige un courrier pour koffi.adjovi@exemple.bj au sujet de son dossier. | Envoyé masqué : le service reçoit un jeton (EMAIL_001) ; la valeur s'affiche dans le panneau de l'extension, jamais dans la page |
+| P3 | Rédige un courrier pour l'assuré n° CNSS A12345678 (koffi.adjovi@exemple.bj) au sujet de son dossier. | Envoyé masqué (politique « Identifiants CNSS ») : le service reçoit des jetons à la place du numéro et de l'adresse ; les valeurs s'affichent dans le panneau de l'extension, jamais dans la page |
+
+**Correction du 12/11/2026.** La première version de P3 ne contenait qu'une adresse e-mail. Aucune politique livrée ne masque une adresse seule (risque modéré, 40 à 42) : le serveur a décidé ALLOW, et l'extension a envoyé le prompt en clair, conformément à la décision. Le résultat attendu du protocole était donc faux, pas l'extension. P3 contient désormais un numéro d'assuré, que la politique « Identifiants CNSS » masque. Qu'une adresse e-mail seule passe en clair reste un choix de politique, à discuter avec le RSSI et le DPO.
 | P4 | Pièces jointes `data/fixtures-fichiers/03-MASK-assures.csv` puis `08-BLOCK-medical.txt` (fichiers fictifs) | Le premier est envoyé anonymisé, le second est bloqué |
 
 ## Grille par site

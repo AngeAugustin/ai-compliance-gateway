@@ -1,5 +1,7 @@
 # Évaluation d'utilisabilité du tableau de bord
 
+> **Statut (12/11/2026)** : non réalisée. Le projet est conduit seul et ne disposait pas des participants nécessaires. Le protocole, le kit et le script de calcul sont prêts et testés, pour un déploiement pilote.
+
 Les tests automatisés ([dashboard.e2e.ts](../../../apps/dashboard/e2e/dashboard.e2e.ts)) vérifient que le tableau de bord **fonctionne**. Cette évaluation mesure s'il est **facile à utiliser** par les personnes qui en auront la charge. Elle demande de vrais participants : elle ne peut pas être automatisée.
 
 ## 1. Objectifs
@@ -28,7 +30,8 @@ Fixés **avant** toute mesure, pour qu'ils ne puissent pas être ajustés aux r�
 
 ## 3. Préparation
 
-- Base de démonstration : `pnpm db:reset` puis `pnpm db:demo-events` (événements fictifs sur plusieurs jours), API et tableau de bord lancés (`pnpm dev`).
+- Base de démonstration : `pnpm db:reset` puis `pnpm db:demo-events` (événements fictifs sur plusieurs jours), API et tableau de bord lancés (`pnpm dev`), puis `pnpm utilisabilite:preparer` : ajoute le collaborateur « parti » de la tâche 9, fait passer un vrai prompt masqué par un agent (événement sous séquestre pour la tâche 4) et affiche les bonnes réponses des tâches 2 à 4 pour l'observateur ([preparer-utilisabilite.ts](../../../tools/eval/preparer-utilisabilite.ts)).
+- Fiches imprimables (cartes de tâches, fiche observateur, questionnaire SUS) : [kit-seance.md](kit-seance.md).
 - Un compte RSSI et un compte DPO par participant, MFA réinitialisée : le participant l'active lui-même (tâche 1).
 - Une application d'authentification (TOTP) sur un téléphone de test fourni.
 - Enregistrement d'écran **avec accord écrit** (formulaire en annexe) ; à défaut, notes de l'observateur.
@@ -53,9 +56,9 @@ Chaque tâche a un critère de réussite observable. Temps limite : 3 minutes (t
 | 4 | DPO | « Une réquisition judiciaire demande le contenu de cet événement. Consultez-le en respectant la procédure. » | Saisit une justification et accède au détail ; la consultation apparaît au journal |
 | 5 | RSSI | « Testez si ce texte serait bloqué : *Mon IBAN est FR76 3000 6000 0112 3456 7890 189.* Pourquoi ? » | Utilise l'inspection et explique la décision à partir du score |
 | 6 | RSSI | « Interdisez l'envoi de numéros de sécurité sociale vers les services d'IA non approuvés. » | Crée la règle ; elle passe en attente de validation |
-| 7 | DPO | « Une modification de politique attend votre validation. Examinez-la et décidez. » | Trouve le changement en attente et l'approuve ou le rejette en connaissance de cause |
+| 7 | DPO | « Une modification de politique attend votre validation. Examinez-la et décidez. » (la modification est celle créée à la tâche 6 ; si la tâche 6 a échoué, l'observateur la crée avant la tâche 7) | Trouve le changement en attente et l'approuve ou le rejette en connaissance de cause |
 | 8 | RSSI | « Un nouvel agent doit être installé sur le poste de Marie Agbodji. Préparez son enrôlement. » | Génère un code d'enrôlement pour la bonne personne et copie la commande |
-| 9 | RSSI | « Un collaborateur a quitté la CNSS. Retirez-lui l'accès. » | Désactive le bon utilisateur, après confirmation |
+| 9 | RSSI | « Rodrigue Hounkpè a quitté la CNSS. Retirez-lui l'accès. » | Désactive le bon utilisateur, après confirmation |
 
 Pour chaque tâche, l'observateur note dans [taches.csv](taches.csv) : réussite (1 = sans aide, 0,5 = avec un indice, 0 = échec), temps en secondes, nombre d'erreurs (clic sur une mauvaise page, retour arrière, saisie erronée), et une remarque.
 

@@ -283,4 +283,19 @@ describe.skipIf(!API)("extension A1 enrôlée auprès de l'API (politiques du se
     const ev = await db.query<{ action: string }>(`SELECT action FROM analytics.security_event WHERE agent_id = $1 ORDER BY sequence`, [agentId]);
     expect(ev.rows.map((r) => r.action)).toEqual(["MASK", "BLOCK"]);
   });
+
+  // Défaut trouvé sur le vrai ChatGPT (sites-reels/protocole.md) : quand l'envoi est intercepté par le
+  // page-hook plutôt que par Entrée / bouton, le prompt était masqué sans aucune bannière.
+  it("envoi masqué par le page-hook : l'utilisateur voit la bannière MASK", async () => {
+    const page = await openChat();
+    const status = await page.evaluate(
+      () => (window as unknown as { directSend: (t: string) => Promise<number> }).directSend("Rédige un courrier pour l'assuré n° CNSS A12345678 au sujet de son dossier"),
+    );
+    expect(status).toBe(200);
+    expect(received.prompts).toHaveLength(1);
+    expect(received.prompts[0]).not.toContain("A12345678");
+    await page.waitForSelector("#acg-agent-banner", { timeout: 10_000 });
+    expect(await page.textContent("#acg-agent-banner")).toContain("MASK");
+    await page.close();
+  });
 });
